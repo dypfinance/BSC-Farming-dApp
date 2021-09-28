@@ -198,6 +198,15 @@ window.buyback_tokens = {
 	},
 	'0xe9e7cea3dedca5984780bafc599bd69add087d56': {
 		symbol: 'BUSD', decimals: 18
+	},
+	'0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82': {
+		symbol: 'CAKE', decimals: 18
+	},
+	'0x3ee2200efb3400fabb9aacf31297cbdd1d435d47': {
+		symbol: 'ADA', decimals: 18
+	},
+	'0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3': {
+		symbol: 'DAI', decimals: 18
 	}
 }
 
