@@ -346,12 +346,12 @@ export default function initStaking({token, staking, liquidity, lp_symbol, rewar
             let lp_data = this.props.the_graph_result.lp_data
             let apy = lp_data ? lp_data[this.props.lp_id].apy : 0
 
-            //let total_stakers = lp_data ? lp_data[this.props.lp_id].stakers_num : 0
+            let total_stakers = lp_data ? lp_data[this.props.lp_id].stakers_num : 0
             let tvl_usd = lp_data ? lp_data[this.props.lp_id].tvl_usd : 0
 
             apy = getFormattedNumber(apy, 2)
             tvl_usd = getFormattedNumber(tvl_usd, 2)
-            //total_stakers = getFormattedNumber(total_stakers, 0)
+            total_stakers = getFormattedNumber(total_stakers, 0)
 
             //console.log(total_stakers)
     
@@ -631,14 +631,15 @@ export default function initStaking({token, staking, liquidity, lp_symbol, rewar
                                         <th>TVL USD</th>
                                         <td className="text-right"><strong>${tvl_usd}</strong> <small>USD</small></td>
                                     </tr>
+                                    {isOwner && <tr>
+                                        <th>Total Stakers</th>
+                                       <td className="text-right"><strong>{total_stakers}</strong> <small></small></td>
+                                    </tr>}
                                     {/*<tr>*/}
-                                    {/*    <th>Total Stakers</th>*/}
-                                    {/*    <td className="text-right"><strong>{total_stakers}</strong> <small></small></td>*/}
+                                    {/*    <th>Pending</th>*/}
+                                    {/*    <td className="text-right"><strong>{pendingDivs}</strong> <small>DYP</small>*/}
+                                    {/*    </td>*/}
                                     {/*</tr>*/}
-                                    {/* <tr>
-                                        <th>Pending</th>
-                                        <td className="text-right"><strong>{pendingDivs}</strong> <small>DYP</small></td>
-                                    </tr> */}
 
                                     <tr>
                                         <td style={{fontSize: '1rem', paddingTop: '2rem'}} colSpan='2' className='text-center'>
