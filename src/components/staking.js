@@ -448,15 +448,11 @@ export default function initStaking({token, staking, liquidity, lp_symbol, rewar
                                                 <b>NOTE:</b>
                                             </div>
                                             <div className='col-md-12 d-block text-muted small' style={{fontSize: '15px'}}>
-                                                1. Please be aware that the farming contract expires on {expiration_time}. At the end of a farming contract, you can withdraw your LP tokens only after the expiration of your lock time.
+                                                Deposit not available because the contract expires faster than the pool lock time.
                                             </div>
                                             <div className='col-md-12 d-block mb-0 text-muted small'
                                                  style={{fontSize: '15px'}}>
-                                                2. The users that deposited funds into a contract that expires earlier than their lock time will continue to earn rewards until their lock time expires.
-                                            </div>
-                                            <div className='col-md-12 d-block mb-0 text-muted small'
-                                                 style={{fontSize: '15px'}}>
-                                                3. New farming contracts with improved strategies will be released after the current one expires.
+                                                New contracts with improved strategies are coming soon, waiting for security audit results.
                                             </div>
                                         </div>
                                     }
