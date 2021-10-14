@@ -17,6 +17,8 @@ import Footer from './components/footer'
 import getFormattedNumber from './functions/get-formatted-number';
 import setupnetwork from './functions/setupnetwork';
 
+import WalletConnectProvider from "@walletconnect/web3-provider";
+
 //const eth_address = 'ETH'
 const wbtc_address = 'BNB'
 const usdc_address = '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56'
@@ -121,7 +123,41 @@ class App extends React.Component {
 
     handleConnection = async () => {
         try {
-            let is_wallet_connected = await window.connectWallet()
+            let is_wallet_connected = await window.connectWallet(undefined, false)
+            //await setupnetwork()
+            let referrer = window.param('r')
+
+            if (is_wallet_connected) {
+                if (referrer) {
+                    referrer = String(referrer).trim().toLowerCase()
+                }
+                if (!window.web3.utils.isAddress(referrer)) {
+                    referrer = window.config.ZERO_ADDRESS
+                }
+            }
+            this.setState({is_wallet_connected, coinbase: await window.web3.eth.getCoinbase(), referrer})
+            try {
+                let the_graph_result = await window.refresh_the_graph_result()
+                this.setState({ the_graph_result: JSON.parse(JSON.stringify(the_graph_result)) })
+            } catch (e) {
+                // window.alertify.error("Cannot fetch TVL");
+                console.error("Cannot fetch TVL: "+e)
+            }
+        } catch (e) {
+            window.alertify.error(String(e))
+        }
+    }
+
+    handleConnectionWalletConnect = async () => {
+        try {
+
+            let provider = new WalletConnectProvider({
+                rpc: {
+                    56: "https://bsc-dataseed.binance.org/"
+                }
+            })
+
+            let is_wallet_connected = await window.connectWallet(provider, true)
             //await setupnetwork()
             let referrer = window.param('r')
 
@@ -178,6 +214,15 @@ render() {
                                                 </div>
                                                 <div className="sc-jnlKLf gJPfsC">
                                                     <img src="/img/wallets/metamask.svg" alt="Icon" />
+                                                </div>
+                                            </button>
+                                            <button onClick={this.handleConnectionWalletConnect} id="connect-WALLETCONNECT"
+                                                    className="sc-kvZOFW sc-hqyNC sc-dNLxif fJOgmn">
+                                                <div className="sc-jbKcbu GeCum">
+                                                    <div color="#E8831D" className="sc-bbmXgH eDNUCi">WalletConnect</div>
+                                                </div>
+                                                <div className="sc-jnlKLf gJPfsC">
+                                                    <img src="/img/wallets/walletConnect.svg" height={'25px'} alt="Icon" />
                                                 </div>
                                             </button>
                                             <button onClick={this.handleConnection} id="connect-COIN98" className="sc-kvZOFW sc-hqyNC sc-dNLxif fJOgmn">

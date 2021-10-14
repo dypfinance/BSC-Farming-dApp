@@ -3630,11 +3630,21 @@ Object.keys(window.config).filter(k => (k.startsWith('token_') || k.startsWith('
 	})
 
 // function to connect metamask
-async function connectWallet() {
-	if (window.ethereum) {
-		window.web3 = new Web3(window.ethereum)
+async function connectWallet(provider, walletType) {
+	//walletConnect
+	if (walletType) {
+			await provider.enable()
+			window.web3 = new Web3(provider)
+			let coinbase_address = await window.web3.eth.getAccounts()
+			window.coinbase_address = coinbase_address.pop()
+
+			window.IS_CONNECTED = true
+			return true
+	} else if(window.ethereum) {
+		//Web3 Providers
+			window.web3 = new Web3(window.ethereum)
 		try {
-			await window.ethereum.enable()
+			//await window.ethereum.enable()
 			console.log("Connected!")
 			window.IS_CONNECTED = true
 			if ( window.ethereum.isCoin98 )
