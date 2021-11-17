@@ -4,6 +4,9 @@ import { Route } from 'react-router-dom'
 
 import initStaking from './components/staking'
 import initBuybackStaking from './components/buy-back-staking'
+import initVesting from './components/vesting'
+import initVestingStaking from "./components/vesting-staking"
+
 import StakingList from './components/staking-list'
 import StakingListEth from './components/staking-list-eth.js'
 import StakingListWbtc from './components/staking-list-wbtc.js'
@@ -42,6 +45,11 @@ const StakingUsdc3 = initStaking({token: window.token_usdc_3, staking: window.st
 const StakingUsdc30 = initStaking({token: window.token_usdc_30, staking: window.staking_usdc_30, liquidity: usdc_address, lp_symbol:'DYP/BUSD', reward: '45,000', lock: '30 Days', rebase_factor: rebase_factors[9], expiration_time: '2 October 2021'})
 const StakingUsdc60 = initStaking({token: window.token_usdc_60, staking: window.staking_usdc_60, liquidity: usdc_address, lp_symbol:'DYP/BUSD', reward: '75,000', lock: '60 Days', rebase_factor: rebase_factors[10], expiration_time: '2 October 2021'})
 const StakingUsdc90 = initStaking({token: window.token_usdc_90, staking: window.staking_usdc_90, liquidity: usdc_address, lp_symbol:'DYP/BUSD', reward: '100,000', lock: '90 Days', rebase_factor: rebase_factors[11], expiration_time: '2 October 2021'})
+
+
+const eth_address = 'ETH'
+const Vesting = initVesting({ staking: window.constant_staking_30, apr: 0, liquidity: eth_address, expiration_time: '16 February 2022' })
+const VestingStaking = initVestingStaking({ staking: window.constant_staking_60, apr: 0, liquidity: eth_address, expiration_time: '16 February 2022' })
 
 const Modal = ({ handleClose, show, children }) => {
     const showHideClassName = show ? "modal display-block" : "modal display-none";
@@ -293,6 +301,9 @@ render() {
       <Route exact path="/staking-busd-90" render={props => <StakingUsdc90 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.usdc[3]} {...props} />} />
       <Route exact path='/' render={props => <StakingList tvl_all={getFormattedNumber(this.getCombinedTvlUsd(), 2)} tvl_farming={getFormattedNumber(this.getTvlFarming(), 2)} {...props} />} />
       <Route exact path='/staking-buyback' render={props => <BuybackStaking the_graph_result={this.state.the_graph_result} {...props} />} />
+
+      <Route exact path='/vesting' render={props => <Vesting the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
+      <Route exact path='/vesting-staking' render={props => <VestingStaking the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
 
       </div>
       <Footer />
