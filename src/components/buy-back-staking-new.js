@@ -1,15 +1,15 @@
 import React from 'react'
 import moment from 'moment'
-import { NavLink } from 'react-router-dom'
+// import { NavLink } from 'react-router-dom'
 import getFormattedNumber from '../functions/get-formatted-number'
 import Address from './address'
-import Clipboard from 'react-clipboard.js'
-import ReactTooltip from 'react-tooltip'
+// import Clipboard from 'react-clipboard.js'
+// import ReactTooltip from 'react-tooltip'
 import Boxes from './boxes'
 
-export default function initStaking({ staking, apr, liquidity='ETH', lock, expiration_time }) {
+export default function initStaking({ staking, constant, apr, lock, expiration_time }) {
 
-    let { reward_token, BigNumber, alertify } = window
+    let { reward_token, BigNumber, alertify, reward_token_idyp } = window
     let token_symbol = 'DYP'
 
     // token, staking
@@ -71,21 +71,33 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                 lastClaimedTime: '',
 
                 depositAmount: '',
-                withdrawAmount: '',
+                withdrawAmount: 0,
 
                 coinbase: '',
                 tvl: '',
-                referralFeeEarned: '',
                 stakingOwner: null,
                 approxDeposit: 100 ,
                 approxDays: 365,
 
-                usdPerToken: '',
+                usdPerToken: 0,
+
+                selectedBuybackToken: Object.keys(window.buyback_tokens)[0],
+                selectedTokenDecimals: window.buyback_tokens[Object.keys(window.buyback_tokens)[0]].decimals,
+                selectedTokenBalance: '',
+                selectedTokenSymbol: window.buyback_tokens[Object.keys(window.buyback_tokens)[0]].symbol,
 
                 contractDeployTime: '',
                 disburseDuration: ''
-
             }
+        }
+
+        handleSelectedTokenChange = async (tokenAddress) => {
+            let tokenDecimals = window.buyback_tokens[tokenAddress].decimals
+            let selectedTokenSymbol = window.buyback_tokens[tokenAddress].symbol
+            this.setState({selectedBuybackToken: tokenAddress, selectedTokenBalance: '', selectedTokenDecimals: tokenDecimals, selectedTokenSymbol})
+
+            let selectedTokenBalance = await window.getTokenHolderBalance(tokenAddress, this.state.coinbase)
+            this.setState({selectedTokenBalance})
         }
 
         handleListDownload = async (e) => {
@@ -130,79 +142,81 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
             clearInterval(window._refreshBalInterval)
         }
 
-        handleDeposit = (e) => {
-            e.preventDefault()
-            let amount = this.state.depositAmount
-            amount = new BigNumber(amount).times(1e18).toFixed(0)
-            staking.depositTOKEN(amount)
-        }
-
         handleApprove = (e) => {
             e.preventDefault()
             let amount = this.state.depositAmount
-            amount = new BigNumber(amount).times(1e18).toFixed(0)
-            reward_token.approve(staking._address, amount)
+            amount = new BigNumber(amount).times(10**this.state.selectedTokenDecimals).toFixed(0)
+            window.approveToken(this.state.selectedBuybackToken, staking._address, amount)
         }
-        // handleStake = (e) => {
-        //     let amount = this.state.depositAmount
-        //     amount = new BigNumber(amount).times(1e18).toFixed(0)
-        //     let referrer = this.props.referrer
-        //
-        //     if (referrer) {
-        //         referrer = String(referrer).trim().toLowerCase()
-        //     }
-        //
-        //     if (!window.web3.utils.isAddress(referrer)) {
-        //         referrer = window.config.ZERO_ADDRESS
-        //     }
-        //     staking.stake(amount, referrer)
-        // }
 
         handleStake = async (e) => {
             e.preventDefault()
 
+            let selectedBuybackToken = this.state.selectedBuybackToken
             let amount = this.state.depositAmount
-            amount = new BigNumber(amount).times(1e18).toFixed(0)
-            let referrer = this.props.referrer
 
-            if (referrer) {
-                referrer = String(referrer).trim().toLowerCase()
-            }
+            amount = new BigNumber(amount).times(10**this.state.selectedTokenDecimals).toFixed(0)
 
-            if (!window.web3.utils.isAddress(referrer)) {
-                referrer = window.config.ZERO_ADDRESS
-            }
+            let _75Percent = new BigNumber(amount).times(75e2).div(100e2).toFixed(0)
+            let _25Percent = new BigNumber(amount).minus(_75Percent).toFixed(0)
 
-            let referralFee = new BigNumber(amount).times(500).div(1e4).toFixed(0)
-            //console.log({referralFee})
-            //let selectedBuybackToken = this.state.selectedBuybackToken
+            let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds).toFixed(0)
+            let router = await window.getPancakeswapRouterContract()
+            let WETH = await router.methods.WETH().call()
+            let platformTokenAddress = window.config.reward_token_address2
+            let platformTokenAddress_25Percent = window.config.reward_token_address
 
-            let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds)
+            let path = [...new Set([selectedBuybackToken, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
+            let _amountOutMin_75Percent = await router.methods.getAmountsOut(_75Percent, path).call()
+            _amountOutMin_75Percent = _amountOutMin_75Percent[_amountOutMin_75Percent.length - 1]
+            _amountOutMin_75Percent = new BigNumber(_amountOutMin_75Percent).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
+
+            let path_25Percent = [...new Set([selectedBuybackToken, WETH, platformTokenAddress_25Percent].map(a => a.toLowerCase()))]
+            let _amountOutMin_25Percent = await router.methods.getAmountsOut(_25Percent, path_25Percent).call()
+            _amountOutMin_25Percent = _amountOutMin_25Percent[_amountOutMin_25Percent.length - 1]
+            _amountOutMin_25Percent = new BigNumber(_amountOutMin_25Percent).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
+
+            let _amountOutMin_stakingReferralFee = new BigNumber(0).toFixed(0)
+
+            console.log({amount, selectedBuybackToken, _amountOutMin_75Percent, _amountOutMin_25Percent, _amountOutMin_stakingReferralFee, deadline})
+
+            staking.stake(amount, selectedBuybackToken, _amountOutMin_75Percent, _amountOutMin_25Percent, _amountOutMin_stakingReferralFee, deadline)
+        }
+
+        handleWithdraw = async (e) => {
+            e.preventDefault()
+
+            let amountConstant = await constant.depositedTokens(this.state.coinbase)
+            amountConstant = new BigNumber(amountConstant).toFixed(0)
+
+            let amountBuyback = await staking.depositedTokens(this.state.coinbase)
+
             let router = await window.getPancakeswapRouterContract()
             let WETH = await router.methods.WETH().call()
             let platformTokenAddress = window.config.reward_token_address
             let rewardTokenAddress = window.config.reward_token_address2
             let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
-            let _amountOutMin_referralFee = await router.methods.getAmountsOut(referralFee, path).call()
-            //console.log({_amountOutMin_referralFee})
-            _amountOutMin_referralFee = _amountOutMin_referralFee[_amountOutMin_referralFee.length - 1]
-            _amountOutMin_referralFee = new BigNumber(_amountOutMin_referralFee).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
-            referralFee = referralFee - _amountOutMin_referralFee
-            referralFee = referralFee.toString()
-
-            console.log({amount, referrer, referralFee, deadline})
-
-            staking.stake(amount, referrer, referralFee, deadline)
-        }
-
-        handleWithdraw = async (e) => {
-            e.preventDefault()
-            let amount = this.state.withdrawAmount
-            amount = new BigNumber(amount).times(1e18).toFixed(0)
+            let _amountOutMin = await router.methods.getAmountsOut(amountBuyback, path).call()
+            _amountOutMin = _amountOutMin[_amountOutMin.length - 1]
+            _amountOutMin = new BigNumber(_amountOutMin).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
 
             let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds)
 
-            staking.unstake(amount, 0, deadline)
+            // console.log({amountBuyback, amountConstant, _amountOutMin})
+
+            try {
+                constant.unstake(amountConstant, 0, deadline)
+            }  catch(e) {
+                console.error(e)
+                return;
+            }
+
+            try {
+                staking.unstake(amountBuyback, _amountOutMin, deadline)
+            }  catch(e) {
+                console.error(e)
+                return;
+            }
         }
 
         handleClaimDivs = async (e) => {
@@ -220,19 +234,79 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
             _amountOutMin = _amountOutMin[_amountOutMin.length - 1]
             _amountOutMin = new BigNumber(_amountOutMin).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
 
-            let referralFee = new BigNumber(_amountOutMin).times(500).div(1e4).toFixed(0)
+            let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds)
+
+            //console.log({_amountOutMin, deadline})
+            amount = await constant.getTotalPendingDivs(address)
+            let _amountOutMinConstant = await router.methods.getAmountsOut(amount, path).call()
+            _amountOutMinConstant = _amountOutMinConstant[_amountOutMinConstant.length - 1]
+            _amountOutMinConstant = new BigNumber(_amountOutMinConstant).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
+
+            let referralFee = new BigNumber(_amountOutMinConstant).times(500).div(1e4).toFixed(0)
             referralFee = referralFee.toString()
+
+            try {
+                constant.claim(referralFee, _amountOutMinConstant, deadline)
+            }  catch(e) {
+                console.error(e)
+                return;
+            }
+
+            try {
+                staking.claim(_amountOutMin, deadline)
+            }  catch(e) {
+                console.error(e)
+                return;
+            }
+
+        }
+
+        handleReinvest = async (e) => {
+            e.preventDefault()
+
+            //Calculate for Constant Staking
+            let address = this.state.coinbase
+            let amount = await constant.getTotalPendingDivs(address)
+
+            let router = await window.getPancakeswapRouterContract()
+            let WETH = await router.methods.WETH().call()
+            let platformTokenAddress = window.config.reward_token_address
+            let rewardTokenAddress = window.config.reward_token_address2
+            let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
+            let _amountOutMin = await router.methods.getAmountsOut(amount, path).call()
+            _amountOutMin = _amountOutMin[_amountOutMin.length - 1]
+            _amountOutMin = new BigNumber(_amountOutMin).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
+
+            /* We don't have any referrer here because it is Staked from Buyback */
+
+            // let referralFee = new BigNumber(_amountOutMin).times(500).div(1e4).toFixed(0)
+            // referralFee = referralFee.toString()
+
+            // _amountOutMin = _amountOutMin - referralFee
+            // _amountOutMin = _amountOutMin.toString()
 
             let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds)
 
-            console.log({referralFee, _amountOutMin, deadline})
+            console.log({_amountOutMin, deadline})
 
-            staking.claim(referralFee, _amountOutMin, deadline)
+            try {
+                constant.reInvest(0, _amountOutMin, deadline)
+            }  catch(e) {
+                console.error(e)
+                return;
+            }
+
+            try {
+                staking.reInvest()
+            }  catch(e) {
+                console.error(e)
+                return;
+            }
         }
 
         handleSetMaxDeposit = (e) => {
             e.preventDefault()
-            this.setState({ depositAmount: new BigNumber(this.state.token_balance).div(1e18).toFixed(18) })
+            this.setState({ depositAmount: new BigNumber(this.state.selectedTokenBalance).div(10**this.state.selectedTokenDecimals).toFixed(this.state.selectedTokenDecimals) })
         }
         handleSetMaxWithdraw = (e) => {
             e.preventDefault()
@@ -246,20 +320,53 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
         refreshBalance = async () => {
             let coinbase = window.coinbase_address
             this.setState({ coinbase })
+
             try {
+                let amount = new BigNumber(1000000000000000000).toFixed(0)
+                let router = await window.getPancakeswapRouterContract()
+                let WETH = await router.methods.WETH().call()
+                let platformTokenAddress = window.config.BUSD_address
+                let rewardTokenAddress = window.config.reward_token_address2
+                let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
+                let _amountOutMin = await router.methods.getAmountsOut(amount, path).call()
+                _amountOutMin = _amountOutMin[_amountOutMin.length - 1]
+                _amountOutMin = new BigNumber(_amountOutMin).div(1e18).toFixed(18)
+
+                //buyback
                 let _bal = reward_token.balanceOf(coinbase)
                 let _pDivs = staking.getTotalPendingDivs(coinbase)
                 let _tEarned = staking.totalEarnedTokens(coinbase)
                 let _stakingTime = staking.stakingTime(coinbase)
                 let _dTokens = staking.depositedTokens(coinbase)
+                let _dTokensBuyback = staking.depositedTokens(coinbase)
                 let _lClaimTime = staking.lastClaimedTime(coinbase)
-                let _tvl = reward_token.balanceOf(staking._address)
-                let _rFeeEarned = staking.totalReferralFeeEarned(coinbase)
+                let _tvl = reward_token_idyp.balanceOf(staking._address)
                 let tStakers = staking.getNumberOfHolders()
+                //constant Staking
+                let _balConstant = constant.depositedTokens(coinbase) /* Balance of DYP on Constant Staking */
+                let _pDivsConstant = constant.getTotalPendingDivs(coinbase) /* Pending Divs is iDYP */
+                let _tvlConstant = reward_token.balanceOf(constant._address) /* TVL of DYP on Constant Staking */
+                let _tEarnedConstant = constant.totalEarnedTokens(coinbase)
+
                 let [token_balance, pendingDivs, totalEarnedTokens, stakingTime,
                     depositedTokens, lastClaimedTime, tvl,
-                    referralFeeEarned, total_stakers
-                ] = await Promise.all([_bal, _pDivs, _tEarned, _stakingTime, _dTokens, _lClaimTime, _tvl, _rFeeEarned, tStakers])
+                    total_stakers, price_iDYP,
+                    //constant staking
+                    pendingDivsConstant, token_dyp_balance, tvlConstant, totalEarnedTokensConstant, depositedTokensBuyback
+                ] = await Promise.all([_bal, _pDivs, _tEarned, _stakingTime, _dTokens, _lClaimTime, _tvl, tStakers, _amountOutMin,
+                    _pDivsConstant, _balConstant, _tvlConstant, _tEarnedConstant, _dTokensBuyback])
+
+                pendingDivs = new BigNumber(pendingDivs).plus(pendingDivsConstant).times(_amountOutMin).toFixed(18)
+                depositedTokens = new BigNumber(depositedTokens).times(_amountOutMin).toFixed(18)
+                totalEarnedTokens = new BigNumber(totalEarnedTokens).plus(totalEarnedTokensConstant).times(_amountOutMin).toFixed(18)
+                tvl =  new BigNumber(tvl).times(_amountOutMin).toFixed(18)
+
+                //iDYP + DYP
+                let dypValue = new BigNumber(token_dyp_balance).times(this.state.usdPerToken).toFixed(18)
+                let tvlValue = new BigNumber(tvlConstant).times(this.state.usdPerToken).toFixed(18)
+                depositedTokens = new BigNumber(depositedTokens).plus(dypValue).toFixed(18)
+                tvl = new BigNumber(tvl).plus(tvlValue).toFixed(18)
+                //console.log({tvl})
 
                 this.setState({
                     token_balance,
@@ -269,8 +376,15 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                     depositedTokens,
                     lastClaimedTime,
                     tvl,
-                    referralFeeEarned,
                     total_stakers,
+                    price_iDYP,
+                    //constant staking
+                    pendingDivsConstant,
+                    token_dyp_balance,
+                    tvlConstant,
+                    totalEarnedTokensConstant,
+                    //for Buyback Only depositedTokens unconverted
+                    depositedTokensBuyback
                 })
                 let stakingOwner = await staking.owner()
                 this.setState({ stakingOwner })
@@ -278,6 +392,8 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                 console.error(e)
             }
 
+            //Set Value $ of iDYP & DYP for Withdraw Input
+            this.setState({ withdrawAmount: new BigNumber(this.state.depositedTokens).div(1e18).toFixed(2) })
 
             staking.LOCKUP_TIME().then((cliffTime) => {
                 this.setState({ cliffTime: Number(cliffTime) })
@@ -294,6 +410,13 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
             let usdPerToken = await window.getPrice('defi-yield-protocol')
             this.setState({usdPerToken})
 
+            try {
+                let selectedTokenBalance = await window.getTokenHolderBalance(this.state.selectedBuybackToken, this.state.coinbase)
+                this.setState({selectedTokenBalance})
+            } catch (e) {
+                console.warn(e)
+            }
+
         }
 
         getUsdPerETH = () => {
@@ -308,57 +431,27 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
             return ( approxDeposit * APY / 100 / 365 * approxDays)
         }
 
-        getReferralLink = () => {
-            return window.location.origin + window.location.pathname + '?r=' + this.state.coinbase
-        }
-
-        handleReinvest = async (e) => {
-            e.preventDefault()
-
-            let address = this.state.coinbase
-            let amount = await staking.getTotalPendingDivs(address)
-
-            let router = await window.getPancakeswapRouterContract()
-            let WETH = await router.methods.WETH().call()
-            let platformTokenAddress = window.config.reward_token_address
-            let rewardTokenAddress = window.config.reward_token_address2
-            let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
-            let _amountOutMin = await router.methods.getAmountsOut(amount, path).call()
-            _amountOutMin = _amountOutMin[_amountOutMin.length - 1]
-            _amountOutMin = new BigNumber(_amountOutMin).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
-
-            let referralFee = new BigNumber(_amountOutMin).times(500).div(1e4).toFixed(0)
-            referralFee = referralFee.toString()
-
-            // _amountOutMin = _amountOutMin - referralFee
-            // _amountOutMin = _amountOutMin.toString()
-
-            let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds)
-
-            console.log({referralFee, _amountOutMin, deadline})
-
-            staking.reInvest(0, _amountOutMin, deadline)
-        }
+        // getReferralLink = () => {
+        //     return window.location.origin + window.location.pathname + '?r=' + this.state.coinbase
+        // }
 
         render() {
 
-            let {disburseDuration, contractDeployTime, cliffTime, referralFeeEarned, token_balance, pendingDivs, totalEarnedTokens, depositedTokens, stakingTime, coinbase, tvl } = this.state
+            let {disburseDuration, contractDeployTime,  cliffTime, token_balance, pendingDivs, totalEarnedTokens, depositedTokens, stakingTime, coinbase, tvl } = this.state
 
 
             token_balance = new BigNumber(token_balance ).div(1e18).toString(10)
-            token_balance = getFormattedNumber(token_balance, 6)
+            token_balance = getFormattedNumber(token_balance, 2)
 
 
             pendingDivs = new BigNumber(pendingDivs).div(10 ** TOKEN_DECIMALS).toString(10)
             pendingDivs = getFormattedNumber(pendingDivs, 6)
 
             totalEarnedTokens = new BigNumber(totalEarnedTokens).div(10 ** TOKEN_DECIMALS).toString(10)
-            totalEarnedTokens = getFormattedNumber(totalEarnedTokens, 6)
-
-            referralFeeEarned = getFormattedNumber(referralFeeEarned/1e18, 6)
+            totalEarnedTokens = getFormattedNumber(totalEarnedTokens, 2)
 
             depositedTokens = new BigNumber(depositedTokens).div(1e18).toString(10)
-            depositedTokens = getFormattedNumber(depositedTokens, 6)
+            depositedTokens = getFormattedNumber(depositedTokens, 2)
 
             tvl = new BigNumber(tvl ).div(1e18).toString(10)
             tvl = getFormattedNumber(tvl, 6)
@@ -390,7 +483,8 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
             }
 
             let total_stakers = this.state.total_stakers
-            let tvl_usd = this.state.tvl / 1e18 * this.state.usdPerToken
+            // let tvl_usd = this.state.tvl / 1e18 * this.state.usdPerToken
+            let tvl_usd = this.state.tvl / 1e18
 
             tvl_usd = getFormattedNumber(tvl_usd, 2)
             total_stakers = getFormattedNumber(total_stakers, 0)
@@ -414,55 +508,47 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                                                     <form onSubmit={e => e.preventDefault()}>
                                                         <div className='form-group'>
                                                             <div className='row'>
-                                                                <label htmlFor='deposit-amount'
-                                                                       className='col-md-8 d-block text-left'>DEPOSIT</label>
-                                                                <div className='col-4'>
-                                                                    <a target='_blank' rel='noopener noreferrer'
-                                                                       href={`https://pancakeswap.finance/swap?inputCurrency=${liquidity}&outputCurrency=0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17`}>
-                                                                        <button
-                                                                            className='btn btn-sm btn-block btn-primary l-outline-btn'
-                                                                            type='button'>
-                                                                            GET DYP
-                                                                        </button>
-                                                                    </a>
-                                                                </div>
+                                                                <label htmlFor='deposit-amount' className='col-md-8 d-block text-left'>DEPOSIT</label>
+                                                                {/*<div className='col-4'>*/}
+                                                                {/*    <a target='_blank' rel='noopener noreferrer' href={`https://app.uniswap.org/#/swap?inputCurrency=${liquidity}&outputCurrency=0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17`} >*/}
+                                                                {/*        <button className='btn btn-sm btn-block btn-primary l-outline-btn' type='button'>*/}
+                                                                {/*            GET DYP*/}
+                                                                {/*        </button>*/}
+                                                                {/*    </a>*/}
+                                                                {/*</div>*/}
+                                                            </div>
+                                                            <div>
+                                                                <p>Balance: {getFormattedNumber(this.state.selectedTokenBalance/10**this.state.selectedTokenDecimals, 6)} {this.state.selectedTokenSymbol}</p>
+                                                                <select value={this.state.selectedBuybackToken} onChange={e => this.handleSelectedTokenChange(e.target.value)} className='form-control' className='form-control'>
+                                                                    {Object.keys(window.buyback_tokens).map((t) => <option key={t} value={t}> {window.buyback_tokens[t].symbol} </option>)}
+                                                                </select>
+                                                                <br />
                                                             </div>
                                                             <div className='input-group '>
-                                                                <input
-                                                                    value={Number(this.state.depositAmount) > 0 ? this.state.depositAmount : this.state.depositAmount}
-                                                                    onChange={e => this.setState({depositAmount: e.target.value})}
-                                                                    className='form-control left-radius' placeholder='0'
-                                                                    type='text'/>
+
+                                                                <input value={Number(this.state.depositAmount) > 0 ? this.state.depositAmount  : this.state.depositAmount} onChange={e => this.setState({ depositAmount: e.target.value })} className='form-control left-radius' placeholder='0' type='text' />
                                                                 <div className='input-group-append'>
-                                                                    <button
-                                                                        className='btn  btn-primary right-radius btn-max l-light-btn'
-                                                                        style={{cursor: 'pointer'}}
-                                                                        onClick={this.handleSetMaxDeposit}>
+                                                                    <button className='btn  btn-primary right-radius btn-max l-light-btn' style={{ cursor: 'pointer' }} onClick={this.handleSetMaxDeposit}>
                                                                         MAX
                                                                     </button>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div className='row'>
-                                                            <div style={{paddingRight: '0.3rem'}} className='col-6'>
-                                                                <button onClick={this.handleApprove}
-                                                                        className='btn  btn-block btn-primary '
-                                                                        type='button'>
+                                                            <div style={{ paddingRight: '0.3rem' }} className='col-6'>
+                                                                <button onClick={this.handleApprove} className='btn  btn-block btn-primary ' type='button'>
                                                                     APPROVE
                                                                 </button>
                                                             </div>
-                                                            <div style={{paddingLeft: '0.3rem'}} className='col-6'>
-                                                                <button onClick={this.handleStake}
-                                                                        className='btn  btn-block btn-primary l-outline-btn'
-                                                                        type='submit'>
+                                                            <div style={{ paddingLeft: '0.3rem' }} className='col-6'>
+                                                                <button onClick={this.handleStake} className='btn  btn-block btn-primary l-outline-btn' type='submit'>
                                                                     DEPOSIT
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <p style={{fontSize: '.8rem'}}
-                                                           className='mt-1 text-center mb-0 text-muted mt-3'>
+                                                        <p style={{ fontSize: '.8rem' }} className='mt-1 text-center mb-0 text-muted mt-3'>
                                                             {/* Some info text here.<br /> */}
-                                                            Please approve before staking. 0% fee for deposit.
+                                                            Please approve before deposit. 0% fee for deposit.
                                                         </p>
 
                                                     </form>
@@ -489,12 +575,12 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                                                     <div className='form-group'>
                                                         <label htmlFor='deposit-amount' className='d-block text-left'>WITHDRAW</label>
                                                         <div className='input-group '>
-                                                            <input value={this.state.withdrawAmount} onChange={e => this.setState({ withdrawAmount:e.target.value })} className='form-control left-radius' placeholder='0' type='text' />
-                                                            <div className='input-group-append'>
-                                                                <button className='btn  btn-primary right-radius btn-max l-light-btn' style={{ cursor: 'pointer' }} onClick={this.handleSetMaxWithdraw}>
-                                                                    MAX
-                                                                </button>
-                                                            </div>
+                                                            <input value={`$${this.state.withdrawAmount}`} onChange={e => this.setState({ withdrawAmount:e.target.value })} className='form-control left-radius' placeholder='0' type='text' disabled />
+                                                            {/*<div className='input-group-append'>*/}
+                                                            {/*    <button className='btn  btn-primary right-radius btn-max l-light-btn' style={{ cursor: 'pointer' }} onClick={this.handleSetMaxWithdraw}>*/}
+                                                            {/*        MAX*/}
+                                                            {/*    </button>*/}
+                                                            {/*</div>*/}
                                                         </div>
                                                     </div>
                                                     <button title={canWithdraw ? '' : `You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
@@ -514,7 +600,7 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                                                         <p className='form-control  text-right' style={{ border: 'none', marginBottom: 0, paddingLeft: 0, background: 'transparent', color: '#222' }}><span style={{ fontSize: '1.2rem', color: 'rgb(255, 0, 122)' }}>{pendingDivsEth}</span> <small className='text-bold'>WETH</small></p>
                                                     </div> */}
                                                             <div className='col-md-12'>
-                                                                <p className='form-control  text-right' style={{ border: 'none', marginBottom: 0, paddingLeft: 0, background: 'transparent', color: 'var(--text-color)' }}><span style={{ fontSize: '1.2rem', color: 'var(--text-color)' }}>{pendingDivs}</span> <small className='text-bold'>DYP</small></p>
+                                                                <p className='form-control  text-right' style={{ border: 'none', marginBottom: 0, paddingLeft: 0, background: 'transparent', color: 'var(--text-color)' }}><span style={{ fontSize: '1.2rem', color: 'var(--text-color)' }}>${pendingDivs}</span> <small className='text-bold'>USD</small></p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -534,29 +620,29 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                                                 </form>
                                             </div>
                                         </div>
-                                        <div className='col-12'>
-                                            <div className='l-box'>
-                                                <form onSubmit={(e) => e.preventDefault()}>
-                                                    <div className='form-group'>
-                                                        <label htmlFor='deposit-amount' className='d-block text-left'>RETURN CALCULATOR</label>
-                                                        <div className='row'>
-                                                            <div className='col'>
-                                                                <label style={{ fontSize: '1rem', fontWeight: 'normal' }}>DYP to Deposit</label>
-                                                                <input className='form-control ' value={ this.state.approxDeposit} onChange={e => this.setState({ approxDeposit: e.target.value })} placeholder='0' type='text' />
-                                                            </div>
-                                                            <div className='col'>
-                                                                <label style={{ fontSize: '1rem', fontWeight: 'normal' }}>Days</label>
-                                                                <input className='form-control ' value={this.state.approxDays} onChange={e => this.setState({ approxDays: e.target.value })} type='text' />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <p>
-                                                        Approx. {getFormattedNumber(this.getApproxReturn(), 6)} DYP
-                                                    </p>
-                                                    {/*<p style={{ fontSize: '.8rem' }} className='mt-1 text-center'>Approx. Value Not Considering Staking / Unstakig Fees.</p>*/}
-                                                </form>
-                                            </div>
-                                        </div>
+                                        {/*<div className='col-12'>*/}
+                                        {/*    <div className='l-box'>*/}
+                                        {/*        <form onSubmit={(e) => e.preventDefault()}>*/}
+                                        {/*            <div className='form-group'>*/}
+                                        {/*                <label htmlFor='deposit-amount' className='d-block text-left'>RETURN CALCULATOR</label>*/}
+                                        {/*                <div className='row'>*/}
+                                        {/*                    <div className='col'>*/}
+                                        {/*                        <label style={{ fontSize: '1rem', fontWeight: 'normal' }}>DYP to Deposit</label>*/}
+                                        {/*                        <input className='form-control ' value={ this.state.approxDeposit} onChange={e => this.setState({ approxDeposit: e.target.value })} placeholder='0' type='text' />*/}
+                                        {/*                    </div>*/}
+                                        {/*                    <div className='col'>*/}
+                                        {/*                        <label style={{ fontSize: '1rem', fontWeight: 'normal' }}>Days</label>*/}
+                                        {/*                        <input className='form-control ' value={this.state.approxDays} onChange={e => this.setState({ approxDays: e.target.value })} type='text' />*/}
+                                        {/*                    </div>*/}
+                                        {/*                </div>*/}
+                                        {/*            </div>*/}
+                                        {/*            <p>*/}
+                                        {/*                Approx. {getFormattedNumber(this.getApproxReturn(), 6)} DYP*/}
+                                        {/*            </p>*/}
+                                        {/*            /!*<p style={{ fontSize: '.8rem' }} className='mt-1 text-center'>Approx. Value Not Considering Staking / Unstakig Fees.</p>*!/*/}
+                                        {/*        </form>*/}
+                                        {/*    </div>*/}
+                                        {/*</div>*/}
                                     </div>
                                 </div>
                                 <div className='col-lg-6'>
@@ -599,22 +685,19 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                                                 </tr>
 
                                                 <tr>
-                                                    <th>MY DYP Deposit</th>
-                                                    <td className="text-right"><strong>{depositedTokens}</strong> <small>{token_symbol}</small></td>
+                                                    <th>My Deposit Value</th>
+                                                    <td className="text-right"><strong>${depositedTokens}</strong> <small>USD</small></td>
                                                 </tr>
+                                                {/*<tr>*/}
+                                                {/*    <th>Total DYP Locked</th>*/}
+                                                {/*    <td className="text-right"><strong>{tvl}</strong> <small>{token_symbol}</small></td>*/}
+                                                {/*</tr>*/}
+
                                                 <tr>
-                                                    <th>Total DYP Locked</th>
-                                                    <td className="text-right"><strong>{tvl}</strong> <small>{token_symbol}</small></td>
+                                                    <th>Total Earned</th>
+                                                    <td className="text-right"><strong>${totalEarnedTokens}</strong> <small>USD</small></td>
                                                 </tr>
 
-                                                {/*<tr>*/}
-                                                {/*    <th>Total Earned DYP</th>*/}
-                                                {/*    <td className="text-right"><strong>{totalEarnedTokens}</strong> <small>DYP</small></td>*/}
-                                                {/*</tr>*/}
-                                                <tr>
-                                                    <th>Referral Fee Earned</th>
-                                                    <td className="text-right"><strong>{referralFeeEarned}</strong> <small>DYP</small></td>
-                                                </tr>
                                                 <tr>
                                                     <th>TVL USD</th>
                                                     <td className="text-right"><strong>${tvl_usd}</strong> <small>USD</small></td>
@@ -630,19 +713,19 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
 
                                                 <tr>
                                                     <td style={{ fontSize: '1rem', paddingTop: '2rem' }} colSpan='2' className='text-center'>
-                                                        <a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/token/${reward_token._address}?a=${coinbase}`}>View Transaction History on BscScan</a> &nbsp; <i style={{ fontSize: '.8rem' }} className='fas fa-external-link-alt'></i>
+                                                        <a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/token/${reward_token._address}?a=${coinbase}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{ fontSize: '.8rem' }} className='fas fa-external-link-alt'></i>
                                                     </td>
                                                 </tr>
-                                                {/*<tr>*/}
-                                                {/*    <td style={{ fontSize: '1rem' }} colSpan='2' className='text-center'>*/}
-                                                {/*    <span className='lp-link'>*/}
-                                                {/*        <NavLink style={{fontSize: '1rem'}} to='/referral-stats'>View Referral Stats</NavLink>*/}
-                                                {/*    </span>*/}
-                                                {/*    </td>*/}
-                                                {/*</tr>*/}
-                                                <tr>
-                                                    <td colSpan='2'>
-                                                        <div><span style={{fontSize: '.8rem'}}>
+                                                {/* <tr>
+                                                <td style={{ fontSize: '1rem' }} colSpan='2' className='text-center'>
+                                                    <span className='lp-link'>
+                                                        <NavLink style={{fontSize: '1rem'}} to='/referral-stats'>View Referral Stats</NavLink>
+                                                    </span>
+                                                </td>
+                                            </tr> */}
+                                                {/* <tr>
+                                                <td colSpan='2'>
+                                                    <div><span style={{fontSize: '.8rem'}}>
 
                                                         <span style={{ cursor: "pointer" }}>
                                                             <Clipboard
@@ -660,8 +743,8 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
 
 
                                                         <br /><a className='text-muted small' href={this.getReferralLink()}> {this.getReferralLink()} </a></span></div>
-                                                    </td>
-                                                </tr>
+                                                </td>
+                                            </tr> */}
                                                 <tr>
 
                                                 </tr>

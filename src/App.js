@@ -7,6 +7,9 @@ import initBuybackStaking from './components/buy-back-staking'
 import initVesting from './components/vesting'
 import initVestingStaking from "./components/vesting-staking"
 
+import initConstantStaking from './components/constant-staking'
+import initBuybackStakingNew from './components/buy-back-staking-new'
+
 import StakingList from './components/staking-list'
 import StakingListEth from './components/staking-list-eth.js'
 import StakingListWbtc from './components/staking-list-wbtc.js'
@@ -48,8 +51,15 @@ const StakingUsdc90 = initStaking({token: window.token_usdc_90, staking: window.
 
 
 const eth_address = 'ETH'
+const bnb_address = 'BNB'
 const Vesting = initVesting({ staking: window.constant_staking_30, apr: 0, liquidity: eth_address, expiration_time: '16 February 2022' })
 const VestingStaking = initVestingStaking({ staking: window.constant_staking_60, apr: 0, liquidity: eth_address, expiration_time: '16 February 2022' })
+
+const ConstantStaking30 = initConstantStaking({ staking: window.constant_staking_new1, apr: 25, liquidity: bnb_address, expiration_time: '17 November 2022' })
+const ConstantStaking90 = initConstantStaking({ staking: window.constant_staking_new2, apr: 50, liquidity: bnb_address, expiration_time: '17 November 2022' })
+
+const BuybackStaking1 = initBuybackStakingNew({ staking: window.buyback_staking1_1, constant: window.constant_staking_new3, apr: 30, expiration_time: '17 November 2021' })
+const BuybackStaking2 = initBuybackStakingNew({ staking: window.buyback_staking1_2, constant: window.constant_staking_new4, apr: 100, expiration_time: '17 November 2021' })
 
 const Modal = ({ handleClose, show, children }) => {
     const showHideClassName = show ? "modal display-block" : "modal display-none";
@@ -304,6 +314,12 @@ render() {
 
       <Route exact path='/vesting' render={props => <Vesting the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
       <Route exact path='/vesting-staking' render={props => <VestingStaking the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
+
+      <Route exact path='/constant-staking-0' render={props => <ConstantStaking30 the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
+      <Route exact path='/constant-staking-90' render={props => <ConstantStaking90 the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
+
+      <Route exact path='/staking-buyback-1' render={props => <BuybackStaking1 the_graph_result={this.state.the_graph_result} {...props} />} />
+      <Route exact path='/staking-buyback-2' render={props => <BuybackStaking2 the_graph_result={this.state.the_graph_result} {...props} />} />
 
       </div>
       <Footer />
