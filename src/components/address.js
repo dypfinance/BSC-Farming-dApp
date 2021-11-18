@@ -7,7 +7,7 @@ export default function Address(props) {
   let id=Math.random().toString(36)
   return (
     <span {...props}>
-      <a rel="noopener noreferrer" target="_blank" href={`${window.config.etherscan_baseURL}/${props.token?"token":"address"}/${props.a}`}>{props.a.slice(0,8)+'...'+props.a.slice(props.a.length-5)}</a>
+      <a style={{fontSize: '16px'}} rel="noopener noreferrer" target="_blank" href={`${window.config.etherscan_baseURL}/${props.token?"token":"address"}/${props.a}`}>{props.a.slice(0,8)+'...'+props.a.slice(props.a.length-5)}</a>
       <Clipboard 
         component="span"
         onSuccess={e => {
