@@ -326,8 +326,8 @@ render() {
       <Route exact path='/vesting' render={props => <Vesting the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
       <Route exact path='/vesting-staking' render={props => <VestingStaking the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
 
-      <Route exact path='/constant-staking-0' render={props => <ConstantStaking30 the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
-      <Route exact path='/constant-staking-90' render={props => <ConstantStaking90 the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
+      <Route exact path='/constant-staking-1' render={props => <ConstantStaking30 the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
+      <Route exact path='/constant-staking-2' render={props => <ConstantStaking90 the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
 
       {/*Buyback New*/}
       <Route exact path='/staking-buyback-1' render={props => <BuybackStaking1 the_graph_result={this.state.the_graph_result} {...props} />} />
