@@ -66,7 +66,11 @@ const BuybackStaking1 = initBuybackStakingNew({ staking: window.buyback_staking1
 const BuybackStaking2 = initBuybackStakingNew({ staking: window.buyback_staking1_2, constant: window.constant_staking_new4, apr: 100, expiration_time: '17 November 2021' })
 
 //Farming New
-const StakingNew0 = initStakingNew({token: window.token_new, staking: window.farming_new_1, constant: window.constant_staking_new5, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2021'})
+const StakingNew1 = initStakingNew({token: window.token_new, staking: window.farming_new_1, constant: window.constant_staking_new5, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2021'})
+const StakingNew2 = initStakingNew({token: window.token_new, staking: window.farming_new_2, constant: window.constant_staking_new6, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2021'})
+const StakingNew3 = initStakingNew({token: window.token_new, staking: window.farming_new_3, constant: window.constant_staking_new7, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2021'})
+const StakingNew4 = initStakingNew({token: window.token_new, staking: window.farming_new_4, constant: window.constant_staking_new8, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2021'})
+const StakingNew5 = initStakingNew({token: window.token_new, staking: window.farming_new_5, constant: window.constant_staking_new9, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2021'})
 
 const Modal = ({ handleClose, show, children }) => {
     const showHideClassName = show ? "modal display-block" : "modal display-none";
@@ -330,7 +334,12 @@ render() {
       <Route exact path='/staking-buyback-2' render={props => <BuybackStaking2 the_graph_result={this.state.the_graph_result} {...props} />} />
 
       {/*Farming New*/}
-      <Route exact path='/farming-new' render={props => <StakingNew0 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[0]} {...props} />} />
+      <Route exact path='/farming-new-1' render={props => <StakingNew1 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[0]} {...props} />} />
+      <Route exact path='/farming-new-2' render={props => <StakingNew2 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[1]} {...props} />} />
+      <Route exact path='/farming-new-3' render={props => <StakingNew3 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[2]} {...props} />} />
+      <Route exact path='/farming-new-4' render={props => <StakingNew4 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[3]} {...props} />} />
+      <Route exact path='/farming-new-5' render={props => <StakingNew5 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[4]} {...props} />} />
+
 
       </div>
       <Footer />

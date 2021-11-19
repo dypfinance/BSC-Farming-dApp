@@ -4196,16 +4196,16 @@ window.farming_new_1 = new STAKING("FARMING_NEW_1")
 window.constant_staking_new5 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW5")
 
 window.farming_new_2 = new STAKING("FARMING_NEW_2")
-window.constant_staking_new5 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW6")
+window.constant_staking_new6 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW6")
 
 window.farming_new_3 = new STAKING("FARMING_NEW_3")
-window.constant_staking_new5 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW7")
+window.constant_staking_new7 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW7")
 
 window.farming_new_4 = new STAKING("FARMING_NEW_4")
-window.constant_staking_new5 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW8")
+window.constant_staking_new8 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW8")
 
 window.farming_new_5 = new STAKING("FARMING_NEW_5")
-window.constant_staking_new5 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW9")
+window.constant_staking_new9 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW9")
 
 
 /**
