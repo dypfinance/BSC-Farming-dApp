@@ -138,10 +138,17 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
         componentDidMount() {
             this.refreshBalance()
             window._refreshBalInterval = setInterval(this.refreshBalance, 3000)
+
+            this.getPriceDYP()
         }
 
         componentWillUnmount() {
             clearInterval(window._refreshBalInterval)
+        }
+
+        getPriceDYP = async () => {
+            let usdPerToken = await window.getPrice('defi-yield-protocol')
+            this.setState({usdPerToken})
         }
 
         handleDeposit = (e) => {
@@ -418,18 +425,21 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                 let _tvlConstantDYP = reward_token.balanceOf(constant._address) /* TVL of iDYP on Staking */
                 let _tvliDYP = reward_token_idyp.balanceOf(staking._address) /* TVL of iDYP on Farming */
 
+               let _dTokensDYP = constant.depositedTokens(coinbase)
+
                 let [token_balance,reward_token_balance, pendingDivs, totalEarnedTokens, stakingTime,
                     depositedTokens, lastClaimedTime, tvl,
-                    totalEarnedEth, pendingDivsEth, tvlConstantiDYP, tvlConstantDYP, tvliDYP
+                    totalEarnedEth, pendingDivsEth, tvlConstantiDYP, tvlConstantDYP, tvliDYP, depositedTokensDYP
                 ] = await Promise.all([_bal, _rBal, _pDivs, _tEarned, _stakingTime, _dTokens, _lClaimTime, _tvl,
-                    _tEarnedEth, _pDivsEth, _tvlConstantiDYP, _tvlConstantDYP, _tvliDYP])
+                    _tEarnedEth, _pDivsEth, _tvlConstantiDYP, _tvlConstantDYP, _tvliDYP, _dTokensDYP])
 
 
-                let tvlValueConstantDYP = new BigNumber(tvlConstantDYP).times(this.state.usdPerToken).toFixed(18)
+                let tvlValueConstantDYP = new BigNumber(depositedTokensDYP).times(this.state.usdPerToken).toFixed(18)
                 let tvlValueiDYP = new BigNumber(tvlConstantiDYP).times(_amountOutMin).toFixed(18)
                 let tvlValueiDYPFarming = new BigNumber(tvliDYP).times(_amountOutMin).toFixed(18)
                 let usd_per_lp = lp_data ? lp_data[this.props.lp_id].usd_per_lp : 0
-                let depositedTokensUSD = new BigNumber(depositedTokens).times(usd_per_lp).toFixed(18)
+                let myDepositedLpTokens = new BigNumber(depositedTokens).times(usd_per_lp).toFixed(18)
+                let depositedTokensUSD = new BigNumber(depositedTokens).times(usd_per_lp).plus(tvlValueConstantDYP).toFixed(18)
                 // let tvlUSD = new BigNumber(tvl).times(usd_per_lp).plus(tvlValueiDYP).toFixed(18)
                 let tvlUSD = new BigNumber(tvl).times(usd_per_lp).toFixed(18)
                 let totalValueLocked = new BigNumber(tvlUSD).plus(tvlValueiDYP).plus(tvlValueiDYPFarming).plus(tvlValueConstantDYP).toFixed(18)
@@ -446,9 +456,12 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                     tvl,
                     totalEarnedEth,
                     pendingDivsEth,
+                    myDepositedLpTokens,
                     depositedTokensUSD,
                     tvlUSD,
-                    totalValueLocked
+                    totalValueLocked,
+                    depositedTokensDYP,
+                    tvlConstantDYP /* DYP DEPOSITED ON STAKING */
                 })
                 let stakingOwner = await staking.owner()
                 this.setState({stakingOwner})
@@ -488,9 +501,6 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                 this.setState({ disburseDuration })
             })
 
-            let usdPerToken = await window.getPrice('defi-yield-protocol')
-            this.setState({usdPerToken})
-
             //Set Value $ of iDYP & DYP for Withdraw Input
             this.setState({ withdrawAmount: new BigNumber(this.state.depositedTokensUSD).div(1e18).toFixed(2) })
 
@@ -521,7 +531,10 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
 
         render() {
 
-            let {disburseDuration, contractDeployTime, cliffTime, swapAttemptPeriod, lastSwapExecutionTime, tokensToBeDisbursedOrBurnt, tokensToBeSwapped, wethBalance, pendingDivsEth, totalEarnedEth, token_balance, reward_token_balance, pendingDivs, totalEarnedTokens, depositedTokens, stakingTime, coinbase, tvl} = this.state
+            let {disburseDuration, contractDeployTime, cliffTime, swapAttemptPeriod, lastSwapExecutionTime,
+                tokensToBeDisbursedOrBurnt, tokensToBeSwapped, wethBalance, pendingDivsEth, totalEarnedEth,
+                token_balance, reward_token_balance, pendingDivs, totalEarnedTokens, depositedTokens, stakingTime,
+                coinbase, tvl, depositedTokensDYP, tvlConstantDYP, myDepositedLpTokens} = this.state
 
             let myShare = ((depositedTokens/ tvl)*100).toFixed(2)
             myShare = getFormattedNumber(myShare, 2)
@@ -555,6 +568,15 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
 
             depositedTokens = new BigNumber(this.state.depositedTokensUSD*LP_AMPLIFY_FACTOR).div(1e18).toString(10)
             depositedTokens = getFormattedNumber(depositedTokens, 2)
+
+            myDepositedLpTokens = new BigNumber(this.state.myDepositedLpTokens*LP_AMPLIFY_FACTOR).div(1e18).toString(10)
+            myDepositedLpTokens = getFormattedNumber(myDepositedLpTokens, 2)
+
+            depositedTokensDYP = new BigNumber(this.state.depositedTokensDYP).div(1e18).toString(10)
+            depositedTokensDYP = getFormattedNumber(depositedTokensDYP, 6)
+
+            tvlConstantDYP = new BigNumber(this.state.tvlConstantDYP).div(1e18).toString(10)
+            tvlConstantDYP = getFormattedNumber(tvlConstantDYP, 6)
 
             tvl = new BigNumber(this.state.tvlUSD*LP_AMPLIFY_FACTOR).div(1e18).toString(10)
             tvl = getFormattedNumber(tvl, 2)
@@ -759,12 +781,12 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                     <div className='form-group'>
                                                         <label htmlFor='deposit-amount' className='text-left d-block'>REWARDS</label>
                                                         <div className='form-row'>
-                                                            <div className='col-md-12'>
+                                                            <div className='col-md-6'>
                                                                 <p className='form-control  text-right' style={{border: 'none', marginBottom: 0, paddingLeft: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivsEth}</span> <small className='text-bold'>WBNB</small></p>
                                                             </div>
-                                                            {/*<div className='col-md-6'>*/}
-                                                            {/*    <p className='form-control  text-right' style={{border: 'none', marginBottom: 0, paddingLeft: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivs}</span> <small className='text-bold'>DYP</small></p>*/}
-                                                            {/*</div>*/}
+                                                            <div className='col-md-6'>
+                                                                <p className='form-control  text-right' style={{border: 'none', marginBottom: 0, paddingLeft: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivs}</span> <small className='text-bold'>DYP</small></p>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <button title={claimTitle} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
@@ -872,11 +894,19 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                 </tr>
                                                 <tr>
                                                     <th>MY LP Deposit</th>
-                                                    <td className="text-right"><strong>${depositedTokens}</strong> <small>{lp_symbol}</small></td>
+                                                    <td className="text-right"><strong>${myDepositedLpTokens}</strong> <small>{lp_symbol}</small></td>
                                                 </tr>
                                                 <tr>
                                                     <th>Total LP Deposited</th>
                                                     <td className="text-right"><strong>${tvl}</strong> <small>{lp_symbol}</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>My DYP Deposit</th>
+                                                    <td className="text-right"><strong>{depositedTokensDYP}</strong> <small>DYP</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total DYP Deposited</th>
+                                                    <td className="text-right"><strong>{tvlConstantDYP}</strong> <small>DYP</small></td>
                                                 </tr>
                                                 <tr>
                                                     <th>My Share</th>

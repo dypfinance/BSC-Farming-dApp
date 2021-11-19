@@ -124,6 +124,13 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
         componentDidMount() {
             this.refreshBalance()
             window._refreshBalInterval = setInterval(this.refreshBalance, 3000)
+
+            this.getPriceDYP()
+        }
+
+        getPriceDYP = async () => {
+            let usdPerToken = await window.getPrice('defi-yield-protocol')
+            this.setState({usdPerToken})
         }
 
         componentWillUnmount() {
@@ -316,9 +323,6 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
             staking.REWARD_INTERVAL().then(disburseDuration => {
                 this.setState({ disburseDuration })
             })
-
-            let usdPerToken = await window.getPrice('defi-yield-protocol')
-            this.setState({usdPerToken})
 
         }
 
