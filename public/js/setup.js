@@ -3819,15 +3819,15 @@ class STAKING {
 				let value = 0;
 				console.log(value)
 				let gas = window.config.default_gas_amount
-				try {
-					let estimatedGas = await contract.methods[fn_name](...args).estimateGas({ gas })
-					if (estimatedGas) {
-						gas = Math.min(estimatedGas, gas)
-						//console.log('estimatedgas'+gas)
-					}
-				} catch (e) {
-					console.warn(e)
-				}
+				// try {
+				// 	let estimatedGas = await contract.methods[fn_name](...args).estimateGas({ gas })
+				// 	if (estimatedGas) {
+				// 		gas = Math.min(estimatedGas, gas)
+				// 		//console.log('estimatedgas'+gas)
+				// 	}
+				// } catch (e) {
+				// 	console.warn(e)
+				// }
 				return (await contract.methods[fn_name](...args).send({value, gas, from: await getCoinbase(), gasPrice: window.config.default_gasprice_gwei*1e9}))
 			}
 		})
@@ -3894,15 +3894,15 @@ class BUYBACK_STAKING {
 				let value = 0;
 				console.log(value)
 				let gas = window.config.default_gas_amount
-				try {
-					let estimatedGas = await contract.methods[fn_name](...args).estimateGas({ gas })
-					if (estimatedGas) {
-						gas = Math.min(estimatedGas, gas)
-						console.log('estimatedgas'+gas)
-					}
-				} catch (e) {
-					console.warn(e)
-				}
+				// try {
+				// 	let estimatedGas = await contract.methods[fn_name](...args).estimateGas({ gas })
+				// 	if (estimatedGas) {
+				// 		gas = Math.min(estimatedGas, gas)
+				// 		console.log('estimatedgas'+gas)
+				// 	}
+				// } catch (e) {
+				// 	console.warn(e)
+				// }
 				return (await contract.methods[fn_name](...args).send({ value, gas, from: await getCoinbase(), gasPrice: window.config.default_gasprice_gwei * 1e9 }))
 			}
 		})
@@ -4025,15 +4025,15 @@ class CONSTANT_STAKING_NEW {
 				let value = 0;
 				console.log(value)
 				let gas = window.config.default_gas_amount
-				try {
-					let estimatedGas = await contract.methods[fn_name](...args).estimateGas({ gas })
-					if (estimatedGas) {
-						gas = Math.min(estimatedGas, gas)
-						console.log('estimatedgas'+gas)
-					}
-				} catch (e) {
-					console.warn(e)
-				}
+				// try {
+				// 	let estimatedGas = await contract.methods[fn_name](...args).estimateGas({ gas })
+				// 	if (estimatedGas) {
+				// 		gas = Math.min(estimatedGas, gas)
+				// 		console.log('estimatedgas'+gas)
+				// 	}
+				// } catch (e) {
+				// 	console.warn(e)
+				// }
 				return (await contract.methods[fn_name](...args).send({ value, gas, from: await getCoinbase(), gasPrice: window.config.default_gasprice_gwei * 1e9 }))
 			}
 		})
