@@ -9,7 +9,7 @@ import Boxes from './boxes'
 
 export default function initStaking({ staking, apr, liquidity='ETH', lock, expiration_time }) {
 
-    let { reward_token, BigNumber, alertify } = window
+    let { reward_token, BigNumber, alertify, reward_token_idyp } = window
     let token_symbol = 'DYP'
 
     // token, staking
@@ -246,7 +246,21 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
         refreshBalance = async () => {
             let coinbase = window.coinbase_address
             this.setState({ coinbase })
+
+            let lp_data = this.props.the_graph_result.token_data
+            //console.log({lp_data})
+
             try {
+                let amount = new BigNumber(1000000000000000000).toFixed(0)
+                let router = await window.getPancakeswapRouterContract()
+                let WETH = await router.methods.WETH().call()
+                let platformTokenAddress = window.config.BUSD_address
+                let rewardTokenAddress = window.config.reward_token_address2
+                let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
+                let _amountOutMin = await router.methods.getAmountsOut(amount, path).call()
+                _amountOutMin = _amountOutMin[_amountOutMin.length - 1]
+                _amountOutMin = new BigNumber(_amountOutMin).div(1e18).toFixed(18)
+
                 let _bal = reward_token.balanceOf(coinbase)
                 let _pDivs = staking.getTotalPendingDivs(coinbase)
                 let _tEarned = staking.totalEarnedTokens(coinbase)
@@ -256,10 +270,21 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                 let _tvl = reward_token.balanceOf(staking._address)
                 let _rFeeEarned = staking.totalReferralFeeEarned(coinbase)
                 let tStakers = staking.getNumberOfHolders()
+
+                //Take iDYP Balance on Staking
+                let _tvlConstantiDYP = reward_token_idyp.balanceOf(staking._address) /* TVL of iDYP on Staking */
+
                 let [token_balance, pendingDivs, totalEarnedTokens, stakingTime,
                     depositedTokens, lastClaimedTime, tvl,
-                    referralFeeEarned, total_stakers
-                ] = await Promise.all([_bal, _pDivs, _tEarned, _stakingTime, _dTokens, _lClaimTime, _tvl, _rFeeEarned, tStakers])
+                    referralFeeEarned, total_stakers, tvlConstantiDYP
+                ] = await Promise.all([_bal, _pDivs, _tEarned, _stakingTime, _dTokens, _lClaimTime, _tvl, _rFeeEarned, tStakers, _tvlConstantiDYP])
+
+                //console.log({tvl, tvlConstantiDYP, _amountOutMin})
+
+                let usdValueiDYP = new BigNumber(tvlConstantiDYP).times(_amountOutMin).toFixed(18)
+                let usd_per_lp = lp_data ? lp_data[window.reward_token["_address"]].token_price_usd : 0
+                let tvlUSD = new BigNumber(tvl).times(usd_per_lp).plus(usdValueiDYP).toFixed(18)
+                //console.log({tvlUSD})
 
                 this.setState({
                     token_balance,
@@ -271,6 +296,7 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                     tvl,
                     referralFeeEarned,
                     total_stakers,
+                    tvlUSD
                 })
                 let stakingOwner = await staking.owner()
                 this.setState({ stakingOwner })
@@ -390,7 +416,8 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
             }
 
             let total_stakers = this.state.total_stakers
-            let tvl_usd = this.state.tvl / 1e18 * this.state.usdPerToken
+            //let tvl_usd = this.state.tvl / 1e18 * this.state.usdPerToken
+            let tvl_usd = this.state.tvlUSD / 1e18
 
             tvl_usd = getFormattedNumber(tvl_usd, 2)
             total_stakers = getFormattedNumber(total_stakers, 0)

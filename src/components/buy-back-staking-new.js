@@ -346,15 +346,16 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
                 let _balConstant = constant.depositedTokens(coinbase) /* Balance of DYP on Constant Staking */
                 let _pDivsConstant = constant.getTotalPendingDivs(coinbase) /* Pending Divs is iDYP */
                 let _tvlConstant = reward_token.balanceOf(constant._address) /* TVL of DYP on Constant Staking */
+                let _tvlConstantiDYP = reward_token_idyp.balanceOf(constant._address) /* TVL of iDYP on Constant Staking */
                 let _tEarnedConstant = constant.totalEarnedTokens(coinbase)
 
                 let [token_balance, pendingDivs, totalEarnedTokens, stakingTime,
                     depositedTokens, lastClaimedTime, tvl,
                     total_stakers, price_iDYP,
                     //constant staking
-                    pendingDivsConstant, token_dyp_balance, tvlConstant, totalEarnedTokensConstant, depositedTokensBuyback
+                    pendingDivsConstant, token_dyp_balance, tvlConstant, tvlConstantiDYP, totalEarnedTokensConstant, depositedTokensBuyback
                 ] = await Promise.all([_bal, _pDivs, _tEarned, _stakingTime, _dTokens, _lClaimTime, _tvl, tStakers, _amountOutMin,
-                    _pDivsConstant, _balConstant, _tvlConstant, _tEarnedConstant, _dTokensBuyback])
+                    _pDivsConstant, _balConstant, _tvlConstant, _tvlConstantiDYP, _tEarnedConstant, _dTokensBuyback])
 
                 pendingDivs = new BigNumber(pendingDivs).plus(pendingDivsConstant).times(_amountOutMin).toFixed(18)
                 depositedTokens = new BigNumber(depositedTokens).times(_amountOutMin).toFixed(18)
@@ -364,9 +365,11 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
                 //iDYP + DYP
                 let dypValue = new BigNumber(token_dyp_balance).times(this.state.usdPerToken).toFixed(18)
                 let tvlValue = new BigNumber(tvlConstant).times(this.state.usdPerToken).toFixed(18)
+                let tvlValueiDYP = new BigNumber(tvlConstantiDYP).times(_amountOutMin).toFixed(18)
+
                 depositedTokens = new BigNumber(depositedTokens).plus(dypValue).toFixed(18)
-                tvl = new BigNumber(tvl).plus(tvlValue).toFixed(18)
-                //console.log({tvl})
+                tvl = new BigNumber(tvl).plus(tvlValue).plus(tvlValueiDYP).toFixed(18)
+
 
                 this.setState({
                     token_balance,

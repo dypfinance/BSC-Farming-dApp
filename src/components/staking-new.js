@@ -6,7 +6,7 @@ import Boxes from './boxes'
 
 export default function initStakingNew({token, staking, constant, liquidity, lp_symbol, reward, lock, rebase_factor, expiration_time}) {
 
-    let {reward_token, BigNumber, alertify} = window
+    let {reward_token, BigNumber, alertify, reward_token_idyp} = window
 
     // token, staking
 
@@ -74,6 +74,8 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                 totalEarnedEth: '',
                 pendingDivsEth: '',
                 wethBalance: '',
+
+                usdPerToken: 0,
 
                 tokensToBeSwapped: '',
                 tokensToBeDisbursedOrBurnt: '',
@@ -390,6 +392,16 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             let lp_data = this.props.the_graph_result.lp_data
 
             try {
+                let amount = new BigNumber(1000000000000000000).toFixed(0)
+                let router = await window.getPancakeswapRouterContract()
+                let WETH = await router.methods.WETH().call()
+                let platformTokenAddress = window.config.BUSD_address
+                let rewardTokenAddress = window.config.reward_token_address2
+                let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
+                let _amountOutMin = await router.methods.getAmountsOut(amount, path).call()
+                _amountOutMin = _amountOutMin[_amountOutMin.length - 1]
+                _amountOutMin = new BigNumber(_amountOutMin).div(1e18).toFixed(18)
+
                 let _bal = token.balanceOf(coinbase)
                 let _rBal = reward_token.balanceOf(coinbase)
                 let _pDivs = staking.getPendingDivs(coinbase)
@@ -400,15 +412,28 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                 let _dTokens = staking.depositedTokens(coinbase)
                 let _lClaimTime = staking.lastClaimedTime(coinbase)
                 let _tvl = token.balanceOf(staking._address)
+
+                //Take iDYP Balance on Staking & Farming
+                let _tvlConstantiDYP = reward_token_idyp.balanceOf(constant._address) /* TVL of iDYP on Staking */
+                let _tvlConstantDYP = reward_token.balanceOf(constant._address) /* TVL of iDYP on Staking */
+                let _tvliDYP = reward_token_idyp.balanceOf(staking._address) /* TVL of iDYP on Farming */
+
                 let [token_balance,reward_token_balance, pendingDivs, totalEarnedTokens, stakingTime,
                     depositedTokens, lastClaimedTime, tvl,
-                    totalEarnedEth, pendingDivsEth
+                    totalEarnedEth, pendingDivsEth, tvlConstantiDYP, tvlConstantDYP, tvliDYP
                 ] = await Promise.all([_bal, _rBal, _pDivs, _tEarned, _stakingTime, _dTokens, _lClaimTime, _tvl,
-                    _tEarnedEth, _pDivsEth])
+                    _tEarnedEth, _pDivsEth, _tvlConstantiDYP, _tvlConstantDYP, _tvliDYP])
 
+
+                let tvlValueConstantDYP = new BigNumber(tvlConstantDYP).times(this.state.usdPerToken).toFixed(18)
+                let tvlValueiDYP = new BigNumber(tvlConstantiDYP).times(_amountOutMin).toFixed(18)
+                let tvlValueiDYPFarming = new BigNumber(tvliDYP).times(_amountOutMin).toFixed(18)
                 let usd_per_lp = lp_data ? lp_data[this.props.lp_id].usd_per_lp : 0
                 let depositedTokensUSD = new BigNumber(depositedTokens).times(usd_per_lp).toFixed(18)
+                // let tvlUSD = new BigNumber(tvl).times(usd_per_lp).plus(tvlValueiDYP).toFixed(18)
                 let tvlUSD = new BigNumber(tvl).times(usd_per_lp).toFixed(18)
+                let totalValueLocked = new BigNumber(tvlUSD).plus(tvlValueiDYP).plus(tvlValueiDYPFarming).plus(tvlValueConstantDYP).toFixed(18)
+                //console.log({tvlValueConstantDYP})
 
                 this.setState({
                     token_balance,
@@ -422,7 +447,8 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                     totalEarnedEth,
                     pendingDivsEth,
                     depositedTokensUSD,
-                    tvlUSD
+                    tvlUSD,
+                    totalValueLocked
                 })
                 let stakingOwner = await staking.owner()
                 this.setState({stakingOwner})
@@ -461,6 +487,9 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             staking.disburseDuration().then(disburseDuration => {
                 this.setState({ disburseDuration })
             })
+
+            let usdPerToken = await window.getPrice('defi-yield-protocol')
+            this.setState({usdPerToken})
 
             //Set Value $ of iDYP & DYP for Withdraw Input
             this.setState({ withdrawAmount: new BigNumber(this.state.depositedTokensUSD).div(1e18).toFixed(2) })
@@ -568,7 +597,8 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             let apy = lp_data ? lp_data[this.props.lp_id].apy : 0
 
             let total_stakers = lp_data ? lp_data[this.props.lp_id].stakers_num : 0
-            let tvl_usd = lp_data ? lp_data[this.props.lp_id].tvl_usd : 0
+            // let tvl_usd = lp_data ? lp_data[this.props.lp_id].tvl_usd : 0
+            let tvl_usd = this.state.totalValueLocked / 1e18
 
             apy = getFormattedNumber(apy, 2)
             tvl_usd = getFormattedNumber(tvl_usd, 2)
