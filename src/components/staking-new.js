@@ -513,10 +513,10 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             let APY = this.getAPY()
             let approxDays = this.state.approxDays
             let approxDeposit = this.state.approxDeposit
-            let lp_data = this.props.the_graph_result.lp_data
-            let usd_per_lp = lp_data ? lp_data[this.props.lp_id].usd_per_lp : 0
+            //let lp_data = this.props.the_graph_result.lp_data
+            //let usd_per_lp = lp_data ? lp_data[this.props.lp_id].usd_per_lp : 0
 
-            return (usd_per_lp*approxDeposit*APY/100/365*approxDays)
+            return (approxDeposit*APY/100/365*approxDays)
         }
 
         render() {
@@ -798,7 +798,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                         <label htmlFor='deposit-amount' className='d-block text-left'>RETURN CALCULATOR</label>
                                                         <div className='row'>
                                                             <div className='col'>
-                                                                <label style={{fontSize: '1rem', fontWeight: 'normal'}}>LP to Deposit</label>
+                                                                <label style={{fontSize: '1rem', fontWeight: 'normal'}}>USD to Deposit</label>
                                                                 <input className='form-control ' value={Number(this.state.approxDeposit) > 0 ? this.state.approxDeposit*LP_AMPLIFY_FACTOR:this.state.approxDeposit} onChange={e => this.setState({approxDeposit: Number(e.target.value) > 0 ? e.target.value/LP_AMPLIFY_FACTOR : e.target.value})} placeholder='0' type='text' />
                                                             </div>
                                                             <div className='col'>
