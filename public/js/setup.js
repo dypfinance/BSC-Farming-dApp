@@ -3,6 +3,7 @@ window.WALLET_TYPE = ''
 window.the_graph_result = {}
 // MAKE SURE THIS ADDRESS IS LOWERCASE
 const TOKEN_ADDRESS = "0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17"
+const TOKEN_IDYP_ADDRESS = "0xbd100d061e120b2c67a24453cf6368e63f1be056"
 
 // MAKE SURE ALL THESE ADDRESSES ARE LOWERCASE
 const TOKENS_DISBURSED_PER_YEAR = [
@@ -4241,8 +4242,13 @@ function get_usd_values({
 		async function getData(token_contract_addresses, lp_ids) {
 			let tokens = []
 			let liquidityPositions = []
+			let token_price_usd = 0
 			for (let id of token_contract_addresses) {
-				let token_price_usd = await getPrice(window.config.cg_ids[id])
+				//Add the price from iDYP
+				if(id==TOKEN_ADDRESS)
+					token_price_usd = await getPrice(window.config.cg_ids[id])
+				else
+					token_price_usd = parseFloat(_amountOutMin)
 				tokens.push({id, token_price_usd})
 			}
 
@@ -4372,6 +4378,8 @@ function wait(ms) {
 async function get_apy_and_tvl(usd_values) {
 	let {token_data, lp_data, usd_per_eth} = usd_values
 
+	//console.log({usd_values})
+
 	let token_price_usd = token_data[TOKEN_ADDRESS].token_price_usd*1
 	let balances_by_address = {}, number_of_holders_by_address = {}
 	let lp_ids = Object.keys(lp_data)
@@ -4444,7 +4452,7 @@ async function get_usd_values_with_apy_and_tvl(...arguments) {
 
 
 async function refresh_the_graph_result() {
-	let result = await get_usd_values_with_apy_and_tvl({token_contract_addresses: [TOKEN_ADDRESS], lp_ids: LP_ID_LIST})
+	let result = await get_usd_values_with_apy_and_tvl({token_contract_addresses: [TOKEN_ADDRESS, TOKEN_IDYP_ADDRESS], lp_ids: LP_ID_LIST})
 	window.the_graph_result = result
 	//window.TVL_FARMING_POOLS = await refreshBalance()
 	return result
