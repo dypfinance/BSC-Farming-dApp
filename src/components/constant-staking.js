@@ -192,7 +192,7 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
 
             console.log({amount, referrer, referralFee, deadline})
 
-            staking.stake(amount, referrer, referralFee, deadline)
+            staking.stake(amount, referrer, 0, deadline)
         }
 
         handleWithdraw = async (e) => {
@@ -227,7 +227,7 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
 
             console.log({referralFee, _amountOutMin, deadline})
 
-            staking.claim(referralFee, _amountOutMin, deadline)
+            staking.claim(0, _amountOutMin, deadline)
         }
 
         handleSetMaxDeposit = (e) => {
