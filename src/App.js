@@ -9,6 +9,7 @@ import initVestingStaking from "./components/vesting-staking"
 
 import initConstantStaking from './components/constant-staking'
 import initBuybackStakingNew from './components/buy-back-staking-new'
+import initStakingNew from './components/staking-new'
 
 import StakingList from './components/staking-list'
 import StakingListEth from './components/staking-list-eth.js'
@@ -50,16 +51,22 @@ const StakingUsdc60 = initStaking({token: window.token_usdc_60, staking: window.
 const StakingUsdc90 = initStaking({token: window.token_usdc_90, staking: window.staking_usdc_90, liquidity: usdc_address, lp_symbol:'DYP/BUSD', reward: '100,000', lock: '90 Days', rebase_factor: rebase_factors[11], expiration_time: '2 October 2021'})
 
 
+//Vesting & staking 3 months
 const eth_address = 'ETH'
 const bnb_address = 'BNB'
 const Vesting = initVesting({ staking: window.constant_staking_30, apr: 0, liquidity: eth_address, expiration_time: '16 February 2022' })
 const VestingStaking = initVestingStaking({ staking: window.constant_staking_60, apr: 0, liquidity: eth_address, expiration_time: '16 February 2022' })
 
+//Constant Staking New
 const ConstantStaking30 = initConstantStaking({ staking: window.constant_staking_new1, apr: 25, liquidity: bnb_address, expiration_time: '17 November 2022' })
 const ConstantStaking90 = initConstantStaking({ staking: window.constant_staking_new2, apr: 50, liquidity: bnb_address, expiration_time: '17 November 2022' })
 
+//Buyback New
 const BuybackStaking1 = initBuybackStakingNew({ staking: window.buyback_staking1_1, constant: window.constant_staking_new3, apr: 30, expiration_time: '17 November 2021' })
 const BuybackStaking2 = initBuybackStakingNew({ staking: window.buyback_staking1_2, constant: window.constant_staking_new4, apr: 100, expiration_time: '17 November 2021' })
+
+//Farming New
+const StakingNew0 = initStakingNew({token: window.token_new, staking: window.farming_new, constant: window.constant_staking_new5, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2021'})
 
 const Modal = ({ handleClose, show, children }) => {
     const showHideClassName = show ? "modal display-block" : "modal display-none";
@@ -318,8 +325,12 @@ render() {
       <Route exact path='/constant-staking-0' render={props => <ConstantStaking30 the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
       <Route exact path='/constant-staking-90' render={props => <ConstantStaking90 the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
 
+      {/*Buyback New*/}
       <Route exact path='/staking-buyback-1' render={props => <BuybackStaking1 the_graph_result={this.state.the_graph_result} {...props} />} />
       <Route exact path='/staking-buyback-2' render={props => <BuybackStaking2 the_graph_result={this.state.the_graph_result} {...props} />} />
+
+      {/*Farming New*/}
+      <Route exact path='/farming-new' render={props => <StakingNew0 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[0]} {...props} />} />
 
       </div>
       <Footer />
