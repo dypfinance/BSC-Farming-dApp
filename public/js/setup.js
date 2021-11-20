@@ -75,11 +75,11 @@ const LP_IDs =
 			"0xc7a4d04699a9539d33e86ce746e88553149c8528-0x417538f319afddd351f33222592b60f985475a21",
 		],
 		"wbnb": [
-			"0x1bc61d08a300892e784ed37b2d0e63c85d1d57fb-0x47902c36e1a0bb31d63d9ebb1de0505c50db8d9c",
-			"0x1bc61d08a300892e784ed37b2d0e63c85d1d57fb-0x4d3b5d5bb0f4a6001fc78e10d34a52625d9db172",
-			"0x1bc61d08a300892e784ed37b2d0e63c85d1d57fb-0x0032a480ef94a3310fbc09fe95a03897ac0c6e1a",
-			"0x1bc61d08a300892e784ed37b2d0e63c85d1d57fb-0x29f3991998138f1cac7a1c6aa0a62edbee54aac7",
-			"0x1bc61d08a300892e784ed37b2d0e63c85d1d57fb-0x4b01aa07a35fa4becce1d431bb82e1dae7ca77cc",
+			"0x1bc61d08a300892e784ed37b2d0e63c85d1d57fb-0x537dc4fee298ea79a7f65676735415f1e2882f92",
+			"0x1bc61d08a300892e784ed37b2d0e63c85d1d57fb-0x219717bf0bc33b2764a6c1a772f75305458bda3d",
+			"0x1bc61d08a300892e784ed37b2d0e63c85d1d57fb-0xd1151a2434931f34bcfa6c27639b67c1a23d93af",
+			"0x1bc61d08a300892e784ed37b2d0e63c85d1d57fb-0xed869ba773c3f1a1adcc87930ca36ee2dc73435d",
+			"0x1bc61d08a300892e784ed37b2d0e63c85d1d57fb-0x415b1624710296717fa96cad84f53454e8f02d18",
 		]
 }
 
@@ -225,24 +225,24 @@ window.config = {
 
 	//Farming New
 	token_new_address: '0x1bC61d08A300892e784eD37b2d0E63C85D1d57fb',
-	farming_new_1_address: '0x47902c36e1a0bb31d63d9ebb1de0505c50db8d9c',
+	farming_new_1_address: '0x537dc4fee298ea79a7f65676735415f1e2882f92',
 	constant_stakingnew_new5_address: '0xc794cdb8d6ac5eb42d5aba9c1e641ae17c239c8c',
 
 	//Farming New
-	farming_new_2_address: '0x4d3b5d5bb0f4a6001fc78e10d34a52625d9db172',
+	farming_new_2_address: '0x219717bf0bc33b2764a6c1a772f75305458bda3d',
 	constant_stakingnew_new6_address: '0x23609b1f5274160564e4afc5eb9329a8bf81c744',
 
 
 	//Farming New
-	farming_new_3_address: '0x0032a480ef94a3310fbc09fe95a03897ac0c6e1a',
+	farming_new_3_address: '0xd1151a2434931f34bcfa6c27639b67c1a23d93af',
 	constant_stakingnew_new7_address: '0x264922696b9972687522b6e98bf78a0430e2163c',
 
 	//Farming New
-	farming_new_4_address: '0x29f3991998138f1cac7a1c6aa0a62edbee54aac7',
+	farming_new_4_address: '0xed869ba773c3f1a1adcc87930ca36ee2dc73435d',
 	constant_stakingnew_new8_address: '0x9df0a645beb6f7adfadc56f3689e79405337efe2',
 
 	//Farming New
-	farming_new_5_address: '0x4b01aa07a35fa4becce1d431bb82e1dae7ca77cc',
+	farming_new_5_address: '0x415b1624710296717fa96cad84f53454e8f02d18',
 	constant_stakingnew_new9_address: '0xbd574278febad04b7a0694c37def4f2ecfa9354a'
 
 }
