@@ -96,7 +96,7 @@ export default class Header extends React.Component {
               <div className="sc-eilVRo jaXjyZ">
                 <div className="sc-eerKOB bKbMab"><span className="sc-jzgbtB dwWyiU"></span>
                   <div className="sc-bnXvFD bcIrBV">
-                    <a style={{borderRadius: '15px', marginRight: '1rem', padding: '2px 7px 2px'}} href="https://github.com/dypfinance/DYP-Bridge-and-Staking-on-Binance-Smart-Chain/tree/main/Audit" target="_blank" id="connect-wallet"
+                    <a style={{borderRadius: '15px', marginRight: '1rem', padding: '2px 7px 2px'}} href="https://github.com/dypfinance/Buyback-Farm-Stake-Governance-V2" target="_blank" id="connect-wallet"
                        className="sc-gqjmRU gacWOr sc-iAyFgw sc-jWBwVP sc-cMhqgX sc-esOvli iivcTi"><p
                         className="sc-hMFtBS cxjZDP">Check Audits</p></a>
                   </div>
