@@ -181,7 +181,7 @@ window.config = {
 	weth_address: '0x2170ed0880ac9a755fd29b2688956bd959f933f8',
 	etherscan_baseURL: 'https://bscscan.com',
 	max_proposals_per_call: 4,
-	default_gasprice_gwei: 10,
+	//default_gasprice_gwei: 10,
 	default_gas_amount: 1200000,
 	token_decimals: 18,
 	lp_amplify_factor: 1e0,

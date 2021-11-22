@@ -760,7 +760,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                             <br />
                                                         </div>
                                                         <div className='input-group '>
-                                                            <input value={Number(this.state.withdrawAmount) > 0 ? this.state.withdrawAmount*LP_AMPLIFY_FACTOR:this.state.withdrawAmount} onChange={e => this.setState({withdrawAmount: Number(e.target.value) > 0 ? e.target.value/LP_AMPLIFY_FACTOR : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
+                                                            <input value={Number(this.state.withdrawAmount) > 0 ? `$${this.state.withdrawAmount*LP_AMPLIFY_FACTOR}` : `$${this.state.withdrawAmount}`} onChange={e => this.setState({withdrawAmount: Number(e.target.value) > 0 ? e.target.value/LP_AMPLIFY_FACTOR : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
                                                             {/*<div className='input-group-append'>*/}
                                                             {/*    <button className='btn  btn-primary right-radius btn-max l-light-btn' style={{cursor: 'pointer'}} onClick={this.handleSetMaxWithdraw}>*/}
                                                             {/*        MAX*/}
