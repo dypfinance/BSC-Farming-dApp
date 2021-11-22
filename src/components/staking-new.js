@@ -425,13 +425,14 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                 let _tvlConstantDYP = reward_token.balanceOf(constant._address) /* TVL of iDYP on Staking */
                 let _tvliDYP = reward_token_idyp.balanceOf(staking._address) /* TVL of iDYP on Farming */
 
-               let _dTokensDYP = constant.depositedTokens(coinbase)
+                let _dTokensDYP = constant.depositedTokens(coinbase)
+                let _pendingDivsStaking = constant.getPendingDivs(coinbase)
 
                 let [token_balance,reward_token_balance, pendingDivs, totalEarnedTokens, stakingTime,
                     depositedTokens, lastClaimedTime, tvl,
-                    totalEarnedEth, pendingDivsEth, tvlConstantiDYP, tvlConstantDYP, tvliDYP, depositedTokensDYP
+                    totalEarnedEth, pendingDivsEth, tvlConstantiDYP, tvlConstantDYP, tvliDYP, depositedTokensDYP, pendingDivsStaking
                 ] = await Promise.all([_bal, _rBal, _pDivs, _tEarned, _stakingTime, _dTokens, _lClaimTime, _tvl,
-                    _tEarnedEth, _pDivsEth, _tvlConstantiDYP, _tvlConstantDYP, _tvliDYP, _dTokensDYP])
+                    _tEarnedEth, _pDivsEth, _tvlConstantiDYP, _tvlConstantDYP, _tvliDYP, _dTokensDYP, _pendingDivsStaking])
 
 
                 let tvlValueConstantDYP = new BigNumber(depositedTokensDYP).times(this.state.usdPerToken).toFixed(18)
@@ -461,7 +462,8 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                     tvlUSD,
                     totalValueLocked,
                     depositedTokensDYP,
-                    tvlConstantDYP /* DYP DEPOSITED ON STAKING */
+                    tvlConstantDYP, /* DYP DEPOSITED ON STAKING */
+                    pendingDivsStaking
                 })
                 let stakingOwner = await staking.owner()
                 this.setState({stakingOwner})
@@ -534,7 +536,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             let {disburseDuration, contractDeployTime, cliffTime, swapAttemptPeriod, lastSwapExecutionTime,
                 tokensToBeDisbursedOrBurnt, tokensToBeSwapped, wethBalance, pendingDivsEth, totalEarnedEth,
                 token_balance, reward_token_balance, pendingDivs, totalEarnedTokens, depositedTokens, stakingTime,
-                coinbase, tvl, depositedTokensDYP, tvlConstantDYP, myDepositedLpTokens} = this.state
+                coinbase, tvl, depositedTokensDYP, tvlConstantDYP, myDepositedLpTokens, pendingDivsStaking} = this.state
 
             let myShare = ((depositedTokens/ tvl)*100).toFixed(2)
             myShare = getFormattedNumber(myShare, 2)
@@ -560,7 +562,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             reward_token_balance = new BigNumber(reward_token_balance).div(10**TOKEN_DECIMALS).toString(10)
             reward_token_balance = getFormattedNumber(reward_token_balance, 6)
 
-            pendingDivs = new BigNumber(pendingDivs).div(10**TOKEN_DECIMALS).toString(10)
+            pendingDivs = new BigNumber(pendingDivsStaking).div(10**TOKEN_DECIMALS).toString(10)
             pendingDivs = getFormattedNumber(pendingDivs, 6)
 
             totalEarnedTokens = new BigNumber(totalEarnedTokens).div(10**TOKEN_DECIMALS).toString(10)
