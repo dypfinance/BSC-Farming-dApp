@@ -16,7 +16,12 @@ const pool_names = [
     "busd_3",
     "busd_30",
     "busd_60",
-    "busd_90"
+    "busd_90",
+    "wbnb_0",
+    "wbnb_3",
+    "wbnb_30",
+    "wbnb_60",
+    "wbnb_90"
 ]
 
 const WETH_ADDRESS = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c'
@@ -25,6 +30,8 @@ const ACCESS_WALLET_LIST = [
     '0x910090Ea889B64B4e722ea4b8fF6D5e734dFb38F',
     '0x2312D7126a0a87114D018E762dc6CAf8A74f04a8'
 ].map(a => a.toLowerCase())
+
+let { BigNumber } = window
 
 export default class StakingStats extends React.Component {
 
@@ -48,10 +55,54 @@ export default class StakingStats extends React.Component {
         return (await contract.methods.depositedTokens(coinbase).call())
     }
 
-    getClaimableTokens = async (contractAddress) => {
+    getDepositedDyp = async (contractAddress) => {
+
         let coinbase = window.coinbase_address
-        let contract = new window.web3.eth.Contract(window.STAKING_ABI, contractAddress)
-        return (await contract.methods.getPendingDivs(coinbase).call())
+
+        let constantStaking = ''
+        let lp_id = window.FarmingStakingAddresses
+
+        let found = 0
+
+        for (let id of lp_id){
+            let contractAdd = id.split('-')[0]
+            let constant = id.split('-')[1]
+            if (contractAddress == contractAdd){
+                constantStaking = new window.web3.eth.Contract(window.CONSTANT_STAKINGNEW_ABI, constant)
+                found = 1
+                break;
+            }
+            else {
+                //constantStaking = new window.web3.eth.Contract(window.STAKING_ABI, contractAdd)
+                found = 0
+            }
+        }
+        if (found == 1)
+            return (await constantStaking.methods.depositedTokens(coinbase).call())
+        else
+            return 0
+    }
+
+    getClaimableTokens = async (contractAddress) => {
+
+        let constantStaking = ''
+        let lp_id = window.FarmingStakingAddresses
+
+        for (let id of lp_id){
+            let contractAdd = id.split('-')[0]
+            let constant = id.split('-')[1]
+            if (contractAddress == contractAdd){
+                constantStaking = new window.web3.eth.Contract(window.CONSTANT_STAKINGNEW_ABI, constant)
+                break;
+            }
+            else {
+                constantStaking = new window.web3.eth.Contract(window.STAKING_ABI, contractAdd)
+            }
+        }
+
+        let coinbase = window.coinbase_address
+
+        return (await constantStaking.methods.getPendingDivs(coinbase).call())
     }
 
     getClaimableWeth = async (contractAddress) => {
@@ -67,9 +118,58 @@ export default class StakingStats extends React.Component {
     }
 
     handleClaim = async (contractAddress) => {
-        let coinbase = window.coinbase_address
-        let contract = new window.web3.eth.Contract(window.STAKING_ABI, contractAddress)
-        return (await contract.methods.claim().send({ from: coinbase, gasPrice: window.config.default_gasprice_gwei * 1e9, gas: window.config.default_gas_amount }))
+
+        let constantStaking = ''
+        let lp_id = window.FarmingStakingAddresses
+        let farming = new window.web3.eth.Contract(window.FARMING_NEW_ABI, contractAddress)
+
+        for (let id of lp_id){
+            let contractAdd = id.split('-')[0]
+            let constant = id.split('-')[1]
+            if (contractAddress == contractAdd)
+                constantStaking = new window.web3.eth.Contract(window.CONSTANT_STAKINGNEW_ABI, constant)
+        }
+
+
+        let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds)
+
+        let address = this.state.coinbase
+
+        let amount = await constantStaking.methods.getTotalPendingDivs(address).call()
+
+        let router = await window.getPancakeswapRouterContract()
+        let WETH = await router.methods.WETH().call()
+        let platformTokenAddress = window.config.reward_token_address
+        let rewardTokenAddress = window.config.reward_token_address2
+        let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
+        let _amountOutMinConstant = await router.methods.getAmountsOut(amount, path).call()
+        _amountOutMinConstant = _amountOutMinConstant[_amountOutMinConstant.length - 1]
+        _amountOutMinConstant = new BigNumber(_amountOutMinConstant).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
+
+        let referralFee = new BigNumber(_amountOutMinConstant).times(500).div(1e4).toFixed(0)
+        referralFee = referralFee.toString()
+
+        //Claim Parameters for Farm
+        /*
+            _amountOutMin_claimAsToken_dyp
+            _amountOutMin_attemptSwap
+            _deadline
+        */
+
+
+        try {
+            constantStaking.methods.claim(referralFee, _amountOutMinConstant, deadline).send({ from: address, gasPrice: window.config.default_gasprice_gwei * 1e9, gas: window.config.default_gas_amount })
+        }  catch(e) {
+            console.error(e)
+            return;
+        }
+
+        try {
+            await farming.methods.claim(0, 0, deadline).send({ from: address, gasPrice: window.config.default_gasprice_gwei * 1e9, gas: window.config.default_gas_amount })
+        }  catch(e) {
+            console.error(e)
+            return;
+        }
     }
 
     getWethPaidOut = async (contractAddress) => {
@@ -88,9 +188,17 @@ export default class StakingStats extends React.Component {
         this.setState({coinbase})
         window.LP_ID_LIST.forEach(async (lp_id) => {
             let contractAddress = lp_id.split('-')[1]
-            let [depositedLp, claimableTokens, claimableEth, wethPaidOut, wethEarned] = await Promise.all([this.getDepositedLP(contractAddress), this.getClaimableTokens(contractAddress), this.getClaimableWeth(contractAddress), this.getWethPaidOut(contractAddress), this.getTotalEarnedWeth(contractAddress)])
+
+
+            let [depositedLp, claimableTokens, claimableEth, wethPaidOut, wethEarned, depositedDyp]
+                = await Promise.all([this.getDepositedLP(contractAddress), this.getClaimableTokens(contractAddress), this.getClaimableWeth(contractAddress), this.getWethPaidOut(contractAddress), this.getTotalEarnedWeth(contractAddress), this.getDepositedDyp(contractAddress)])
+
+           // console.log({contractAddress, depositedDyp})
+
             let pools_info = this.state.pools_info
-            pools_info[lp_id] = { depositedLp, claimableTokens, claimableEth, wethPaidOut, wethEarned }
+
+            pools_info[lp_id] = { depositedLp, claimableTokens, claimableEth, wethPaidOut, wethEarned, depositedDyp }
+
             this.setState({ pools_info })
         })
     }
@@ -165,9 +273,12 @@ export default class StakingStats extends React.Component {
 
         const { pools_info } = this.state
 
+        //console.log({pools_info})
+
         let { the_graph_result } = this.props
 
         let usd_per_token = the_graph_result.token_data ? the_graph_result.token_data["0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17"].token_price_usd : 0
+        let usd_per_idyp = the_graph_result.token_data ? the_graph_result.token_data["0xbd100d061e120b2c67a24453cf6368e63f1be056"].token_price_usd : 0
         let usd_per_eth = the_graph_result.usd_per_eth || 0
 
         let can_access = this.state.coinbase && ACCESS_WALLET_LIST.includes( String(this.state.coinbase).toLowerCase() )
@@ -187,7 +298,7 @@ export default class StakingStats extends React.Component {
                         <thead>
                             <tr>
                                 <th>Pool</th>
-                                <th>Deposited LP</th>
+                                <th>Deposited LP + DYP</th>
                                 <th>Claimable DYP</th>
                                 <th>Claimable WBNB</th>
                                 <th>Earned WBNB</th>
@@ -201,7 +312,7 @@ export default class StakingStats extends React.Component {
                                     
                                     let usd_per_lp = the_graph_result.lp_data ? the_graph_result.lp_data[lp_id].usd_per_lp : 0
 
-                                    let { depositedLp, claimableTokens, claimableEth, wethPaidOut, wethEarned } = pools_info[lp_id]
+                                    let { depositedLp, claimableTokens, claimableEth, wethPaidOut, wethEarned, depositedDyp } = pools_info[lp_id]
 
                                     //console.log({usd_per_token})
 
@@ -228,6 +339,8 @@ export default class StakingStats extends React.Component {
                                         addressImg = '/images/wbnb_logo.png'
                                     if (res[0] == 'busd')
                                         addressImg = '/images/BUSD.png'
+                                    if (res[0] == 'wbnb')
+                                        addressImg = '/images/wbnb_logo.png'
                                     // if (res[0] == 'usdt')
                                     //     addressImg = '/images/USDT.png'
 
@@ -239,8 +352,9 @@ export default class StakingStats extends React.Component {
                                     return (
                                     <tr key={lp_id} style={{visibility: displayNone, display: displayNone2}}>
                                         <td> <img src={addressImg} width={'20px'} /> {combineName} </td>
-                                        <td className={Number(depositedLp) > 0 ? 'text-bold' : 'text-muted'}> {f( depositedLp/1e18 * window.rebase_factors[i], 6)} (${f( depositedLp/1e18*usd_per_lp, 2 )}) </td>
-                                        <td className={Number(claimableTokens) > 0 ? 'text-bold' : 'text-muted'}> {f( claimableTokens/1e18, 6)} (${f( claimableTokens/1e18 * usd_per_token, 2 )}) </td>
+                                        {/*<td className={Number(depositedLp) > 0 ? 'text-bold' : 'text-muted'}> {f( depositedLp/1e18 * window.rebase_factors[i], 6)} (${f( ((depositedLp/1e18*usd_per_lp) + (depositedDyp/1e18*usd_per_token)), 2 )}) </td>*/}
+                                        <td className={Number(depositedLp) > 0 ? 'text-bold' : 'text-muted'}> ${f( ((depositedLp/1e18*usd_per_lp) + (depositedDyp/1e18*usd_per_token)), 2 )} </td>
+                                        <td className={Number(claimableTokens) > 0 ? 'text-bold' : 'text-muted'}> {f( claimableTokens/1e18, 6)} (${f( claimableTokens/1e18 * usd_per_idyp, 2 )}) </td>
                                         <td className={Number(claimableEth) > 0 ? 'text-bold' : 'text-muted'}> {f(claimableEth / 1e18, 6)} (${f(claimableEth / 1e18 * usd_per_eth, 2)}) </td>
                                         <td className={Number(wethEarned) > 0 ? 'text-bold' : 'text-muted'}> {f(wethEarned / 1e18, 6)} (${f(wethEarned / 1e18 * usd_per_eth, 2)}) </td>
                                         {can_access && <td className={Number(wethPaidOut) > 0 ? 'text-bold' : 'text-muted'}> {f( wethPaidOut/1e18, 6)} (${f( wethPaidOut/1e18 * usd_per_eth , 2 )}) </td>}

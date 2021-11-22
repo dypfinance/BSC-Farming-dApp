@@ -4547,3 +4547,15 @@ async function isStaking(holder) {
 	let tokenContract = new window.web3.eth.Contract(window.CONSTANT_STAKING_ABI, window.config.constant_staking_60_address, {from: await getCoinbase()})
 	return await tokenContract.methods.depositedTokens(holder).call()
 }
+
+/* iDYP Staking Stats V2 */
+
+const FarmingStakingAddresses = [
+	"0x537dc4fee298ea79a7f65676735415f1e2882f92-0xc794cdb8d6ac5eb42d5aba9c1e641ae17c239c8c",
+	"0x219717bf0bc33b2764a6c1a772f75305458bda3d-0x23609b1f5274160564e4afc5eb9329a8bf81c744",
+	"0xd1151a2434931f34bcfa6c27639b67c1a23d93af-0x264922696b9972687522b6e98bf78a0430e2163c",
+	"0xed869ba773c3f1a1adcc87930ca36ee2dc73435d-0x9df0a645beb6f7adfadc56f3689e79405337efe2",
+	"0x415b1624710296717fa96cad84f53454e8f02d18-0xbd574278febad04b7a0694c37def4f2ecfa9354a"
+]
+
+window.FarmingStakingAddresses = FarmingStakingAddresses
