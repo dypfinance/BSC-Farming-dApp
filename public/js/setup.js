@@ -243,7 +243,14 @@ window.config = {
 
 	//Farming New
 	farming_new_5_address: '0x415b1624710296717fa96cad84f53454e8f02d18',
-	constant_stakingnew_new9_address: '0xbd574278febad04b7a0694c37def4f2ecfa9354a'
+	constant_stakingnew_new9_address: '0xbd574278febad04b7a0694c37def4f2ecfa9354a',
+
+	//Farming New Error
+	farming_new_6_address: '0x47902c36e1a0bb31d63d9ebb1de0505c50db8d9c',
+	farming_new_7_address: '0x4d3b5d5bb0f4a6001fc78e10d34a52625d9db172',
+	farming_new_8_address: '0x0032a480ef94a3310fbc09fe95a03897ac0c6e1a',
+	farming_new_9_address: '0x29f3991998138f1cac7a1c6aa0a62edbee54aac7',
+	farming_new_10_address: '0x4b01aa07a35fa4becce1d431bb82e1dae7ca77cc'
 
 }
 
@@ -4207,6 +4214,12 @@ window.constant_staking_new8 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW
 
 window.farming_new_5 = new STAKING("FARMING_NEW_5")
 window.constant_staking_new9 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW9")
+
+window.farming_error_1 = new STAKING("FARMING_NEW_6")
+window.farming_error_2 = new STAKING("FARMING_NEW_7")
+window.farming_error_3 = new STAKING("FARMING_NEW_8")
+window.farming_error_4 = new STAKING("FARMING_NEW_9")
+window.farming_error_5 = new STAKING("FARMING_NEW_10")
 
 
 /**

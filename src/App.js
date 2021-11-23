@@ -72,6 +72,13 @@ const StakingNew3 = initStakingNew({token: window.token_new, staking: window.far
 const StakingNew4 = initStakingNew({token: window.token_new, staking: window.farming_new_4, constant: window.constant_staking_new8, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
 const StakingNew5 = initStakingNew({token: window.token_new, staking: window.farming_new_5, constant: window.constant_staking_new9, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
 
+//Farming New Error
+const StakingNewError1 = initStakingNew({token: window.token_new, staking: window.farming_error_1, constant: window.constant_staking_new5, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
+const StakingNewError2 = initStakingNew({token: window.token_new, staking: window.farming_error_2, constant: window.constant_staking_new6, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
+const StakingNewError3 = initStakingNew({token: window.token_new, staking: window.farming_error_3, constant: window.constant_staking_new7, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
+const StakingNewError4 = initStakingNew({token: window.token_new, staking: window.farming_error_4, constant: window.constant_staking_new8, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
+const StakingNewError5 = initStakingNew({token: window.token_new, staking: window.farming_error_5, constant: window.constant_staking_new9, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
+
 const Modal = ({ handleClose, show, children }) => {
     const showHideClassName = show ? "modal display-block" : "modal display-none";
 
@@ -339,6 +346,13 @@ render() {
       <Route exact path='/farming-new-3' render={props => <StakingNew3 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[2]} {...props} />} />
       <Route exact path='/farming-new-4' render={props => <StakingNew4 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[3]} {...props} />} />
       <Route exact path='/farming-new-5' render={props => <StakingNew5 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[4]} {...props} />} />
+
+      {/*Farming New Error*/}
+      <Route exact path='/farming-emergency-1' render={props => <StakingNewError1 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[0]} {...props} />} />
+      <Route exact path='/farming-emergency-2' render={props => <StakingNewError2 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[1]} {...props} />} />
+      <Route exact path='/farming-emergency-3' render={props => <StakingNewError3 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[2]} {...props} />} />
+      <Route exact path='/farming-emergency-4' render={props => <StakingNewError4 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[3]} {...props} />} />
+      <Route exact path='/farming-emergency-5' render={props => <StakingNewError5 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[4]} {...props} />} />
 
 
       </div>
