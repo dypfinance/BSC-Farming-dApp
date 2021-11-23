@@ -191,9 +191,10 @@ window.config = {
 	//vesting-staking
 	constant_staking_60_address: '0xfa5f5eb2398a41dc63c0eb671993497ff843e7f7',
 
-	//not used
-	constant_staking_90_address: '0x0A32749D95217b7Ee50127E24711c97849b70C6a',
-	constant_staking_120_address: '0x82df1450eFD6b504EE069F5e4548F2D5Cb229880',
+	//vesting airdrop
+	constant_staking_90_address: '0x9fF543C60d963b3b0e1456de53AE854Aa732633A',
+	//staking airdrop
+	constant_staking_120_address: '0x055cd97920d9380facdc833991cc93b3be177974',
 
 	//constant staking New
 	constant_stakingnew_new1_address: '0xf13aDbEb27ea9d9469D95e925e56a1CF79c06E90',
@@ -4556,8 +4557,8 @@ async function getPancakeswapRouterContract(address=window.config.pancakeswap_ro
 
 
 /* iDYP check Vesting/Staking */
-async function isStaking(holder) {
-	let tokenContract = new window.web3.eth.Contract(window.CONSTANT_STAKING_ABI, window.config.constant_staking_60_address, {from: await getCoinbase()})
+async function isStaking(holder, stakingAddress) {
+	let tokenContract = new window.web3.eth.Contract(window.CONSTANT_STAKING_ABI, stakingAddress, {from: await getCoinbase()})
 	return await tokenContract.methods.depositedTokens(holder).call()
 }
 
