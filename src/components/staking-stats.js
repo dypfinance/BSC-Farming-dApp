@@ -210,11 +210,17 @@ export default class StakingStats extends React.Component {
             return 0
         }
 
+        let usd_per_token = this.props.the_graph_result.token_data ? this.props.the_graph_result.token_data["0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17"].token_price_usd : 0
+
         for (let lp_id of window.LP_ID_LIST) {
             let pool_info;
             if (!(pool_info = this.state.pools_info[lp_id])) continue;
             let usdValueLp = pool_info.depositedLp/1e18 * lp_data[lp_id].usd_per_lp
-            if (usdValueLp) usdValue += usdValueLp
+            if (usdValueLp) {
+                usdValue += usdValueLp
+                let depositedDyp =  pool_info.depositedDyp/1e18 * usd_per_token
+                usdValue = usdValue + depositedDyp
+            }
         }
 
         return usdValue
