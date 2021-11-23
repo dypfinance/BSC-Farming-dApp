@@ -224,8 +224,13 @@ export default function initVesting({ staking, buyers, apr, liquidity='ETH', loc
             else
                 stakingAddress = window.config.constant_staking_120_address
             let staked = await window.isStaking(coinbase, stakingAddress)
-            if(staked > 0)
-                window.location.assign('/vesting-staking')
+            if(staked > 0){
+                if(buyers)
+                    window.location.assign('/vesting-staking')
+                else
+                    window.location.assign('/airdrop-staking')
+            }
+
             try {
                 let _bal = reward_token_idyp.balanceOf(coinbase)
                 let _pDivs = staking.getTotalPendingDivs(coinbase)
