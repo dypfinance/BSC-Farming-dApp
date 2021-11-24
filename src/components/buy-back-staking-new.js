@@ -593,6 +593,10 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
                                                     <button title={canWithdraw ? '' : `You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
                                                         WITHDRAW
                                                     </button>
+                                                    <p style={{fontSize: '.8rem'}}
+                                                       className='mt-1 text-center mb-0 text-muted mt-3'>
+                                                        To <strong>WITHDRAW</strong> you will be asked to sign <strong>2 transactions</strong>
+                                                    </p>
                                                     <p style={{fontSize: '.8rem'}} className='mt-1 text-center text-muted mt-3'>0% fee for withdraw</p>
                                                 </form>
                                             </div>
@@ -623,7 +627,10 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
                                                             </button>
                                                         </div>
                                                     </div>
-
+                                                    <p style={{fontSize: '.8rem'}}
+                                                       className='mt-1 text-center mb-0 text-muted mt-3'>
+                                                        To <strong>CLAIM</strong> you will be asked to sign <strong>2 transactions</strong>
+                                                    </p>
                                                 </form>
                                             </div>
                                         </div>

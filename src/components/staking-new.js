@@ -3,6 +3,7 @@ import moment from 'moment'
 import getFormattedNumber from '../functions/get-formatted-number'
 import Address from './address'
 import Boxes from './boxes'
+import Dots from "./elements/dots"
 
 export default function initStakingNew({token, staking, constant, liquidity, lp_symbol, reward, lock, rebase_factor, expiration_time}) {
 
@@ -773,7 +774,10 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                     <button title={canWithdraw?'':`You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
                                                         WITHDRAW
                                                     </button>
-                                                    {/* <p style={{fontSize: '.8rem'}} className='mt-1 text-center'>Some info text here.</p> */}
+                                                    <p style={{fontSize: '.8rem'}}
+                                                       className='mt-1 text-center mb-0 text-muted mt-3'>
+                                                        To <strong>WITHDRAW</strong> you will be asked to sign <strong>2 transactions</strong>
+                                                    </p>
                                                 </form>
                                             </div>
                                         </div>
@@ -812,6 +816,10 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                     {/*<button onClick={this.handleClaimAsDivs(window.config.reward_token_address2)} className='btn  btn-primary btn-block l-outline-btn' type='button'>*/}
                                                     {/*    CLAIM AS DYP*/}
                                                     {/*</button>*/}
+                                                    <p style={{fontSize: '.8rem'}}
+                                                       className='mt-1 text-center mb-0 text-muted mt-3'>
+                                                        To <strong>CLAIM</strong> you will be asked to sign <strong>2 transactions</strong>
+                                                    </p>
                                                 </form>
                                             </div>
                                         </div>
@@ -932,7 +940,14 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                 </tr>
                                                 <tr>
                                                     <th>APY (AT NO BURN)</th>
-                                                    <td className="text-right"><strong>{apy}</strong> <small>%</small></td>
+                                                    <td className="text-right"><strong>
+                                                        {apy == 0 ? (
+                                                            <Dots />
+                                                        ) : (
+                                                            apy
+                                                        )
+                                                        }
+                                                    </strong> <small>%</small></td>
                                                 </tr>
                                                 <tr>
                                                     <th>TVL USD</th>

@@ -4478,6 +4478,21 @@ window.get_apy_and_tvl = get_apy_and_tvl
 window.get_number_of_stakers = get_number_of_stakers
 window.refresh_the_graph_result = refresh_the_graph_result
 
+
+window.the_graph_result_bsc_v2 = {}
+
+async function get_the_graph_bsc_v2() {
+	try {
+		const res = await getData('https://api.dyp.finance/api/the_graph_bsc_v2')
+		window.the_graph_result_bsc_v2 = res.the_graph_bsc_v2
+	} catch(err) {
+		console.log(err);
+	}
+	return window.the_graph_result_bsc_v2
+}
+
+window.get_the_graph_bsc_v2 = get_the_graph_bsc_v2
+
 function getPrice(coingecko_id = 'ethereum', vs_currency = 'usd') {
 	return new Promise((resolve, reject) => {
 		window.$.get(`https://api.coingecko.com/api/v3/simple/price?ids=${coingecko_id}&vs_currencies=${vs_currency}`)

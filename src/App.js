@@ -108,6 +108,7 @@ class App extends React.Component {
     this.state = {
         is_wallet_connected: false,
         the_graph_result: JSON.parse(JSON.stringify(window.the_graph_result)),
+        the_graph_result_BSC_V2: JSON.parse(JSON.stringify(window.the_graph_result_bsc_v2)),
         referrer: '',
         darkTheme: false,
         show: false
@@ -174,6 +175,15 @@ class App extends React.Component {
                 }
             }
             this.setState({is_wallet_connected, coinbase: await window.web3.eth.getCoinbase(), referrer})
+
+            try {
+                let the_graph_result_BSC_V2 = await window.get_the_graph_bsc_v2()
+                this.setState({ the_graph_result_BSC_V2: JSON.parse(JSON.stringify(the_graph_result_BSC_V2)) })
+            } catch (e) {
+                // window.alertify.error("Cannot fetch TVL");
+                console.error("TVL BSC V2 error: "+e)
+            }
+
             try {
                 let the_graph_result = await window.refresh_the_graph_result()
                 this.setState({ the_graph_result: JSON.parse(JSON.stringify(the_graph_result)) })
@@ -208,6 +218,13 @@ class App extends React.Component {
                 }
             }
             this.setState({is_wallet_connected, coinbase: await window.web3.eth.getCoinbase(), referrer})
+            try {
+                let the_graph_result_BSC_V2 = await window.get_the_graph_bsc_v2()
+                this.setState({ the_graph_result_BSC_V2: JSON.parse(JSON.stringify(the_graph_result_BSC_V2)) })
+            } catch (e) {
+                // window.alertify.error("Cannot fetch TVL");
+                console.error("TVL BSC V2 error: "+e)
+            }
             try {
                 let the_graph_result = await window.refresh_the_graph_result()
                 this.setState({ the_graph_result: JSON.parse(JSON.stringify(the_graph_result)) })
@@ -338,26 +355,26 @@ render() {
       <Route exact path='/airdrop' render={props => <VestingAirdrop the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
       <Route exact path='/airdrop-staking' render={props => <VestingStakingAirdrop the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
 
-      <Route exact path='/constant-staking-1' render={props => <ConstantStaking30 the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
-      <Route exact path='/constant-staking-2' render={props => <ConstantStaking90 the_graph_result={this.state.the_graph_result} referrer={this.state.referrer} {...props} />} />
+      <Route exact path='/constant-staking-1' render={props => <ConstantStaking30 the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
+      <Route exact path='/constant-staking-2' render={props => <ConstantStaking90 the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
 
       {/*Buyback New*/}
-      <Route exact path='/staking-buyback-1' render={props => <BuybackStaking1 the_graph_result={this.state.the_graph_result} {...props} />} />
-      <Route exact path='/staking-buyback-2' render={props => <BuybackStaking2 the_graph_result={this.state.the_graph_result} {...props} />} />
+      <Route exact path='/staking-buyback-1' render={props => <BuybackStaking1 the_graph_result={this.state.the_graph_result_BSC_V2} {...props} />} />
+      <Route exact path='/staking-buyback-2' render={props => <BuybackStaking2 the_graph_result={this.state.the_graph_result_BSC_V2} {...props} />} />
 
       {/*Farming New*/}
-      <Route exact path='/farming-new-1' render={props => <StakingNew1 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[0]} {...props} />} />
-      <Route exact path='/farming-new-2' render={props => <StakingNew2 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[1]} {...props} />} />
-      <Route exact path='/farming-new-3' render={props => <StakingNew3 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[2]} {...props} />} />
-      <Route exact path='/farming-new-4' render={props => <StakingNew4 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[3]} {...props} />} />
-      <Route exact path='/farming-new-5' render={props => <StakingNew5 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[4]} {...props} />} />
+      <Route exact path='/farming-new-1' render={props => <StakingNew1 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[0]} {...props} />} />
+      <Route exact path='/farming-new-2' render={props => <StakingNew2 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[1]} {...props} />} />
+      <Route exact path='/farming-new-3' render={props => <StakingNew3 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[2]} {...props} />} />
+      <Route exact path='/farming-new-4' render={props => <StakingNew4 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[3]} {...props} />} />
+      <Route exact path='/farming-new-5' render={props => <StakingNew5 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[4]} {...props} />} />
 
       {/*Farming New Error*/}
-      <Route exact path='/farming-emergency-1' render={props => <StakingNewError1 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[0]} {...props} />} />
-      <Route exact path='/farming-emergency-2' render={props => <StakingNewError2 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[1]} {...props} />} />
-      <Route exact path='/farming-emergency-3' render={props => <StakingNewError3 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[2]} {...props} />} />
-      <Route exact path='/farming-emergency-4' render={props => <StakingNewError4 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[3]} {...props} />} />
-      <Route exact path='/farming-emergency-5' render={props => <StakingNewError5 the_graph_result={this.state.the_graph_result} lp_id={LP_IDs.wbnb[4]} {...props} />} />
+      <Route exact path='/farming-emergency-1' render={props => <StakingNewError1 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[0]} {...props} />} />
+      <Route exact path='/farming-emergency-2' render={props => <StakingNewError2 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[1]} {...props} />} />
+      <Route exact path='/farming-emergency-3' render={props => <StakingNewError3 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[2]} {...props} />} />
+      <Route exact path='/farming-emergency-4' render={props => <StakingNewError4 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[3]} {...props} />} />
+      <Route exact path='/farming-emergency-5' render={props => <StakingNewError5 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[4]} {...props} />} />
 
 
       </div>
