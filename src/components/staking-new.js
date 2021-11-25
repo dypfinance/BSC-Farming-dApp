@@ -932,11 +932,11 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                 </tr>
                                                 <tr>
                                                     <th>To be Swapped</th>
-                                                    <td className="text-right"><strong>{tokensToBeSwapped}</strong> <small>DYP</small></td>
+                                                    <td className="text-right"><strong>{tokensToBeSwapped}</strong> <small>iDYP</small></td>
                                                 </tr>
                                                 <tr>
                                                     <th>To be burnt / disbursed</th>
-                                                    <td className="text-right"><strong>{tokensToBeDisbursedOrBurnt}</strong> <small>DYP</small></td>
+                                                    <td className="text-right"><strong>{tokensToBeDisbursedOrBurnt}</strong> <small>iDYP</small></td>
                                                 </tr>
                                                 <tr>
                                                     <th>APY (AT NO BURN)</th>
