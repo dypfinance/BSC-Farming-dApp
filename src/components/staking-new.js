@@ -93,12 +93,12 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                 contractDeployTime: '',
                 disburseDuration: '',
 
-                selectedBuybackToken: Object.keys(window.buyback_tokens)[0],
-                selectedTokenDecimals: window.buyback_tokens[Object.keys(window.buyback_tokens)[0]].decimals,
+                selectedBuybackToken: Object.keys(window.buyback_tokens_farming)[0],
+                selectedTokenDecimals: window.buyback_tokens_farming[Object.keys(window.buyback_tokens_farming)[0]].decimals,
                 selectedTokenBalance: '',
-                selectedTokenSymbol: window.buyback_tokens[Object.keys(window.buyback_tokens)[0]].symbol,
+                selectedTokenSymbol: window.buyback_tokens_farming[Object.keys(window.buyback_tokens_farming)[0]].symbol,
 
-                selectedBuybackTokenWithdraw: Object.keys(window.buyback_tokens)[0]
+                selectedBuybackTokenWithdraw: Object.keys(window.buyback_tokens_farming)[0]
 
             }
         }
@@ -167,8 +167,8 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
         }
 
         handleSelectedTokenChange = async (tokenAddress) => {
-            let tokenDecimals = window.buyback_tokens[tokenAddress].decimals
-            let selectedTokenSymbol = window.buyback_tokens[tokenAddress].symbol
+            let tokenDecimals = window.buyback_tokens_farming[tokenAddress].decimals
+            let selectedTokenSymbol = window.buyback_tokens_farming[tokenAddress].symbol
             this.setState({selectedBuybackToken: tokenAddress, selectedTokenBalance: '', selectedTokenDecimals: tokenDecimals, selectedTokenSymbol})
 
             let selectedTokenBalance = await window.getTokenHolderBalance(tokenAddress, this.state.coinbase)
@@ -680,7 +680,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                             <div>
                                                                 <p>Balance: {getFormattedNumber(this.state.selectedTokenBalance/10**this.state.selectedTokenDecimals, 6)} {this.state.selectedTokenSymbol}</p>
                                                                 <select value={this.state.selectedBuybackToken} onChange={e => this.handleSelectedTokenChange(e.target.value)} className='form-control' className='form-control'>
-                                                                    {Object.keys(window.buyback_tokens).map((t) => <option key={t} value={t}> {window.buyback_tokens[t].symbol} </option>)}
+                                                                    {Object.keys(window.buyback_tokens_farming).map((t) => <option key={t} value={t}> {window.buyback_tokens_farming[t].symbol} </option>)}
                                                                 </select>
                                                                 <br />
                                                             </div>
@@ -758,7 +758,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                         <label htmlFor='deposit-amount' className='d-block text-left'>WITHDRAW</label>
                                                         <div>
                                                             <select value={this.state.selectedBuybackTokenWithdraw} onChange={e => this.handleSelectedTokenChangeWithdraw(e.target.value)} className='form-control' className='form-control'>
-                                                                {Object.keys(window.buyback_tokens).map((t) => <option key={t} value={t}> {window.buyback_tokens[t].symbol} </option>)}
+                                                                {Object.keys(window.buyback_tokens_farming).map((t) => <option key={t} value={t}> {window.buyback_tokens_farming[t].symbol} </option>)}
                                                             </select>
                                                             <br />
                                                         </div>

@@ -275,6 +275,27 @@ window.buyback_tokens = {
 	}
 }
 
+window.buyback_tokens_farming = {
+	'0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c': {
+		symbol: 'WBNB', decimals: 18
+	},
+	'0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c': {
+		symbol: 'BTCB', decimals: 18
+	},
+	'0x2170ed0880ac9a755fd29b2688956bd959f933f8': {
+		symbol: 'ETH', decimals: 18
+	},
+	'0xe9e7cea3dedca5984780bafc599bd69add087d56': {
+		symbol: 'BUSD', decimals: 18
+	},
+	'0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82': {
+		symbol: 'CAKE', decimals: 18
+	},
+	'0xbd100d061e120b2c67a24453cf6368e63f1be056': {
+		symbol: 'iDYP', decimals: 18
+	}
+}
+
 window.vaults = [
 	{
 		hidden: true,
