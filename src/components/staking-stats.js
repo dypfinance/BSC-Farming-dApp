@@ -360,7 +360,8 @@ export default class StakingStats extends React.Component {
                                         <td> <img src={addressImg} width={'20px'} /> {combineName} </td>
                                         {/*<td className={Number(depositedLp) > 0 ? 'text-bold' : 'text-muted'}> {f( depositedLp/1e18 * window.rebase_factors[i], 6)} (${f( ((depositedLp/1e18*usd_per_lp) + (depositedDyp/1e18*usd_per_token)), 2 )}) </td>*/}
                                         <td className={Number(depositedLp) > 0 ? 'text-bold' : 'text-muted'}> ${f( ((depositedLp/1e18*usd_per_lp) + (depositedDyp/1e18*usd_per_token)), 2 )} </td>
-                                        <td className={Number(claimableTokens) > 0 ? 'text-bold' : 'text-muted'}> {f( claimableTokens/1e18, 6)} (${f( claimableTokens/1e18 * usd_per_idyp, 2 )}) </td>
+                                        {/*<td className={Number(claimableTokens) > 0 ? 'text-bold' : 'text-muted'}> {f( claimableTokens/1e18, 6)} (${f( claimableTokens/1e18 * usd_per_idyp, 2 )}) </td>*/}
+                                        <td className={Number(claimableTokens) > 0 ? 'text-bold' : 'text-muted'}> ${f( claimableTokens/1e18 * usd_per_idyp, 2 )} </td>
                                         <td className={Number(claimableEth) > 0 ? 'text-bold' : 'text-muted'}> {f(claimableEth / 1e18, 6)} (${f(claimableEth / 1e18 * usd_per_eth, 2)}) </td>
                                         <td className={Number(wethEarned) > 0 ? 'text-bold' : 'text-muted'}> {f(wethEarned / 1e18, 6)} (${f(wethEarned / 1e18 * usd_per_eth, 2)}) </td>
                                         {can_access && <td className={Number(wethPaidOut) > 0 ? 'text-bold' : 'text-muted'}> {f( wethPaidOut/1e18, 6)} (${f( wethPaidOut/1e18 * usd_per_eth , 2 )}) </td>}
@@ -372,7 +373,8 @@ export default class StakingStats extends React.Component {
                             <tr>
                                 <td>Total</td>
                                 <td> ${f( this.getTotalUsdValueOfLpDeposited(), 2)} </td>
-                                <td> {f( this.getTotalClaimableTokens(), 6)} (${f( this.getTotalClaimableTokens() * usd_per_token, 2 )}) </td>
+                                {/*<td> {f( this.getTotalClaimableTokens(), 6)} (${f( this.getTotalClaimableTokens() * usd_per_token, 2 )}) </td>*/}
+                                <td> ${f( this.getTotalClaimableTokens() * usd_per_idyp, 2 )} </td>
                                 <td> {f(this.getTotalClaimableEth(), 6)} (${f(this.getTotalClaimableEth() * usd_per_eth, 2)}) </td>
                                 <td> {f( this.getCombinedWethEarnings(), 6)} (${f( this.getCombinedWethEarnings() * usd_per_eth , 2 )}) </td>
                                 {can_access && <td> {f( this.getTotalClaimedEth(), 6)} (${f( this.getTotalClaimedEth() * usd_per_eth , 2 )}) </td>} 
