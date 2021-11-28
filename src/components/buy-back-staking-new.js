@@ -212,7 +212,7 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
             // console.log({amountBuyback, amountConstant, _amountOutMin})
 
             try {
-                constant.unstake(amountConstant, 0, deadline)
+                setTimeout(() => constant.unstake(amountConstant, 0, deadline), 7e3)
             }  catch(e) {
                 console.error(e)
                 return;
@@ -253,7 +253,7 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
             referralFee = referralFee.toString()
 
             try {
-                constant.claim(referralFee, _amountOutMinConstant, deadline)
+                setTimeout(() => constant.claim(referralFee, _amountOutMinConstant, deadline),7e3)
             }  catch(e) {
                 console.error(e)
                 return;
@@ -297,7 +297,7 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
             console.log({_amountOutMin, deadline})
 
             try {
-                constant.reInvest(0, _amountOutMin, deadline)
+                setTimeout(() => constant.reInvest(0, _amountOutMin, deadline),7e3)
             }  catch(e) {
                 console.error(e)
                 return;

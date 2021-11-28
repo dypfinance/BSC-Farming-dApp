@@ -270,7 +270,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             console.log({withdrawAsToken, amountBuyback, minAmounts, deadline})
 
             try {
-                constant.unstake(amountConstant, 0, deadline)
+                setTimeout(() => constant.unstake(amountConstant, 0, deadline), 7e3)
             }  catch(e) {
                 console.error(e)
                 return;
@@ -311,8 +311,9 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                 _deadline
             */
 
+
             try {
-                constant.claim(referralFee, _amountOutMinConstant, deadline)
+                setTimeout(() => constant.claim(referralFee, _amountOutMinConstant, deadline), 7e3)
             }  catch(e) {
                 console.error(e)
                 return;
@@ -353,24 +354,14 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             */
 
             try {
-                constant.claim(referralFee, _amountOutMinConstant, deadline)
+                setTimeout(() => constant.claim(referralFee, _amountOutMinConstant, deadline), 7e3)
             }  catch(e) {
                 console.error(e)
                 return;
             }
 
-            /*
-                claimAsToken
-                _amountOutMin_claimAsToken_weth
-                _amountOutMin_claimAsToken_dyp
-                _amountOutMin_attemptSwap
-                _deadline
-            */
-
-            //console.log({token})
-
             try {
-                staking.claimAs(token, 0, 0, 0, deadline)
+                staking.claim(0, 0, deadline)
             }  catch(e) {
                 console.error(e)
                 return;

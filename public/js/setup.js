@@ -4406,6 +4406,8 @@ function wait(ms) {
 	}, ms))
 }
 
+window.wait = wait
+
 /**
  *
  * @param {{token_data, lp_data}} usd_values - assuming only one token is there in token_list
