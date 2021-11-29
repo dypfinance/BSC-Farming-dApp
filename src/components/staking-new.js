@@ -418,7 +418,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                 let _tvliDYP = reward_token_idyp.balanceOf(staking._address) /* TVL of iDYP on Farming */
 
                 let _dTokensDYP = constant.depositedTokens(coinbase)
-                let _pendingDivsStaking = constant.getPendingDivs(coinbase)
+                let _pendingDivsStaking = constant.getTotalPendingDivs(coinbase)
 
                 let [token_balance,reward_token_balance, pendingDivs, totalEarnedTokens, stakingTime,
                     depositedTokens, lastClaimedTime, tvl,
@@ -782,7 +782,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                                 <p className='form-control  text-right' style={{border: 'none', marginBottom: 0, paddingLeft: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivsEth}</span> <small className='text-bold'>WBNB</small></p>
                                                             </div>
                                                             <div className='col-md-6'>
-                                                                <p className='form-control  text-right' style={{border: 'none', marginBottom: 0, paddingLeft: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivs}</span> <small className='text-bold'>DYP</small></p>
+                                                                <p className='form-control  text-right' style={{border: 'none', marginBottom: 0, paddingLeft: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivs}</span> <small className='text-bold'>iDYP</small></p>
                                                             </div>
                                                         </div>
                                                     </div>
