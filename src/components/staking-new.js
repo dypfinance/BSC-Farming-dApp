@@ -320,7 +320,8 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             }
 
             try {
-                staking.claim(0, 0, deadline)
+                //staking.claimAs(window.config.claim_as_eth_address)
+                staking.claimAs(window.config.claim_as_eth_address, 0, 0, 0, deadline)
             }  catch(e) {
                 console.error(e)
                 return;
