@@ -449,6 +449,7 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
             let { the_graph_result } = this.props
 
             let usd_per_token = the_graph_result.token_data ? the_graph_result.token_data["0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17"].token_price_usd : 1
+            let usd_per_idyp = the_graph_result.token_data ? the_graph_result.token_data["0xbd100d061e120b2c67a24453cf6368e63f1be056"].token_price_usd : 1
 
             token_balance = new BigNumber(token_balance ).div(1e18).toString(10)
             token_balance = getFormattedNumber(token_balance, 2)
@@ -502,6 +503,22 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
             //console.log(total_stakers)
 
             let isOwner = String(this.state.coinbase).toLowerCase() === String(window.config.admin_address).toLowerCase()
+
+            // APR is 100% considering 1$ as initial investment, 0.75$ goes to Buyback
+            let apy1 = new BigNumber(0.75)
+            let apy2 = new BigNumber(0.25).div(usd_per_token).times(usd_per_idyp)
+
+            //apr is 30%
+            if (apr == 30){
+                apy1 = new BigNumber(0.225)
+                apy2 = new BigNumber(0.25).div(usd_per_token).times(30).div(1e2).times(usd_per_idyp)
+
+                //apr is 50%
+                // apy1 = new BigNumber(0.375)
+                // apy2 = new BigNumber(0.25).div(usd_per_token).div(2).times(usd_per_idyp)
+            }
+
+            let apy = new BigNumber(apy1).plus(apy2).times(1e2).toFixed(0)
 
             let id = Math.random().toString(36)
 
@@ -669,8 +686,8 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
                                             number: '$'+tvl_usd
                                         },
                                         {
-                                            title: `APR`,
-                                            number: getFormattedNumber(apr, 2)+'%'
+                                            title: `APY`,
+                                            number: getFormattedNumber(apy, 2)+'%'
                                         }
                                     ]} />
                                     <div className='l-box'>

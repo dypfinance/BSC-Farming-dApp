@@ -437,7 +437,6 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
             let id = Math.random().toString(36)
 
 
-
             let apy = new BigNumber(apr).div(1e2).times(usd_per_idyp).div(usd_per_token).times(1e2).toFixed(2)
 
             return (<div>
