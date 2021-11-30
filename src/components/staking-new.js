@@ -530,6 +530,11 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                 token_balance, reward_token_balance, pendingDivs, totalEarnedTokens, depositedTokens, stakingTime,
                 coinbase, tvl, depositedTokensDYP, tvlConstantDYP, myDepositedLpTokens, pendingDivsStaking} = this.state
 
+            let { the_graph_result } = this.props
+
+            let usd_per_token = the_graph_result.token_data ? the_graph_result.token_data["0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17"].token_price_usd : 1
+            let usd_per_idyp = the_graph_result.token_data ? the_graph_result.token_data["0xbd100d061e120b2c67a24453cf6368e63f1be056"].token_price_usd : 1
+
             let myShare = ((depositedTokens/ tvl)*100).toFixed(2)
             myShare = getFormattedNumber(myShare, 2)
 
@@ -554,7 +559,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             reward_token_balance = new BigNumber(reward_token_balance).div(10**TOKEN_DECIMALS).toString(10)
             reward_token_balance = getFormattedNumber(reward_token_balance, 6)
 
-            pendingDivs = new BigNumber(pendingDivsStaking).div(10**TOKEN_DECIMALS).toString(10)
+            pendingDivs = new BigNumber(pendingDivsStaking).div(10**TOKEN_DECIMALS).times(usd_per_idyp).div(usd_per_token).toString(10)
             pendingDivs = getFormattedNumber(pendingDivs, 6)
 
             totalEarnedTokens = new BigNumber(totalEarnedTokens).div(10**TOKEN_DECIMALS).toString(10)
@@ -782,7 +787,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                                 <p className='form-control  text-right' style={{border: 'none', marginBottom: 0, paddingLeft: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivsEth}</span> <small className='text-bold'>WBNB</small></p>
                                                             </div>
                                                             <div className='col-md-6'>
-                                                                <p className='form-control  text-right' style={{border: 'none', marginBottom: 0, paddingLeft: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivs}</span> <small className='text-bold'>iDYP</small></p>
+                                                                <p className='form-control  text-right' style={{border: 'none', marginBottom: 0, paddingLeft: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivs}</span> <small className='text-bold'>DYP</small></p>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -374,12 +374,16 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
 
             let {disburseDuration, contractDeployTime, cliffTime, referralFeeEarned, token_balance, pendingDivs, totalEarnedTokens, depositedTokens, stakingTime, coinbase, tvl } = this.state
 
+            let { the_graph_result } = this.props
+
+            let usd_per_token = the_graph_result.token_data ? the_graph_result.token_data["0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17"].token_price_usd : 1
+            let usd_per_idyp = the_graph_result.token_data ? the_graph_result.token_data["0xbd100d061e120b2c67a24453cf6368e63f1be056"].token_price_usd : 1
 
             token_balance = new BigNumber(token_balance ).div(1e18).toString(10)
             token_balance = getFormattedNumber(token_balance, 6)
 
 
-            pendingDivs = new BigNumber(pendingDivs).div(10 ** TOKEN_DECIMALS).toString(10)
+            pendingDivs = new BigNumber(pendingDivs).div(10 ** TOKEN_DECIMALS).times(usd_per_idyp).div(usd_per_token).toString(10)
             pendingDivs = getFormattedNumber(pendingDivs, 6)
 
             totalEarnedTokens = new BigNumber(totalEarnedTokens).div(10 ** TOKEN_DECIMALS).toString(10)
