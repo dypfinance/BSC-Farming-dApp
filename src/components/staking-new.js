@@ -961,7 +961,8 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
 
                                                 <tr>
                                                     <td style={{fontSize: '1rem', paddingTop: '2rem'}} colSpan='2' className='text-center'>
-                                                        <a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/token/${token._address}?a=${coinbase}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{fontSize: '.8rem'}} className='fas fa-external-link-alt'></i>
+                                                        {/*<a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/token/${token._address}?a=${coinbase}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{fontSize: '.8rem'}} className='fas fa-external-link-alt'></i>*/}
+                                                        <a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/address/${staking._address}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{fontSize: '.8rem'}} className='fas fa-external-link-alt'></i>
                                                     </td>
                                                 </tr>
                                                 {/* <tr>
