@@ -83,7 +83,9 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                 usdPerToken: '',
 
                 contractDeployTime: '',
-                disburseDuration: ''
+                disburseDuration: '',
+
+                apy: 0
 
             }
         }
@@ -257,6 +259,14 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
             let lp_data = this.props.the_graph_result.token_data
             //console.log({lp_data})
 
+            //Calculate APY
+            let { the_graph_result } = this.props
+            let usd_per_token = the_graph_result.token_data ? the_graph_result.token_data["0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17"].token_price_usd : 1
+            let usd_per_idyp = the_graph_result.token_data ? the_graph_result.token_data["0xbd100d061e120b2c67a24453cf6368e63f1be056"].token_price_usd : 1
+            let apy = new BigNumber(apr).div(1e2).times(usd_per_idyp).div(usd_per_token).times(1e2).toFixed(2)
+
+            this.setState({apy})
+
             try {
                 let amount = new BigNumber(1000000000000000000).toFixed(0)
                 let router = await window.getPancakeswapRouterContract()
@@ -331,11 +341,10 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
         }
 
         getApproxReturn = () => {
-            let APY = this.getAPY()
             let approxDays = this.state.approxDays
             let approxDeposit = this.state.approxDeposit
 
-            return ( approxDeposit * APY / 100 / 365 * approxDays)
+            return ( approxDeposit * this.state.apy / 100 / 365 * approxDays)
         }
 
         getReferralLink = () => {
@@ -374,14 +383,13 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
 
             let {disburseDuration, contractDeployTime, cliffTime, referralFeeEarned, token_balance, pendingDivs, totalEarnedTokens, depositedTokens, stakingTime, coinbase, tvl } = this.state
 
+            token_balance = new BigNumber(token_balance ).div(1e18).toString(10)
+            token_balance = getFormattedNumber(token_balance, 6)
+
             let { the_graph_result } = this.props
 
             let usd_per_token = the_graph_result.token_data ? the_graph_result.token_data["0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17"].token_price_usd : 1
             let usd_per_idyp = the_graph_result.token_data ? the_graph_result.token_data["0xbd100d061e120b2c67a24453cf6368e63f1be056"].token_price_usd : 1
-
-            token_balance = new BigNumber(token_balance ).div(1e18).toString(10)
-            token_balance = getFormattedNumber(token_balance, 6)
-
 
             pendingDivs = new BigNumber(pendingDivs).div(10 ** TOKEN_DECIMALS).times(usd_per_idyp).div(usd_per_token).toString(10)
             pendingDivs = getFormattedNumber(pendingDivs, 6)
@@ -437,7 +445,9 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
             let id = Math.random().toString(36)
 
 
-            let apy = new BigNumber(apr).div(1e2).times(usd_per_idyp).div(usd_per_token).times(1e2).toFixed(2)
+            // let apy = new BigNumber(apr).div(1e2).times(usd_per_idyp).div(usd_per_token).times(1e2).toFixed(2)
+
+            //this.setState({apy})
 
             return (<div>
 
@@ -605,7 +615,7 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                                         },
                                         {
                                             title: `APY`,
-                                            number: getFormattedNumber(apy, 2)+'%'
+                                            number: getFormattedNumber(this.state.apy, 2)+'%'
                                         }
                                     ]} />
                                     <div className='l-box'>
