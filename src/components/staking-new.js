@@ -230,6 +230,22 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
 
         }
 
+        handleWithdrawDyp = async () => {
+            let amountConstant = await constant.depositedTokens(this.state.coinbase)
+            amountConstant = new BigNumber(amountConstant).toFixed(0)
+
+            let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds)
+
+            //console.log({withdrawAsToken, amountBuyback, deadline})
+
+            try {
+                constant.unstake(amountConstant, 0, deadline)
+            }  catch(e) {
+                console.error(e)
+                return;
+            }
+        }
+
         handleWithdraw = async (e) => {
             e.preventDefault()
 
@@ -240,14 +256,14 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
 
             let amountBuyback = await staking.depositedTokens(this.state.coinbase)
 
-            let router = await window.getPancakeswapRouterContract()
-            let WETH = await router.methods.WETH().call()
-            let platformTokenAddress = window.config.reward_token_address
-            let rewardTokenAddress = window.config.reward_token_address2
-            let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
-            let _amountOutMin = await router.methods.getAmountsOut(amountBuyback, path).call()
-            _amountOutMin = _amountOutMin[_amountOutMin.length - 1]
-            _amountOutMin = new BigNumber(_amountOutMin).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
+            // let router = await window.getPancakeswapRouterContract()
+            // let WETH = await router.methods.WETH().call()
+            // let platformTokenAddress = window.config.reward_token_address
+            // let rewardTokenAddress = window.config.reward_token_address2
+            // let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
+            // let _amountOutMin = await router.methods.getAmountsOut(amountBuyback, path).call()
+            // _amountOutMin = _amountOutMin[_amountOutMin.length - 1]
+            // _amountOutMin = new BigNumber(_amountOutMin).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
 
             let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds)
 
@@ -269,12 +285,12 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
 
             console.log({withdrawAsToken, amountBuyback, minAmounts, deadline})
 
-            try {
-                setTimeout(() => constant.unstake(amountConstant, 0, deadline), 10e3)
-            }  catch(e) {
-                console.error(e)
-                return;
-            }
+            // try {
+            //     setTimeout(() => constant.unstake(amountConstant, 0, deadline), 10e3)
+            // }  catch(e) {
+            //     console.error(e)
+            //     return;
+            // }
 
             try {
                 staking.withdraw(withdrawAsToken, amountBuyback, minAmounts, deadline)
@@ -782,10 +798,16 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                     <button title={canWithdraw?'':`You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
                                                         WITHDRAW
                                                     </button>
-                                                    <p style={{fontSize: '.8rem'}}
-                                                       className='mt-1 text-center mb-0 text-muted mt-3'>
-                                                        To <strong>WITHDRAW</strong> you will be asked to sign <strong>2 transactions</strong>
-                                                    </p>
+                                                    <button onClick={e => {
+                                                        e.preventDefault()
+                                                        this.handleWithdrawDyp()
+                                                    }} title={canWithdraw?'':`You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
+                                                        WITHDRAW DYP
+                                                    </button>
+                                                    {/*<p style={{fontSize: '.8rem'}}*/}
+                                                    {/*   className='mt-1 text-center mb-0 text-muted mt-3'>*/}
+                                                    {/*    To <strong>WITHDRAW</strong> you will be asked to sign <strong>2 transactions</strong>*/}
+                                                    {/*</p>*/}
                                                 </form>
                                             </div>
                                         </div>
