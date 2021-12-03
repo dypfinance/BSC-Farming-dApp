@@ -289,35 +289,27 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
 
             let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds)
 
-            let address = this.state.coinbase
+            // let address = this.state.coinbase
+            //
+            // let amount = await constant.getTotalPendingDivs(address)
+            // let router = await window.getPancakeswapRouterContract()
+            // let WETH = await router.methods.WETH().call()
+            // let platformTokenAddress = window.config.reward_token_address
+            // let rewardTokenAddress = window.config.reward_token_address2
+            // let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
+            // let _amountOutMinConstant = await router.methods.getAmountsOut(amount, path).call()
+            // _amountOutMinConstant = _amountOutMinConstant[_amountOutMinConstant.length - 1]
+            // _amountOutMinConstant = new BigNumber(_amountOutMinConstant).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
+            //
+            // let referralFee = new BigNumber(_amountOutMinConstant).times(500).div(1e4).toFixed(0)
+            // referralFee = referralFee.toString()
 
-            let amount = await constant.getTotalPendingDivs(address)
-            let router = await window.getPancakeswapRouterContract()
-            let WETH = await router.methods.WETH().call()
-            let platformTokenAddress = window.config.reward_token_address
-            let rewardTokenAddress = window.config.reward_token_address2
-            let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
-            let _amountOutMinConstant = await router.methods.getAmountsOut(amount, path).call()
-            _amountOutMinConstant = _amountOutMinConstant[_amountOutMinConstant.length - 1]
-            _amountOutMinConstant = new BigNumber(_amountOutMinConstant).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
-
-            let referralFee = new BigNumber(_amountOutMinConstant).times(500).div(1e4).toFixed(0)
-            referralFee = referralFee.toString()
-
-            //Claim Parameters for Farm
-            /*
-                _amountOutMin_claimAsToken_dyp
-                _amountOutMin_attemptSwap
-                _deadline
-            */
-
-
-            try {
-                setTimeout(() => constant.claim(referralFee, _amountOutMinConstant, deadline), 10e3)
-            }  catch(e) {
-                console.error(e)
-                return;
-            }
+            // try {
+            //     setTimeout(() => constant.claim(referralFee, _amountOutMinConstant, deadline), 10e3)
+            // }  catch(e) {
+            //     console.error(e)
+            //     return;
+            // }
 
             try {
                 staking.claim(0, 0, deadline)
@@ -328,6 +320,41 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
         }
 
         handleClaimAsDivs = async (token) => {
+
+            let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds)
+
+            // let address = this.state.coinbase
+            //
+            // let amount = await constant.getTotalPendingDivs(address)
+            // let router = await window.getPancakeswapRouterContract()
+            // let WETH = await router.methods.WETH().call()
+            // let platformTokenAddress = window.config.reward_token_address
+            // let rewardTokenAddress = window.config.reward_token_address2
+            // let path = [...new Set([rewardTokenAddress, WETH, platformTokenAddress].map(a => a.toLowerCase()))]
+            // let _amountOutMinConstant = await router.methods.getAmountsOut(amount, path).call()
+            // _amountOutMinConstant = _amountOutMinConstant[_amountOutMinConstant.length - 1]
+            // _amountOutMinConstant = new BigNumber(_amountOutMinConstant).times(100 - window.config.slippage_tolerance_percent).div(100).toFixed(0)
+            //
+            // let referralFee = new BigNumber(_amountOutMinConstant).times(500).div(1e4).toFixed(0)
+            // referralFee = referralFee.toString()
+
+            // try {
+            //     setTimeout(() => constant.claim(referralFee, _amountOutMinConstant, deadline), 10e3)
+            // }  catch(e) {
+            //     console.error(e)
+            //     return;
+            // }
+
+            try {
+                staking.claimAs(window.config.claim_as_eth_address, 0, 0, 0, deadline)
+            }  catch(e) {
+                console.error(e)
+                return;
+            }
+
+        }
+
+        handleClaimDyp = async () => {
 
             let deadline = Math.floor(Date.now()/1e3 + window.config.tx_max_wait_seconds)
 
@@ -346,27 +373,12 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             let referralFee = new BigNumber(_amountOutMinConstant).times(500).div(1e4).toFixed(0)
             referralFee = referralFee.toString()
 
-            //Claim Parameters for Farm
-            /*
-                _amountOutMin_claimAsToken_dyp
-                _amountOutMin_attemptSwap
-                _deadline
-            */
-
             try {
-                setTimeout(() => constant.claim(referralFee, _amountOutMinConstant, deadline), 10e3)
+                constant.claim(referralFee, _amountOutMinConstant, deadline)
             }  catch(e) {
                 console.error(e)
                 return;
             }
-
-            try {
-                staking.claimAs(window.config.claim_as_eth_address, 0, 0, 0, deadline)
-            }  catch(e) {
-                console.error(e)
-                return;
-            }
-
         }
 
         handleSetMaxDeposit = (e) => {
@@ -784,22 +796,38 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                         <label htmlFor='deposit-amount' className='text-left d-block'>REWARDS</label>
                                                         <div className='form-row'>
                                                             <div className='col-md-6'>
-                                                                <p className='form-control  text-right' style={{border: 'none', marginBottom: 0, paddingLeft: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivsEth}</span> <small className='text-bold'>WBNB</small></p>
+                                                                <p className='form-control  text-center' style={{border: 'none', marginBottom: 0, paddingLeft: '1px', paddingRight: '10px',  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivsEth}</span> <small className='text-bold'>WBNB</small></p>
                                                             </div>
                                                             <div className='col-md-6'>
-                                                                <p className='form-control  text-right' style={{border: 'none', marginBottom: 0, paddingLeft: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivs}</span> <small className='text-bold'>DYP</small></p>
+                                                                <p className='form-control  text-center' style={{border: 'none', marginBottom: 0, paddingLeft: '11px', paddingRight: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivs}</span> <small className='text-bold'>DYP</small></p>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <button title={claimTitle} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
-                                                        CLAIM AS WBNB
-                                                    </button>
-                                                    <button onClick={e => {
-                                                        e.preventDefault()
-                                                        this.handleClaimAsDivs(window.config.claim_as_eth_address)
-                                                    }} className='btn  btn-primary btn-block l-outline-btn' type='button'>
-                                                        CLAIM AS ETH
-                                                    </button>
+                                                    <div className='row'>
+                                                        <div style={{ marginBottom: '0.7rem'}} className='col-12 col-sm-6'>
+                                                            <button title={claimTitle} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
+                                                                CLAIM AS WBNB
+                                                            </button>
+                                                        </div>
+                                                        <div style={{ marginBottom: '0.7rem' }} className='col-12 col-sm-6'>
+                                                            <button onClick={e => {
+                                                                e.preventDefault()
+                                                                this.handleClaimDyp()
+                                                            }} title={claimTitle} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
+                                                                CLAIM DYP
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <div className='row'>
+                                                        <div className='col-12 col-sm-6'>
+                                                            <button onClick={e => {
+                                                                e.preventDefault()
+                                                                this.handleClaimAsDivs(window.config.claim_as_eth_address)
+                                                            }} className='btn  btn-primary btn-block l-outline-btn' type='button'>
+                                                                CLAIM AS ETH
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                     {/*<button onClick={this.handleClaimAsDivs(window.config.claim_as_eth_address)} className='btn  btn-primary btn-block l-outline-btn' type='button'>*/}
                                                     {/*    CLAIM AS ETH*/}
                                                     {/*</button>*/}
@@ -812,10 +840,10 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                     {/*<button onClick={this.handleClaimAsDivs(window.config.reward_token_address2)} className='btn  btn-primary btn-block l-outline-btn' type='button'>*/}
                                                     {/*    CLAIM AS DYP*/}
                                                     {/*</button>*/}
-                                                    <p style={{fontSize: '.8rem'}}
-                                                       className='mt-1 text-center mb-0 text-muted mt-3'>
-                                                        To <strong>CLAIM</strong> you will be asked to sign <strong>2 transactions</strong>
-                                                    </p>
+                                                    {/*<p style={{fontSize: '.8rem'}}*/}
+                                                    {/*   className='mt-1 text-center mb-0 text-muted mt-3'>*/}
+                                                    {/*    To <strong>CLAIM</strong> you will be asked to sign <strong>2 transactions</strong>*/}
+                                                    {/*</p>*/}
                                                 </form>
                                             </div>
                                         </div>
