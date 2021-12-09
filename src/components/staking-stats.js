@@ -226,6 +226,29 @@ export default class StakingStats extends React.Component {
         return usdValue
     }
 
+    getTotalUsdValueOfDypDeposited = () => {
+        let usdValue = 0, lp_data
+
+        if (!(lp_data = this.props.the_graph_result.lp_data)) {
+            return 0
+        }
+
+        let usd_per_token = this.props.the_graph_result.token_data ? this.props.the_graph_result.token_data["0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17"].token_price_usd : 0
+
+        for (let lp_id of window.LP_ID_LIST) {
+            let pool_info;
+            if (!(pool_info = this.state.pools_info[lp_id])) continue;
+            let usdValueLp = pool_info.depositedLp/1e18 * lp_data[lp_id].usd_per_lp
+            if (usdValueLp) {
+                usdValue += pool_info.depositedDyp/1e18 * usd_per_token
+                // let depositedDyp =  pool_info.depositedDyp/1e18 * usd_per_token
+                // usdValue = usdValue + depositedDyp
+            }
+        }
+
+        return usdValue
+    }
+
     getTotalClaimableEth = () => {
         let claimableEth = 0
 
@@ -304,7 +327,8 @@ export default class StakingStats extends React.Component {
                         <thead>
                             <tr>
                                 <th>Pool</th>
-                                <th>Deposited LP + DYP</th>
+                                <th>Deposited LP</th>
+                                <th>Deposited DYP</th>
                                 <th>Claimable DYP</th>
                                 <th>Claimable WBNB</th>
                                 <th>Earned WBNB</th>
@@ -356,17 +380,21 @@ export default class StakingStats extends React.Component {
                                     let combineName = string[0].toUpperCase() + ' ' + string[1]
 
                                     return (
-                                    <tr key={lp_id} style={{visibility: displayNone, display: displayNone2}}>
-                                        <td> <img src={addressImg} width={'20px'} /> {combineName} </td>
-                                        {/*<td className={Number(depositedLp) > 0 ? 'text-bold' : 'text-muted'}> {f( depositedLp/1e18 * window.rebase_factors[i], 6)} (${f( ((depositedLp/1e18*usd_per_lp) + (depositedDyp/1e18*usd_per_token)), 2 )}) </td>*/}
-                                        <td className={Number(depositedLp) > 0 ? 'text-bold' : 'text-muted'}> ${f( ((depositedLp/1e18*usd_per_lp) + (depositedDyp/1e18*usd_per_token)), 2 )} </td>
-                                        {/*<td className={Number(claimableTokens) > 0 ? 'text-bold' : 'text-muted'}> {f( claimableTokens/1e18, 6)} (${f( claimableTokens/1e18 * usd_per_idyp, 2 )}) </td>*/}
-                                        <td className={Number(claimableTokens) > 0 ? 'text-bold' : 'text-muted'}> ${f( claimableTokens/1e18 * usd_per_idyp, 2 )} </td>
-                                        <td className={Number(claimableEth) > 0 ? 'text-bold' : 'text-muted'}> {f(claimableEth / 1e18, 6)} (${f(claimableEth / 1e18 * usd_per_eth, 2)}) </td>
-                                        <td className={Number(wethEarned) > 0 ? 'text-bold' : 'text-muted'}> {f(wethEarned / 1e18, 6)} (${f(wethEarned / 1e18 * usd_per_eth, 2)}) </td>
-                                        {can_access && <td className={Number(wethPaidOut) > 0 ? 'text-bold' : 'text-muted'}> {f( wethPaidOut/1e18, 6)} (${f( wethPaidOut/1e18 * usd_per_eth , 2 )}) </td>}
-                                        <td> <button onClick={() => this.handleClaim(contractAddress)} className='btn btn-primary'>CLAIM</button> </td>
-                                    </tr>
+                                        <tr key={lp_id} style={{visibility: displayNone, display: displayNone2}}>
+                                            <td> <img src={addressImg} width={'20px'} /> {combineName} </td>
+                                            <td className={Number(depositedLp) > 0 ? 'text-bold' : 'text-muted'}> {f( depositedLp/1e18 * window.rebase_factors[i], 6)} (${f( depositedLp/1e18*usd_per_lp, 2 )}) </td>
+                                            {/*<td className={Number(depositedLp) > 0 ? 'text-bold' : 'text-muted'}> ${f( ((depositedLp/1e18*usd_per_lp) + (depositedDyp/1e18*usd_per_token)), 2 )} </td>*/}
+
+                                            {/*Deposited DYP*/}
+                                            <td className={Number(depositedLp) > 0 ? 'text-bold' : 'text-muted'}> {f( depositedDyp/1e18 * window.rebase_factors[i], 2)} (${f( depositedDyp/1e18*usd_per_token, 2 )}) </td>
+
+                                            {/*<td className={Number(claimableTokens) > 0 ? 'text-bold' : 'text-muted'}> {f( claimableTokens/1e18, 6)} (${f( claimableTokens/1e18 * usd_per_idyp, 2 )}) </td>*/}
+                                            <td className={Number(claimableTokens) > 0 ? 'text-bold' : 'text-muted'}> {f( claimableTokens/1e18, 6 )} (${f( claimableTokens/1e18 * usd_per_idyp, 2 )}) </td>
+                                            <td className={Number(claimableEth) > 0 ? 'text-bold' : 'text-muted'}> {f(claimableEth / 1e18, 6)} (${f(claimableEth / 1e18 * usd_per_eth, 2)}) </td>
+                                            <td className={Number(wethEarned) > 0 ? 'text-bold' : 'text-muted'}> {f(wethEarned / 1e18, 6)} (${f(wethEarned / 1e18 * usd_per_eth, 2)}) </td>
+                                            {can_access && <td className={Number(wethPaidOut) > 0 ? 'text-bold' : 'text-muted'}> {f( wethPaidOut/1e18, 6)} (${f( wethPaidOut/1e18 * usd_per_eth , 2 )}) </td>}
+                                            <td> <button onClick={() => this.handleClaim(contractAddress)} className='btn btn-primary'>CLAIM</button> </td>
+                                        </tr>
                                     )
                                 })
                             }
@@ -374,10 +402,11 @@ export default class StakingStats extends React.Component {
                                 <td>Total</td>
                                 <td> ${f( this.getTotalUsdValueOfLpDeposited(), 2)} </td>
                                 {/*<td> {f( this.getTotalClaimableTokens(), 6)} (${f( this.getTotalClaimableTokens() * usd_per_token, 2 )}) </td>*/}
-                                <td> ${f( this.getTotalClaimableTokens() * usd_per_idyp, 2 )} </td>
+                                <td> ${f( this.getTotalUsdValueOfDypDeposited() , 2 )} </td>
+                                <td> {f( this.getTotalClaimableTokens(), 6 )} (${f( this.getTotalClaimableTokens() * usd_per_idyp, 2 )}) </td>
                                 <td> {f(this.getTotalClaimableEth(), 6)} (${f(this.getTotalClaimableEth() * usd_per_eth, 2)}) </td>
                                 <td> {f( this.getCombinedWethEarnings(), 6)} (${f( this.getCombinedWethEarnings() * usd_per_eth , 2 )}) </td>
-                                {can_access && <td> {f( this.getTotalClaimedEth(), 6)} (${f( this.getTotalClaimedEth() * usd_per_eth , 2 )}) </td>} 
+                                {can_access && <td> {f( this.getTotalClaimedEth(), 6)} (${f( this.getTotalClaimedEth() * usd_per_eth , 2 )}) </td>}
                                 <td></td>
                             </tr>
                         </tbody>
