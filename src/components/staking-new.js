@@ -968,7 +968,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                             number: '$' + tvl_usd
                                         },
                                         {
-                                            title: `APY`,
+                                            title: `APR`,
                                             number: apy + '%',
                                         }
                                     ]} />
