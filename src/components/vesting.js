@@ -263,10 +263,16 @@ export default function initVesting({ staking, buyers, apr, liquidity='ETH', loc
                 console.error(e)
             }
 
+            if(stakingAddress == '0x055cd97920d9380facdc833991cc93b3be177974'){
+                staking.LOCKUP_TIME().then((cliffTime) => {
+                    this.setState({ cliffTime: Number(cliffTime) })
+                }).catch(console.error)
+            }
 
-            staking.LOCKUP_TIME().then((cliffTime) => {
-                this.setState({ cliffTime: Number(cliffTime) })
-            }).catch(console.error)
+            if(stakingAddress != '0x055cd97920d9380facdc833991cc93b3be177974'){
+                let hide = true
+                this.setState({hide})
+            }
 
             staking.contractStartTime().then(contractDeployTime => {
                 this.setState({ contractDeployTime })
@@ -498,18 +504,29 @@ export default function initVesting({ staking, buyers, apr, liquidity='ETH', loc
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className='form-row'>
-                                                        <div className='col-md-6 mb-2'>
-                                                            <button className='btn  btn-primary btn-block ' type='submit'>
-                                                                CLAIM
-                                                            </button>
+                                                    {!this.state.hide ? (
+                                                        <div className='form-row'>
+                                                            <div className='col-md-6 mb-2'>
+                                                                <button className='btn  btn-primary btn-block ' type='submit'>
+                                                                    CLAIM
+                                                                </button>
+                                                            </div>
+                                                            <div className='col-md-6 mb-2'>
+                                                                <button className='btn  btn-primary btn-block l-outline-btn' type='button' onClick={this.handleReinvest}>
+                                                                    STAKE
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                        <div className='col-md-6 mb-2'>
-                                                            <button className='btn  btn-primary btn-block l-outline-btn' type='button' onClick={this.handleReinvest}>
-                                                                STAKE
-                                                            </button>
+                                                    ) : (
+                                                        <div className='form-row'>
+                                                            <div className='col-md-12 mb-2'>
+                                                                <button className='btn  btn-primary btn-block ' type='submit'>
+                                                                    CLAIM
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    )}
+
 
                                                 </form>
                                             </div>

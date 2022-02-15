@@ -51,10 +51,10 @@ const StakingUsdc60 = initStaking({token: window.token_usdc_60, staking: window.
 const StakingUsdc90 = initStaking({token: window.token_usdc_90, staking: window.staking_usdc_90, liquidity: usdc_address, lp_symbol:'DYP/BUSD', reward: '100,000', lock: '90 Days', rebase_factor: rebase_factors[11], expiration_time: '2 October 2021'})
 
 
-//Vesting & staking 3 months
+//Vesting & staking 3 month
 const eth_address = 'ETH'
 const bnb_address = 'BNB'
-const Vesting = initVesting({ staking: window.constant_staking_30, buyers: true, apr: 0, liquidity: eth_address, expiration_time: '16 February 2022' })
+const Vesting = initVesting({ staking: window.constant_stakingvesting_30, buyers: true, apr: 0, liquidity: eth_address, expiration_time: '16 February 2022' })
 const VestingStaking = initVestingStaking({ staking: window.constant_staking_60, apr: 0, liquidity: eth_address, expiration_time: '16 February 2022' })
 const VestingAirdrop = initVesting({ staking: window.constant_staking_90, buyers: false, apr: 0, liquidity: eth_address, expiration_time: '23 November 2022' })
 const VestingStakingAirdrop = initVestingStaking({ staking: window.constant_staking_120, apr: 0, liquidity: eth_address, expiration_time: '23 November 2022' })
