@@ -10,6 +10,7 @@ import initVestingStaking from "./components/vesting-staking"
 import initConstantStaking from './components/constant-staking'
 import initBuybackStakingNew from './components/buy-back-staking-new'
 import initStakingNew from './components/staking-new'
+import initConstantStakingiDYP from './components/constant-staking-idyp'
 
 import StakingList from './components/staking-list'
 import StakingListEth from './components/staking-list-eth.js'
@@ -80,6 +81,10 @@ const StakingNewError2 = initStakingNew({token: window.token_new, staking: windo
 const StakingNewError3 = initStakingNew({token: window.token_new, staking: window.farming_error_3, constant: window.constant_staking_new7, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
 const StakingNewError4 = initStakingNew({token: window.token_new, staking: window.farming_error_4, constant: window.constant_staking_new8, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
 const StakingNewError5 = initStakingNew({token: window.token_new, staking: window.farming_error_5, constant: window.constant_staking_new9, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
+
+//Constant Staking iDYP
+const ConstantStakingiDYP1 = initConstantStakingiDYP({ staking: window.constant_staking_idyp_1, apr: 20, liquidity: wbnb_address, expiration_time: '28 February 2023' })
+const ConstantStakingiDYP2 = initConstantStakingiDYP({ staking: window.constant_staking_idyp_2, apr: 45, liquidity: wbnb_address, expiration_time: '28 February 2023' })
 
 const Modal = ({ handleClose, show, children }) => {
     const showHideClassName = show ? "modal display-block" : "modal display-none";
@@ -376,6 +381,8 @@ render() {
       <Route exact path='/farming-emergency-4' render={props => <StakingNewError4 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[3]} {...props} />} />
       <Route exact path='/farming-emergency-5' render={props => <StakingNewError5 the_graph_result={this.state.the_graph_result_BSC_V2} lp_id={LP_IDs.wbnb[4]} {...props} />} />
 
+      <Route exact path='/staking-idyp-1' render={props => <ConstantStakingiDYP1 the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
+      <Route exact path='/staking-idyp-2' render={props => <ConstantStakingiDYP2 the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
 
       </div>
       <Footer />
