@@ -255,8 +255,9 @@ window.config = {
 	farming_new_7_address: '0x4d3b5d5bb0f4a6001fc78e10d34a52625d9db172',
 	farming_new_8_address: '0x0032a480ef94a3310fbc09fe95a03897ac0c6e1a',
 	farming_new_9_address: '0x29f3991998138f1cac7a1c6aa0a62edbee54aac7',
-	farming_new_10_address: '0x4b01aa07a35fa4becce1d431bb82e1dae7ca77cc'
+	farming_new_10_address: '0x4b01aa07a35fa4becce1d431bb82e1dae7ca77cc',
 
+	reward_token_dyps_address: '0x4B2dfB131B0AE1D6d5D0c9a3a09c028a5cD10554'
 }
 
 // add buyback supported deposit tokens here, lowercase
@@ -4158,6 +4159,10 @@ window.token = new TOKEN
 window.staking = new STAKING
 window.reward_token = new TOKEN("REWARD_TOKEN")
 window.reward_token_idyp = new TOKEN("REWARD_TOKEN_IDYP")
+
+window.REWARD_TOKEN_DYPS_ABI = window.TOKEN_ABI
+window.token_dyps = new TOKEN("REWARD_TOKEN_DYPS")
+
 window.weth = new TOKEN("WETH")
 
 window.token_dyp_30 = new TOKEN("TOKEN_DYP30")
