@@ -382,7 +382,7 @@ button.l-outline-btn {
 button.l-outline-btn:hover,
 button.l-outline-btn:focus,
 button.l-outline-btn:active {
-    background: var(--solid-btn-bg)!important;
+    /*background: var(--solid-btn-bg)!important;*/
     color: var(--white)!important;
     border: 1px solid var(--solid-btn-bg)!important;
 }
