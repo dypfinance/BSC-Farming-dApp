@@ -2,10 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import getFormattedNumber from '../functions/get-formatted-number'
 import Address from './address'
-import Boxes from './boxes'
-import Dots from "./elements/dots"
 import Modal from "./modal";
-import WalletConnectProvider from "@walletconnect/web3-provider";
 import Popup from "./popup";
 import Tooltip from "@material-ui/core/Tooltip"
 import {Button} from "@material-ui/core";
@@ -738,9 +735,12 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             let isOwner = String(this.state.coinbase).toLowerCase() === String(window.config.admin_address).toLowerCase()
 
 
+            let apr2 = 50
+            let ApyStake = new BigNumber(apr2).div(1e2).times(usd_per_idyp).div(usd_per_token).times(1e2).toFixed(2)
+
             let infoItems = [
                 "75% from your deposit is added to PancakeSwap V2 BNB/iDYP LP",
-                "25% from your deposit is sent to DYP Staking with "+ apy +"% APR"
+                "25% from your deposit is sent to DYP Staking with "+ ApyStake +"% APR"
             ]
             let tooltip1 = infoItems.join('\n')
 
@@ -770,6 +770,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                     WBNB/ETH/DYP as rewards.</Button>
                                             </Tooltip>
                                         </p>
+                                        {/*{this.state.ApyStake}*/}
                                         <p>All pool rewards are automatically converted from iDYP to WBNB by the
                                             smart contract, decreasing the risk of iDYP price volatility.
                                             <Tooltip placement="top" title={<div style={{ whiteSpace: 'pre-line' }}>{tooltip2}</div>}>

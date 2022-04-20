@@ -170,10 +170,32 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
 
         componentDidMount() {
             this.refreshBalance()
-            this.getTotalTvl()
+            this.getTotalTvl().then()
             window._refreshBalInterval = setInterval(this.refreshBalance, 3000)
 
             this.getPriceDYP()
+        }
+
+
+        getTotalTvl = async () =>
+        {
+            let { the_graph_result } = this.props
+
+            let usd_per_token = the_graph_result.token_data ? the_graph_result.token_data["0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17"].token_price_usd : 1
+            let usd_per_idyp = the_graph_result.token_data ? the_graph_result.token_data["0xbd100d061e120b2c67a24453cf6368e63f1be056"].token_price_usd : 1
+
+            //apr is 30%
+            let apy1_buyback1 = new BigNumber(0.225)
+            let apy2_buyback1 = new BigNumber(0.25).div(usd_per_token).times(30).div(1e2).times(usd_per_idyp)
+
+            // APR is 100% considering 1$ as initial investment, 0.75$ goes to Buyback
+            let apy1_buyback2 = new BigNumber(0.75)
+            let apy2_buyback2 = new BigNumber(0.25).div(usd_per_token).times(usd_per_idyp)
+
+            let apyBuyback1 = new BigNumber(apy1_buyback1).plus(apy2_buyback1).times(1e2).toFixed(0)
+            let apyBuyback2 = new BigNumber(apy1_buyback2).plus(apy2_buyback2).times(1e2).toFixed(0)
+
+            this.setState({apyBuyback1, apyBuyback2})
         }
 
         getPriceDYP = async () => {
@@ -489,79 +511,6 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
         //     return window.location.origin + window.location.pathname + '?r=' + this.state.coinbase
         // }
 
-        getTotalTvl = async () => {
-
-            const { BigNumber } = window
-
-            let tvlTotal1 = 0
-
-            //let callCombinerTvl = await window.getTokenHolderBalance('0x350f3fe979bfad4766298713c83b387c2d2d7a7a', 2)
-
-            // let [usdPerToken, usdPerTokeniDYP] = await Promise.all([window.getPrice('defi-yield-protocol'), window.getPriceiDYP()])
-            let [usdPerToken, usdPerTokeniDYP, usdPerTokenDYPS] =
-                await Promise.all([
-                    window.getPrice('defi-yield-protocol'),
-                    window.getPriceiDYP(),
-                    window.getPriceDYPSBsc()
-                ])
-
-            //TODO take the iDYP from Buyback & DYP + iDYP from Staking
-            let tokensBuybackiDYP = await window.getTokenHolderBalanceiDYP('0x94B1A7B57C441890b7a0f64291B39ad6f7E14804',2) / 1e18
-            let tokensStakingiDYP = await window.getTokenHolderBalanceiDYP('0x9af074cE714FE1Eb32448052a38D274E93C5dc28',2) / 1e18
-            let tokensStakingDYP = await window.getTokenHolderBalance( '0x9af074cE714FE1Eb32448052a38D274E93C5dc28',2) / 1e18
-
-            //console.log({tokensBuybackiDYP, tokensStakingiDYP, tokensStakingDYP})
-
-            //TODO Calulate $ Value
-            let tvliDYP = ((tokensBuybackiDYP + tokensStakingiDYP) * usdPerTokeniDYP)
-            let tvlDYP = (tokensStakingDYP * usdPerToken)
-
-
-            //TODO take the iDYP from Buyback & DYP + iDYP from Staking
-            let tokensBuybackiDYP2 = await window.getTokenHolderBalanceiDYP('0x4eF782E66244A0CF002016AA1Db3019448c670aE',2) / 1e18
-            let tokensStakingiDYP2 = await window.getTokenHolderBalanceiDYP('0xDBfb96e2899d52B469C1a1C35eD71fBBa228d2cC',2) / 1e18
-            let tokensStakingDYP2 = await window.getTokenHolderBalance( '0xDBfb96e2899d52B469C1a1C35eD71fBBa228d2cC',2) / 1e18
-
-            //console.log({tokensBuybackiDYP2, tokensStakingiDYP2, tokensStakingDYP2})
-
-            //TODO Calulate $ Value
-            let tvliDYP2 = ((tokensBuybackiDYP2 + tokensStakingiDYP2) * usdPerTokeniDYP)
-            let tvlDYP2 = (tokensStakingDYP2 * usdPerToken)
-
-            /* Calculate with DYPS */
-            let tokensBuybackDYPS = await window.getTokenHolderBalanceDYPS('0x94B1A7B57C441890b7a0f64291B39ad6f7E14804',2) / 1e18
-            let tokensBuybackDYPS2 = await window.getTokenHolderBalanceDYPS('0x4eF782E66244A0CF002016AA1Db3019448c670aE',2) / 1e18
-
-            tokensBuybackDYPS = tokensBuybackDYPS * usdPerTokenDYPS
-            tokensBuybackDYPS2 = tokensBuybackDYPS2 * usdPerTokenDYPS
-            /* End DYPS */
-
-            //tvlTotal1 = usdPerToken * (callCombinerTvl/1e18)
-
-            let tvlTotalBuyback1 = tvlDYP + tvliDYP + tokensBuybackDYPS
-            this.setState({tvlTotalBuyback1})
-
-            let tvlTotalBuyback2 = tvlDYP2 + tvliDYP2 + tokensBuybackDYPS2
-            this.setState({tvlTotalBuyback2})
-
-            let tvlTotal = tvlTotalBuyback1 + tvlTotalBuyback2
-            this.setState({tvlTotal})
-
-            //apr is 30%
-            let apy1_buyback1 = new BigNumber(0.225)
-            let apy2_buyback1 = new BigNumber(0.25).div(usdPerToken).times(30).div(1e2).times(usdPerTokeniDYP)
-
-            // APR is 100% considering 1$ as initial investment, 0.75$ goes to Buyback
-            let apy1_buyback2 = new BigNumber(0.75)
-            let apy2_buyback2 = new BigNumber(0.25).div(usdPerToken).times(usdPerTokeniDYP)
-
-            let apyBuyback1 = new BigNumber(apy1_buyback1).plus(apy2_buyback1).times(1e2).toFixed(0)
-            let apyBuyback2 = new BigNumber(apy1_buyback2).plus(apy2_buyback2).times(1e2).toFixed(0)
-
-            this.setState({apyBuyback1, apyBuyback2})
-
-            return {tvlTotal}
-        }
 
         render() {
 
