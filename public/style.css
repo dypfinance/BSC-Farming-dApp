@@ -328,6 +328,11 @@ Medium Screen - Others
         .social-list ul li a {
             font-size: 16px;
         }
+
+        .padding-mobile
+        {
+            padding-bottom: 30px;
+        }
     }
     
     /*
@@ -360,6 +365,11 @@ Medium Screen - Others
         }
         .social-list ul li a {
             font-size: 16px;
+        }
+
+        .padding-mobile
+        {
+            padding-bottom: 30px;
         }
     }
     
@@ -406,6 +416,39 @@ Medium Screen - Others
         .social-list ul li a {
             font-size: 16px;
         }
+
+        .padding-mobile
+        {
+
+            padding-bottom: 30px;
+        }
+
+        .tvl_test
+        {
+            /*font-family: 'Mulish';!*! font-style: normal; *!!*! font-weight: 300; *!*/
+            /*font-style: normal;*/
+            /*font-weight: bolder;*/
+            text-align: center;
+            font-size: 16px;
+            line-height: 15px;
+            color: #FFF !important;
+            /*opacity: 0.8;*/
+            z-index: 1;
+            margin: 5px;
+            /*margin-left: 15px;*/
+        }
+
+        .testNumber
+        {
+            padding-left: 10px;
+            font-family: 'Mulish';
+            font-style: normal;
+            /*font-weight: bolder;*/
+            line-height: 15px;
+            color: #FFF !important;
+            z-index: 1;
+        }
+
     }
 
 
