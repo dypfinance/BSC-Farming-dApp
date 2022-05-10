@@ -4238,11 +4238,11 @@ window.constant_staking_120 = new CONSTANT_STAKING("CONSTANT_STAKING_120")
 window.constant_staking_new1 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW1")
 window.constant_staking_new2 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW2")
 //constant staking for Buyback New
-window.reward_token_dai = new TOKEN("REWARD_TOKEN_DAI")
 window.constant_staking_new3 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW3")
 window.constant_staking_new4 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGNEW_NEW4")
 
 //Constant staking DYP -> DAI
+window.reward_token_dai = new TOKEN("REWARD_TOKEN_DAI")
 window.constant_stakingdai = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGDAI")
 
 /*buyback*/
