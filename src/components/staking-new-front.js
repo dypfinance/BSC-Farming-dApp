@@ -2,8 +2,10 @@ import React from 'react'
 import moment from 'moment'
 import getFormattedNumber from '../functions/get-formatted-number'
 import Address from './address'
-import Boxes from './boxes'
-import Dots from "./elements/dots"
+import Modal from "./modal";
+import Popup from "./popup";
+import Tooltip from "@material-ui/core/Tooltip"
+import {Button} from "@material-ui/core";
 
 export default function initStakingNew({token, staking, constant, liquidity, lp_symbol, reward, lock, rebase_factor, expiration_time}) {
 
@@ -99,9 +101,37 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                 selectedTokenSymbol: window.buyback_tokens_farming[Object.keys(window.buyback_tokens_farming)[0]].symbol,
 
                 selectedBuybackTokenWithdraw: Object.keys(window.buyback_tokens_farming)[0],
-                selectedClaimToken: 0
+                selectedClaimToken: 0,
+                show: false,
+                popup: false,
+                is_wallet_connected: false
 
             }
+
+            this.showModal = this.showModal.bind(this)
+            this.hideModal = this.hideModal.bind(this)
+
+            this.showPopup = this.showPopup.bind(this)
+            this.hidePopup = this.hidePopup.bind(this)
+        }
+
+        // this.props.is_connected
+        showModal = () => {
+            this.setState({ show: true })
+        }
+
+        hideModal = () => {
+            this.setState({ show: false })
+
+        }
+
+        showPopup = () => {
+            this.setState({ popup: true })
+        }
+
+        hidePopup = () => {
+            this.setState({ popup: false })
+
         }
 
         handleListDownload = async (e) => {
@@ -587,13 +617,20 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
 
             return (approxDeposit*APY/100/365*approxDays)
         }
-
         render() {
 
             let {disburseDuration, contractDeployTime, cliffTime, swapAttemptPeriod, lastSwapExecutionTime,
                 tokensToBeDisbursedOrBurnt, tokensToBeSwapped, wethBalance, pendingDivsEth, totalEarnedEth,
                 token_balance, reward_token_balance, pendingDivs, totalEarnedTokens, depositedTokens, stakingTime,
                 coinbase, tvl, depositedTokensDYP, tvlConstantDYP, myDepositedLpTokens, pendingDivsStaking} = this.state
+
+
+            let is_connected = false
+
+            if(coinbase !== "0x0000000000000000000000000000000000000111")
+            {
+                is_connected = true
+            }
 
             let { the_graph_result } = this.props
 
@@ -697,28 +734,84 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
 
             let isOwner = String(this.state.coinbase).toLowerCase() === String(window.config.admin_address).toLowerCase()
 
+
+            let apr2 = 50
+            let ApyStake = new BigNumber(apr2).div(1e2).times(usd_per_idyp).div(usd_per_token).times(1e2).toFixed(2)
+
+            let infoItems = [
+                "75% from your deposit is added to PancakeSwap V2 BNB/iDYP LP",
+                "25% from your deposit is sent to DYP Staking with "+ ApyStake +"% APR"
+            ]
+            let tooltip1 = infoItems.join('\n')
+
+            let infoItems2 = [
+                "75% WBNB/ETH rewards",
+                "25% DYP rewards"
+            ]
+            let tooltip2 = infoItems2.join('\n')
+
             return (<div>
 
                     <div className='row'>
                         <div className="col-12" style={{background: 'url(img/banner/bsc-farming.svg)', backgroundSize: 'cover', resize: 'both'}}>
                             <div className="container">
+                                <Popup show={this.state.popup} handleClose={this.hidePopup} >
+                                    <div className="earn-hero-content p4token-wrapper">
+                                        <p className='h3'><b>Maximize your Yield Farming Rewards</b></p>
+                                        <p>Automatically adds liquidity to
+                                            <Tooltip placement="top" title={<div style={{ whiteSpace: 'pre-line' }}>{tooltip1}</div>}>
+                                                <Button style={{fontSize: '70%', textDecoration: 'underline', color:  'var(--color_white)'}}>
+                                                    PancakeSwap V2 & deposit to Staking </Button>
+                                            </Tooltip>
+                                            contract using one asset. To start earning, all you need is to deposit
+                                            one of the supported assets (WBNB, BTCB, ETH, BUSD, CAKE, or iDYP) and earn
+                                            <Tooltip placement="top" title={<div style={{ whiteSpace: 'pre-line' }}>{tooltip2}</div>}>
+                                                <Button style={{fontSize: '70%', textDecoration: 'underline', color:  'var(--color_white)', padding: '4px 0px 2px 5px'}}>
+                                                    WBNB/ETH/DYP as rewards.</Button>
+                                            </Tooltip>
+                                        </p>
+                                        {/*{this.state.ApyStake}*/}
+                                        <p>All pool rewards are automatically converted from iDYP to WBNB by the
+                                            smart contract, decreasing the risk of iDYP price volatility.
+                                            <Tooltip placement="top" title={<div style={{ whiteSpace: 'pre-line' }}>{tooltip2}</div>}>
+                                                <Button style={{fontSize: '70%', textDecoration: 'underline', color:  'var(--color_white)'}}>
+                                                    WBNB/ETH + DYP </Button>
+                                            </Tooltip>
+                                            is a double reward to the liquidity providers. The users can
+                                            choose between two different types of rewards: WBNB or ETH. Maintaining
+                                            token price stability — every 24 hours, the smart contract will
+                                            automatically try converting the iDYP rewards to WBNB. If the iDYP
+                                            price is affected by more than
+                                            <img src='/img/arrow.svg' alt="images not found" />2.5%, then the
+                                            maximum iDYP amount not influencing the price will be swapped to WBNB,
+                                            with the remaining amount distributed in the next day’s rewards. After
+                                            seven days, if we still have undistributed iDYP rewards, the DeFi Yield
+                                            Protocol governance will vote on whether the remaining iDYP will be
+                                            distributed to the token holders or burned (all burned tokens are out
+                                            of circulation).</p>
+                                        <p>You will receive the total amount in the initial deposit asset with
+                                            withdrawal by burning LP tokens when you unstake.</p>
+                                    </div>
+
+                                </Popup>
+                                <Modal show={this.state.show} handleConnection={this.props.handleConnection} handleConnectionWalletConnect={this.props.handleConnectionWalletConnect} handleClose={this.hideModal} />
                                 <div className='row'>
                                     <div className='col-12' style={{marginBottom: '30px'}}>
                                         <p style={{width: '100%', height: 'auto', fontFamily: 'Mulish', fontStyle: 'normal', fontWeight: '900', fontSize: '42px', lineHeight: '55px', color: '#FFFFFF', marginTop: '35px', maxHeight: '55px'}} >Farming pool</p>
                                     </div>
                                     <div className='col-6' style={{marginBottom: '27px'}}>
                                         <div className='row'>
-                                            <div style={{paddingRight: '15px'}} className='col-4'>
-                                                <button onClick={this.handleApprove}
-                                                        className='btn  btn-block btn-primary ' type='button'>
+                                            <div style={{paddingRight: '15px'}} className='col-6 button'>
+                                                <button onClick={this.showPopup}
+                                                        className='btn  btn-block btn-primary button' type='button'>
                                                     <img src="img/icon/bulb.svg" style={{float: 'left'}}
                                                          alt="wallet" />
                                                     Farming info
                                                 </button>
                                             </div>
-                                            <div style={{paddingLeft: '20px'}} className='col-4'>
-                                                <button onClick={this.handleStake}
-                                                        className='btn  btn-block btn-primary l-outline-btn'
+                                            <div style={{paddingLeft: '20px'}} className='col-6'>
+                                                <button className onClick={()=> window.open("https://www.youtube.com/watch?v=2pOUmRTMN1o", "_blank")}
+                                                        className='btn  btn-block btn-primary l-outline-btn button'
                                                         type='submit'>
                                                     <img src="img/icon/video.svg" style={{float: 'left'}}
                                                          alt="wallet" />
@@ -734,26 +827,94 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                         <div className='container'>
                             <div className='token-staking mt-4'>
                                 <div className='row'>
-                                    <div className='col-lg-6'>
-                                        <div className='row token-staking-form'>
-                                            <div className="col-12">
-                                                <div className="l-box" style={{padding: '0.5rem'}}>
-                                                    <div className="row">
-                                                        <div className="col-8" style={{marginTop: '0px'}}>
-                                                            <img src="img/icon/wallet.svg" style={{marginRight: '10px', marginTop: '3px'}}
-                                                                 alt="wallet" />
-                                                            <label htmlFor="deposit-amount" style={{margin: '0', top: '3px', position: 'relative'}}>
-                                                                Please connect wallet to use this dApp
-                                                            </label>
-                                                        </div>
-                                                        <div className="col-4">
-                                                            <button type="submit" className="btn  btn-block btn-primary l-outline-btn">
-                                                                Connect Wallet
-                                                            </button>
+                                    <div className="col-12">
+                                        <div className='row'>
+                                            <div className='col-lg-6 col-xs-12'>
+                                                <div className='row token-staking-form'>
+                                                    <div className="col-12">
+                                                        <div className="l-box" style={{padding: '0.5rem'}}>
+                                                            {is_connected ?
+                                                                <div className="row">
+                                                                    <div className="col-7" style={{marginTop: '0px'}}>
+                                                                        <img src="img/connected.png" style={{marginRight: '10px', marginTop: '3px'}}
+                                                                             alt="wallet" />
+                                                                        <span htmlFor="deposit-amount" style={{margin: '0', top: '3px', position: 'relative'}}>
+                                                                    Wallet has been connected
+                                                                </span>
+                                                                    </div>
+                                                                    <div className="col-5 text-right">
+                                                                        <div style={{marginTop: '5px', paddingRight: '15px'}}>
+                                                                            <Address style={{fontFamily: 'monospace'}} a={coinbase} />
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                                :
+                                                                <div className="row">
+                                                                    <div className="col-8" style={{marginTop: '0px'}}>
+                                                                        <img src="img/icon/wallet.svg" style={{marginRight: '10px', marginTop: '3px'}}
+                                                                             alt="wallet" />
+                                                                        <label htmlFor="deposit-amount" style={{margin: '0', top: '3px', position: 'relative'}}>
+                                                                            Please connect wallet to use this dApp
+                                                                        </label>
+                                                                    </div>
+                                                                    <div className="col-4">
+                                                                        <button type="submit" onClick={this.showModal} className="btn  btn-block btn-primary l-outline-btn">
+                                                                            Connect Wallet
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            }
+
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                                <div className='col-lg-6 col-xs-12'>
+                                                <div className='row token-staking-form'>
+                                                    <div className="col-12 padding-mobile">
+                                                        <div className="" style={{background: 'linear-gradient(257.76deg, #FFD962 6.29%, #F0BB1D 93.71%)',
+                                                            boxShadow: '0px 4px 24px rgba(0, 0, 0, 0.06)', borderRadius: '6px', paddingLeft: '5px', padding: '10px'}}>
+                                                            <div className="row">
+                                                                <div style={{marginTop: '0px', paddingLeft: ''}} className='col-3'>
+                                                                    <img src="img/icon/bsc.svg"
+                                                                         style={{marginRight: '10px', marginTop: '5px'}}
+                                                                         alt="wallet" />
+                                                                    <label htmlFor="deposit-amount"
+                                                                           style={{margin: '0px', top: '3px', position: 'relative', color: 'white'}}>
+                                                                        BSC Yield
+                                                                    </label>
+                                                                </div>
+                                                                <div className="col-9">
+                                                                    <div className='row' >
+                                                                        <div className='col-6' style={{margin : '0px', padding: '0px'}}>
+                                                                            <div className='test'>
+                                                                                <div className='tvl_test'>
+                                                                                    TVL USD <span className='testNumber'>$ {tvl_usd} </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div className='col-5' style={{marginLeft : '10px', padding: '0px'}}>
+                                                                            <div className='test'>
+                                                                                <div className='tvl_test'>
+                                                                                    APR <span className='testNumber'> <img src='img/icon/vector.svg' /> {apy}% </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div className='col-lg-6'>
+                                        <div className='row token-staking-form'>
                                             <div className='col-12'>
                                                 <div className='l-box'>
                                                     {showDeposit == true ?
@@ -793,16 +954,16 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                                 {/*</div>*/}
                                                                 <div>
                                                                     <p>Balance: {getFormattedNumber(this.state.selectedTokenBalance/10**this.state.selectedTokenDecimals, 6)} {this.state.selectedTokenSymbol}</p>
-                                                                    <select value={this.state.selectedBuybackToken} onChange={e => this.handleSelectedTokenChange(e.target.value)} className='form-control' className='form-control'>
+                                                                    <select  disabled={!is_connected} value={this.state.selectedBuybackToken} onChange={e => this.handleSelectedTokenChange(e.target.value)}  className='form-control'>
                                                                         {Object.keys(window.buyback_tokens_farming).map((t) => <option key={t} value={t}> {window.buyback_tokens_farming[t].symbol} </option>)}
                                                                     </select>
                                                                     <br />
                                                                 </div>
                                                                 <div className='input-group '>
 
-                                                                    <input value={Number(this.state.depositAmount) > 0 ? this.state.depositAmount  : this.state.depositAmount} onChange={e => this.setState({ depositAmount: e.target.value })} className='form-control left-radius' placeholder='0' type='text' />
+                                                                    <input disabled={!is_connected} value={Number(this.state.depositAmount) > 0 ? this.state.depositAmount  : this.state.depositAmount} onChange={e => this.setState({ depositAmount: e.target.value })} className='form-control left-radius' placeholder='0' type='text' />
                                                                     <div className='input-group-append'>
-                                                                        <button className='btn  btn-primary right-radius btn-max l-light-btn' style={{ cursor: 'pointer' }} onClick={this.handleSetMaxDeposit}>
+                                                                        <button disabled={!is_connected} className='btn  btn-primary right-radius btn-max l-light-btn' style={{ cursor: 'pointer' }} onClick={this.handleSetMaxDeposit}>
                                                                             MAX
                                                                         </button>
                                                                     </div>
@@ -825,13 +986,13 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                             </div>
                                                             <div className='row'>
                                                                 <div style={{paddingRight: '0.3rem'}} className='col-6'>
-                                                                    <button onClick={this.handleApprove}
+                                                                    <button disabled={!is_connected} onClick={this.handleApprove}
                                                                             className='btn  btn-block btn-primary ' type='button'>
                                                                         APPROVE
                                                                     </button>
                                                                 </div>
                                                                 <div style={{paddingLeft: '0.3rem'}} className='col-6'>
-                                                                    <button onClick={this.handleStake}
+                                                                    <button disabled={!is_connected} onClick={this.handleStake}
                                                                             className='btn  btn-block btn-primary l-outline-btn'
                                                                             type='submit'>
                                                                         DEPOSIT
@@ -890,12 +1051,12 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                             </div>
                                                             <div className="form-row">
                                                                 <div className="col-6">
-                                                                    <select value={this.state.selectedBuybackTokenWithdraw} onChange={e => this.handleSelectedTokenChangeWithdraw(e.target.value)} className='form-control' className='form-control'>
+                                                                    <select disabled={!is_connected} value={this.state.selectedBuybackTokenWithdraw} onChange={e => this.handleSelectedTokenChangeWithdraw(e.target.value)} className='form-control' className='form-control'>
                                                                         {Object.keys(window.buyback_tokens_farming).map((t) => <option key={t} value={t}> {window.buyback_tokens_farming[t].symbol} </option>)}
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-6">
-                                                                    <select defaultValue="DYP" className='form-control' className='form-control'>
+                                                                    <select disabled={!is_connected} defaultValue="DYP" className='form-control' className='form-control'>
                                                                         <option value="DYP"> DYP </option>)}
                                                                     </select>
                                                                 </div>
@@ -904,7 +1065,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                         {/*<br />*/}
                                                         <div className="form-row">
                                                             <div className="col-6">
-                                                                <button title={canWithdraw?'':`You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
+                                                                <button title={canWithdraw?'':`You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw || !is_connected} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
                                                                     WITHDRAW
                                                                 </button>
                                                             </div>
@@ -912,7 +1073,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                                 <button onClick={e => {
                                                                     e.preventDefault()
                                                                     this.handleWithdrawDyp()
-                                                                }} title={canWithdraw?'':`You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
+                                                                }} title={canWithdraw?'':`You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw || !is_connected} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
                                                                     WITHDRAW
                                                                 </button>
                                                             </div>
@@ -932,22 +1093,22 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                             <div className='form-row mb-3'>
                                                                 <div className='col-6'>
                                                                     {/*<p className='form-control  text-center' style={{border: 'none', marginBottom: 0, paddingLeft: '1px', paddingRight: '10px',  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivsEth}</span> <small className='text-bold'>WAVAX</small></p>*/}
-                                                                    <input value={Number(pendingDivsEth) > 0 ? `${pendingDivsEth} WBNB` : `${pendingDivsEth} WBNB`} onChange={e => this.setState({pendingDivsEth: Number(e.target.value) > 0 ? e.target.value : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
+                                                                    <input  value={Number(pendingDivsEth) > 0 ? `${pendingDivsEth} WBNB` : `${pendingDivsEth} WBNB`} onChange={e => this.setState({pendingDivsEth: Number(e.target.value) > 0 ? e.target.value : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
                                                                 </div>
                                                                 <div className='col-6'>
                                                                     {/*<p className='form-control  text-center' style={{border: 'none', marginBottom: 0, paddingLeft: '11px', paddingRight: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivs}</span> <small className='text-bold'>DYP</small></p>*/}
-                                                                    <input value={Number(pendingDivs) > 0 ? `${pendingDivs} DYP` : `${pendingDivs} DYP`} onChange={e => this.setState({pendingDivs: Number(e.target.value) > 0 ? e.target.value : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
+                                                                    <input  value={Number(pendingDivs) > 0 ? `${pendingDivs} DYP` : `${pendingDivs} DYP`} onChange={e => this.setState({pendingDivs: Number(e.target.value) > 0 ? e.target.value : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
                                                                 </div>
                                                             </div>
                                                             <div className="form-row">
                                                                 <div className="col-6">
-                                                                    <select value={this.state.selectedClaimToken} onChange={e => this.handleClaimToken(e.target.value)} className='form-control' className='form-control'>
+                                                                    <select disabled={!is_connected} value={this.state.selectedClaimToken} onChange={e => this.handleClaimToken(e.target.value)} className='form-control'>
                                                                         <option value="0"> WBNB </option>
                                                                         <option value="1"> ETH </option>
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-6">
-                                                                    <select defaultValue="DYP" className='form-control' className='form-control'>
+                                                                    <select disabled={!is_connected}  defaultValue="DYP" className='form-control' className='form-control'>
                                                                         <option value="DYP"> DYP </option>
                                                                     </select>
                                                                 </div>
@@ -955,12 +1116,12 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                         </div>
                                                         <div className='form-row'>
                                                             <div className='col-6'>
-                                                                <button title={claimTitle} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
+                                                                <button disabled={!is_connected} title={claimTitle} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
                                                                     CLAIM
                                                                 </button>
                                                             </div>
                                                             <div className='col-6'>
-                                                                <button onClick={e => {
+                                                                <button disabled={!is_connected} onClick={e => {
                                                                     e.preventDefault()
                                                                     this.handleClaimDyp()
                                                                 }} title={claimTitle} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
@@ -1043,36 +1204,41 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                         {/*        </div>*/}
                                         {/*    </div>*/}
                                         {/*</div>*/}
-                                        <Boxes items={[
-                                            {
-                                                title: 'TVL USD',
-                                                number: '$' + tvl_usd
-                                            },
-                                            {
-                                                title: `APR`,
-                                                number: apy + '%',
-                                            }
-                                        ]} />
+                                        {/*<Boxes items={[*/}
+                                        {/*    {*/}
+                                        {/*        title: 'TVL USD',*/}
+                                        {/*        number: '$' + tvl_usd*/}
+                                        {/*    },*/}
+                                        {/*    {*/}
+                                        {/*        title: `APR`,*/}
+                                        {/*        number: apy + '%',*/}
+                                        {/*    }*/}
+                                        {/*]} />*/}
                                         <div className='l-box pl-3 pr-3'>
                                             <div className='table-responsive container'>
                                                 <div className='row' style={{marginLeft: '0px'}}>
                                                     <label className='col-md-8 d-block text-left' style={{fontSize: '1.1rem', fontWeight: '600', padding: '.3rem'}}>MY STATS</label>
                                                     <div className='col-4'>
                                                         <a rel='noopener noreferrer' href={'/staking-stats'} >
-                                                            <button className='btn btn-sm btn-block btn-primary l-outline-btn' type='button'>
-                                                                VIEW ALL
-                                                            </button>
+
+                                                            {is_connected &&
+
+                                                                <button className='btn btn-sm btn-block btn-primary l-outline-btn' type='button'>
+                                                                    VIEW ALL
+                                                                </button>
+                                                            }
+
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <table className='table-stats table table-sm table-borderless'>
                                                     <tbody>
-                                                    <tr>
-                                                        <th>My Address</th>
-                                                        <td className='text-right'>
-                                                            <Address style={{fontFamily: 'monospace'}} a={coinbase} />
-                                                        </td>
-                                                    </tr>
+                                                    {/*<tr>*/}
+                                                    {/*    <th>My Address</th>*/}
+                                                    {/*    <td className='text-right'>*/}
+                                                    {/*        <Address style={{fontFamily: 'monospace'}} a={coinbase} />*/}
+                                                    {/*    </td>*/}
+                                                    {/*</tr>*/}
                                                     {/*<tr>*/}
                                                     {/*    <th>Contract Address</th>*/}
                                                     {/*    <td className='text-right'>*/}
@@ -1157,12 +1323,16 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                     {/*    </td>*/}
                                                     {/*</tr>*/}
 
-                                                    <tr>
-                                                        <td style={{fontSize: '1rem', paddingTop: '2rem'}} colSpan='2' className='text-center'>
-                                                            {/*<a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/token/${token._address}?a=${coinbase}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{fontSize: '.8rem'}} className='fas fa-external-link-alt'></i>*/}
-                                                            <a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/address/${staking._address}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{fontSize: '.8rem'}} className='fas fa-external-link-alt'></i>
-                                                        </td>
-                                                    </tr>
+                                                    {is_connected &&
+
+                                                        <tr>
+                                                            <td style={{fontSize: '1rem', paddingTop: '2rem'}} colSpan='2' className='text-center'>
+                                                                {/*<a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/token/${token._address}?a=${coinbase}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{fontSize: '.8rem'}} className='fas fa-external-link-alt'></i>*/}
+                                                                <a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/address/${staking._address}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{fontSize: '.8rem'}} className='fas fa-external-link-alt'></i>
+                                                            </td>
+                                                        </tr>
+                                                    }
+
                                                     {/* <tr>
                                         <td style={{fontSize: '1rem'}} colSpan='2' className='text-center'>
                                             <span className='lp-link'>
