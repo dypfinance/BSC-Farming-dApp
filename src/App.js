@@ -11,6 +11,8 @@ import initConstantStaking from './components/constant-staking'
 import initBuybackStakingNew from './components/buy-back-staking-new'
 import initStakingNew from './components/staking-new'
 
+import initConstantStakingDai from './components/constant-staking-dai'
+
 import initStakingNew_front from './components/staking-new-front'
 
 import initConstantStakingiDYP from './components/constant-staking-idyp'
@@ -66,6 +68,9 @@ const VestingStakingAirdrop = initVestingStaking({ staking: window.constant_stak
 //Constant Staking New
 const ConstantStaking30 = initConstantStaking({ staking: window.constant_staking_new1, apr: 25, liquidity: bnb_address, expiration_time: '17 November 2022' })
 const ConstantStaking90 = initConstantStaking({ staking: window.constant_staking_new2, apr: 50, liquidity: bnb_address, expiration_time: '17 November 2022' })
+
+//Constant Staking NEW DYP -> DAI
+const ConstantStakingDai = initConstantStakingDai({ staking: window.constant_stakingdai, apr: 25, liquidity: bnb_address, expiration_time: '10 May 2023' })
 
 //Buyback New
 const BuybackStaking1 = initBuybackStakingNew({ staking: window.buyback_staking1_1, constant: window.constant_staking_new3, apr: 30, expiration_time: '17 November 2022' })
@@ -370,6 +375,10 @@ render() {
 
       <Route exact path='/constant-staking-1' render={props => <ConstantStaking30 the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
       <Route exact path='/constant-staking-2' render={props => <ConstantStaking90 the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
+
+      {/*Constant Staking DYP -> DAI*/}
+      <Route exact path='/constant-staking-3' render={props => <ConstantStakingDai the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
+
 
       {/*Buyback New*/}
       <Route exact path='/staking-buyback-1' render={props => <BuybackStaking1 the_graph_result={this.state.the_graph_result_BSC_V2} {...props} />} />
