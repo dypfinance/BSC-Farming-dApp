@@ -870,7 +870,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className='col-lg-6 col-xs-12'>
+                                                <div className='col-lg-6 col-xs-12'>
                                                 <div className='row token-staking-form'>
                                                     <div className="col-12 padding-mobile">
                                                         <div className="" style={{background: 'linear-gradient(257.76deg, #FFD962 6.29%, #F0BB1D 93.71%)',
@@ -954,16 +954,16 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                                 {/*</div>*/}
                                                                 <div>
                                                                     <p>Balance: {getFormattedNumber(this.state.selectedTokenBalance/10**this.state.selectedTokenDecimals, 6)} {this.state.selectedTokenSymbol}</p>
-                                                                    <select value={this.state.selectedBuybackToken} onChange={e => this.handleSelectedTokenChange(e.target.value)} className='form-control' className='form-control'>
+                                                                    <select  disabled={!is_connected} value={this.state.selectedBuybackToken} onChange={e => this.handleSelectedTokenChange(e.target.value)}  className='form-control'>
                                                                         {Object.keys(window.buyback_tokens_farming).map((t) => <option key={t} value={t}> {window.buyback_tokens_farming[t].symbol} </option>)}
                                                                     </select>
                                                                     <br />
                                                                 </div>
                                                                 <div className='input-group '>
 
-                                                                    <input value={Number(this.state.depositAmount) > 0 ? this.state.depositAmount  : this.state.depositAmount} onChange={e => this.setState({ depositAmount: e.target.value })} className='form-control left-radius' placeholder='0' type='text' />
+                                                                    <input disabled={!is_connected} value={Number(this.state.depositAmount) > 0 ? this.state.depositAmount  : this.state.depositAmount} onChange={e => this.setState({ depositAmount: e.target.value })} className='form-control left-radius' placeholder='0' type='text' />
                                                                     <div className='input-group-append'>
-                                                                        <button className='btn  btn-primary right-radius btn-max l-light-btn' style={{ cursor: 'pointer' }} onClick={this.handleSetMaxDeposit}>
+                                                                        <button disabled={!is_connected} className='btn  btn-primary right-radius btn-max l-light-btn' style={{ cursor: 'pointer' }} onClick={this.handleSetMaxDeposit}>
                                                                             MAX
                                                                         </button>
                                                                     </div>
@@ -986,13 +986,13 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                             </div>
                                                             <div className='row'>
                                                                 <div style={{paddingRight: '0.3rem'}} className='col-6'>
-                                                                    <button onClick={this.handleApprove}
+                                                                    <button disabled={!is_connected} onClick={this.handleApprove}
                                                                             className='btn  btn-block btn-primary ' type='button'>
                                                                         APPROVE
                                                                     </button>
                                                                 </div>
                                                                 <div style={{paddingLeft: '0.3rem'}} className='col-6'>
-                                                                    <button onClick={this.handleStake}
+                                                                    <button disabled={!is_connected} onClick={this.handleStake}
                                                                             className='btn  btn-block btn-primary l-outline-btn'
                                                                             type='submit'>
                                                                         DEPOSIT
@@ -1051,12 +1051,12 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                             </div>
                                                             <div className="form-row">
                                                                 <div className="col-6">
-                                                                    <select value={this.state.selectedBuybackTokenWithdraw} onChange={e => this.handleSelectedTokenChangeWithdraw(e.target.value)} className='form-control' className='form-control'>
+                                                                    <select disabled={!is_connected} value={this.state.selectedBuybackTokenWithdraw} onChange={e => this.handleSelectedTokenChangeWithdraw(e.target.value)} className='form-control' className='form-control'>
                                                                         {Object.keys(window.buyback_tokens_farming).map((t) => <option key={t} value={t}> {window.buyback_tokens_farming[t].symbol} </option>)}
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-6">
-                                                                    <select defaultValue="DYP" className='form-control' className='form-control'>
+                                                                    <select disabled={!is_connected} defaultValue="DYP" className='form-control' className='form-control'>
                                                                         <option value="DYP"> DYP </option>)}
                                                                     </select>
                                                                 </div>
@@ -1065,7 +1065,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                         {/*<br />*/}
                                                         <div className="form-row">
                                                             <div className="col-6">
-                                                                <button title={canWithdraw?'':`You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
+                                                                <button title={canWithdraw?'':`You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw || !is_connected} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
                                                                     WITHDRAW
                                                                 </button>
                                                             </div>
@@ -1073,7 +1073,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                                 <button onClick={e => {
                                                                     e.preventDefault()
                                                                     this.handleWithdrawDyp()
-                                                                }} title={canWithdraw?'':`You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
+                                                                }} title={canWithdraw?'':`You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw || !is_connected} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
                                                                     WITHDRAW
                                                                 </button>
                                                             </div>
@@ -1093,22 +1093,22 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                             <div className='form-row mb-3'>
                                                                 <div className='col-6'>
                                                                     {/*<p className='form-control  text-center' style={{border: 'none', marginBottom: 0, paddingLeft: '1px', paddingRight: '10px',  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivsEth}</span> <small className='text-bold'>WAVAX</small></p>*/}
-                                                                    <input value={Number(pendingDivsEth) > 0 ? `${pendingDivsEth} WBNB` : `${pendingDivsEth} WBNB`} onChange={e => this.setState({pendingDivsEth: Number(e.target.value) > 0 ? e.target.value : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
+                                                                    <input  value={Number(pendingDivsEth) > 0 ? `${pendingDivsEth} WBNB` : `${pendingDivsEth} WBNB`} onChange={e => this.setState({pendingDivsEth: Number(e.target.value) > 0 ? e.target.value : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
                                                                 </div>
                                                                 <div className='col-6'>
                                                                     {/*<p className='form-control  text-center' style={{border: 'none', marginBottom: 0, paddingLeft: '11px', paddingRight: 0,  background: 'transparent', color: 'var(--text-color)'}}><span style={{fontSize: '1.2rem', color: 'var(--text-color)'}}>{pendingDivs}</span> <small className='text-bold'>DYP</small></p>*/}
-                                                                    <input value={Number(pendingDivs) > 0 ? `${pendingDivs} DYP` : `${pendingDivs} DYP`} onChange={e => this.setState({pendingDivs: Number(e.target.value) > 0 ? e.target.value : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
+                                                                    <input  value={Number(pendingDivs) > 0 ? `${pendingDivs} DYP` : `${pendingDivs} DYP`} onChange={e => this.setState({pendingDivs: Number(e.target.value) > 0 ? e.target.value : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
                                                                 </div>
                                                             </div>
                                                             <div className="form-row">
                                                                 <div className="col-6">
-                                                                    <select value={this.state.selectedClaimToken} onChange={e => this.handleClaimToken(e.target.value)} className='form-control' className='form-control'>
+                                                                    <select disabled={!is_connected} value={this.state.selectedClaimToken} onChange={e => this.handleClaimToken(e.target.value)} className='form-control'>
                                                                         <option value="0"> WBNB </option>
                                                                         <option value="1"> ETH </option>
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-6">
-                                                                    <select defaultValue="DYP" className='form-control' className='form-control'>
+                                                                    <select disabled={!is_connected}  defaultValue="DYP" className='form-control' className='form-control'>
                                                                         <option value="DYP"> DYP </option>
                                                                     </select>
                                                                 </div>
@@ -1116,12 +1116,12 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                         </div>
                                                         <div className='form-row'>
                                                             <div className='col-6'>
-                                                                <button title={claimTitle} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
+                                                                <button disabled={!is_connected} title={claimTitle} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
                                                                     CLAIM
                                                                 </button>
                                                             </div>
                                                             <div className='col-6'>
-                                                                <button onClick={e => {
+                                                                <button disabled={!is_connected} onClick={e => {
                                                                     e.preventDefault()
                                                                     this.handleClaimDyp()
                                                                 }} title={claimTitle} className='btn  btn-primary btn-block l-outline-btn' type='submit'>
@@ -1220,9 +1220,14 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                     <label className='col-md-8 d-block text-left' style={{fontSize: '1.1rem', fontWeight: '600', padding: '.3rem'}}>MY STATS</label>
                                                     <div className='col-4'>
                                                         <a rel='noopener noreferrer' href={'/staking-stats'} >
-                                                            <button className='btn btn-sm btn-block btn-primary l-outline-btn' type='button'>
-                                                                VIEW ALL
-                                                            </button>
+
+                                                            {is_connected &&
+
+                                                                <button className='btn btn-sm btn-block btn-primary l-outline-btn' type='button'>
+                                                                    VIEW ALL
+                                                                </button>
+                                                            }
+
                                                         </a>
                                                     </div>
                                                 </div>
@@ -1318,12 +1323,16 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                     {/*    </td>*/}
                                                     {/*</tr>*/}
 
-                                                    <tr>
-                                                        <td style={{fontSize: '1rem', paddingTop: '2rem'}} colSpan='2' className='text-center'>
-                                                            {/*<a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/token/${token._address}?a=${coinbase}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{fontSize: '.8rem'}} className='fas fa-external-link-alt'></i>*/}
-                                                            <a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/address/${staking._address}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{fontSize: '.8rem'}} className='fas fa-external-link-alt'></i>
-                                                        </td>
-                                                    </tr>
+                                                    {is_connected &&
+
+                                                        <tr>
+                                                            <td style={{fontSize: '1rem', paddingTop: '2rem'}} colSpan='2' className='text-center'>
+                                                                {/*<a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/token/${token._address}?a=${coinbase}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{fontSize: '.8rem'}} className='fas fa-external-link-alt'></i>*/}
+                                                                <a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/address/${staking._address}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{fontSize: '.8rem'}} className='fas fa-external-link-alt'></i>
+                                                            </td>
+                                                        </tr>
+                                                    }
+
                                                     {/* <tr>
                                         <td style={{fontSize: '1rem'}} colSpan='2' className='text-center'>
                                             <span className='lp-link'>
