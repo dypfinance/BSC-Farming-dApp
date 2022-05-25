@@ -15,7 +15,8 @@ import initBuybackStakingNewFront from './components/buy-back-staking-new-front'
 
 import initStakingNew from './components/staking-new'
 
-import initConstantStakingDai from './components/constant-staking-dai'
+// import initConstantStakingDai from './components/constant-staking-dai'
+import initConstantStakingDai from './components/constant-staking-dai-front'
 
 import initStakingNew_front from './components/staking-new-front'
 
@@ -261,7 +262,7 @@ render() {
 
 
   return (
-    <div className="App App-header">
+    <div className="App App-header" style={{overflowX: "hidden"}}>
       <Header darkTheme={this.state.darkTheme} toggleTheme={this.toggleTheme} />
       <div style={{minHeight: '550px'}} className="App-container">
           <Modal show={this.state.show} handleClose={this.hideModal}>
@@ -367,7 +368,7 @@ render() {
       <Route exact path='/constant-staking-2' render={props => <ConstantStaking90 is_wallet_connected={this.state.is_wallet_connected} handleConnection={this.handleConnection} handleConnectionWalletConnect={this.handleConnectionWalletConnect} the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
 
       {/*Constant Staking DYP -> DAI*/}
-      <Route exact path='/constant-staking-3' render={props => <ConstantStakingDai the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
+      <Route exact path='/constant-staking-3' render={props => <ConstantStakingDai is_wallet_connected={this.state.is_wallet_connected} handleConnection={this.handleConnection} handleConnectionWalletConnect={this.handleConnectionWalletConnect} the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
 
 
       {/*Buyback New*/}

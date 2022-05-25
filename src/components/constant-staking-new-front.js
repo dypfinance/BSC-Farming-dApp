@@ -509,20 +509,11 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
 
             let id = Math.random().toString(36)
 
-            let is_connected = false
-
-            if(coinbase !== "0x0000000000000000000000000000000000000111")
-            {
-                is_connected = true
-            }
-
-
-
-
-
             // let apy = new BigNumber(apr).div(1e2).times(usd_per_idyp).div(usd_per_token).times(1e2).toFixed(2)
 
             //this.setState({apy})
+
+            let is_connected = this.props.is_wallet_connected
 
             return (<div>
 
@@ -650,7 +641,7 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                                                                          alt="wallet" />
                                                                     <label htmlFor="deposit-amount"
                                                                            style={{margin: '0px', top: '3px', position: 'relative', color: 'white'}}>
-                                                                        BSC Yield
+                                                                        BNB Chain
                                                                     </label>
                                                                 </div>
                                                                 <div className="col-9">

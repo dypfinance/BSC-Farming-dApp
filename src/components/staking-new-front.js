@@ -625,12 +625,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                 coinbase, tvl, depositedTokensDYP, tvlConstantDYP, myDepositedLpTokens, pendingDivsStaking} = this.state
 
 
-            let is_connected = false
-
-            if(coinbase !== "0x0000000000000000000000000000000000000111")
-            {
-                is_connected = true
-            }
+            let is_connected = this.props.is_wallet_connected
 
             let { the_graph_result } = this.props
 
@@ -882,7 +877,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                                          alt="wallet" />
                                                                     <label htmlFor="deposit-amount"
                                                                            style={{margin: '0px', top: '3px', position: 'relative', color: 'white'}}>
-                                                                        BSC Yield
+                                                                        BNB Chain
                                                                     </label>
                                                                 </div>
                                                                 <div className="col-9">
