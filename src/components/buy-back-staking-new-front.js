@@ -657,23 +657,28 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
                                 </Popup>
                                 <Modal show={this.state.show} handleConnection={this.props.handleConnection} handleConnectionWalletConnect={this.props.handleConnectionWalletConnect} handleClose={this.hideModal} />
                                 <div className='row'>
-                                    <div className='col-12' style={{marginBottom: '30px'}}>
-                                        <p style={{width: '100%', height: 'auto', fontFamily: 'Mulish', fontStyle: 'normal', fontWeight: '900', fontSize: '42px', lineHeight: '55px', color: '#FFFFFF', marginTop: '35px', maxHeight: '55px'}} >DYP Buyback</p>
+                                    <div className='col-12'>
+                                        <p className="header-title-text">DYP Buyback</p>
                                     </div>
-                                    <div className='col-6' style={{marginBottom: '27px'}}>
+                                    <div className='col-7 col-md-7 col-lg-6 col-xl-5'>
                                         <div className='row'>
-                                            <div style={{paddingRight: '15px'}} className='col-6 button'>
+                                            <div className='col-9 col-md-5 mb-4'>
                                                 <button onClick={this.showPopup}
-                                                        className='btn  btn-block btn-primary button' type='button'>
+                                                        className='btn  btn-block btn-primary button'
+                                                        type='button'
+                                                        style={{maxWidth: '100%', width: '100%'}}
+                                                >
                                                     <img src="img/icon/bulb.svg" style={{float: 'left'}}
                                                          alt="wallet" />
                                                      More Info
                                                 </button>
                                             </div>
-                                            <div style={{paddingLeft: '20px'}} className='col-6'>
+                                            <div className='col-11 col-md-5 mb-4'>
                                                 <button className onClick={()=> window.open("https://www.youtube.com/watch?v=l3Jka88T308", "_blank")}
                                                         className='btn  btn-block btn-primary l-outline-btn button'
-                                                        type='submit'>
+                                                        type='submit'
+                                                        style={{maxWidth: '100%', width: '100%'}}
+                                                >
                                                     <img src="img/icon/video.svg" style={{float: 'left'}}
                                                          alt="wallet" />
                                                     Video tutorial
@@ -686,84 +691,78 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
                         </div>
 
                         <div className='container'>
-
-
-                            <div className='token-staking mt-5'>
-                            <div className='row'>
-
-                                <div className="col-12">
-                                    <div className='row'>
-                                        <div className='col-lg-6'>
-                                            <div className='row token-staking-form'>
-                                                <div className="col-12">
-                                                    <div className="l-box" style={{padding: '0.5rem'}}>
-                                                        {is_connected ?
-                                                            <div className="row">
-                                                                <div className="col-7" style={{marginTop: '0px'}}>
-                                                                    <img src="img/connected.png" style={{marginRight: '10px', marginTop: '3px'}}
-                                                                         alt="wallet" />
-                                                                    <span htmlFor="deposit-amount" style={{margin: '0', top: '3px', position: 'relative'}}>
-                                                                    Wallet has been connected
-                                                                </span>
-                                                                </div>
-                                                                <div className="col-5 text-right">
-                                                                    <div style={{marginTop: '5px', paddingRight: '15px'}}>
-                                                                        <Address style={{fontFamily: 'monospace'}} a={coinbase} />
+                            <div className='token-staking mt-4'>
+                                <div className='row p-3 p-sm-0 p-md-0'>
+                                    <div className="col-12">
+                                        <div className='row'>
+                                            <div className='col-lg-6'>
+                                                <div className='row token-staking-form'>
+                                                    <div className="col-12">
+                                                        <div className="l-box" style={{padding: '0.5rem'}}>
+                                                            {is_connected ?
+                                                                <div className="row justify-content-center">
+                                                                    <div className="col-9 col-sm-8 col-md-7 text-center text-md-left" style={{marginTop: '0px'}}>
+                                                                        <img src="img/connected.png" style={{marginRight: '10px', marginTop: '3px'}}
+                                                                             alt="wallet" />
+                                                                        <span htmlFor="deposit-amount" style={{margin: '0', top: '3px', position: 'relative'}}>
+                                                                        Wallet has been connected
+                                                                    </span>
                                                                     </div>
+                                                                    <div className="col-8 col-sm-6 col-md-5 text-center">
+                                                                        <div style={{marginTop: '5px', paddingRight: '15px'}}>
+                                                                            <Address style={{fontFamily: 'monospace'}} a={coinbase} />
+                                                                        </div>
 
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            :
+                                                                :
+                                                                <div className="row justify-content-center">
+                                                                    <div className="col-11 col-sm-8 col-md-8 text-center text-md-left mb-3 mb-md-0" style={{marginTop: '0px'}}>
+                                                                        <img src="img/icon/wallet.svg" style={{marginRight: '10px', marginTop: '3px'}}
+                                                                             alt="wallet" />
+                                                                        <label htmlFor="deposit-amount" style={{margin: '0', top: '3px', position: 'relative'}}>
+                                                                            Please connect wallet to use this dApp
+                                                                        </label>
+                                                                    </div>
+                                                                    <div className="col-10 col-md-4 mb-3 mb-md-0">
+                                                                        <button type="submit" onClick={this.showModal} className="btn  btn-block btn-primary l-outline-btn">
+                                                                            Connect Wallet
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            }
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className='col-lg-6 col-xs-12'>
+                                                <div className='row token-staking-form'>
+                                                    <div className="col-12 padding-mobile">
+                                                        <div className="" style={{background: 'linear-gradient(257.76deg, #FFD962 6.29%, #F0BB1D 93.71%)',
+                                                            boxShadow: '0px 4px 24px rgba(0, 0, 0, 0.06)', borderRadius: '6px', paddingLeft: '5px', padding: '10px'}}>
                                                             <div className="row">
-                                                                <div className="col-8" style={{marginTop: '0px'}}>
-                                                                    <img src="img/icon/wallet.svg" style={{marginRight: '10px', marginTop: '3px'}}
+                                                                <div style={{marginTop: '0px', paddingLeft: ''}} className='col-4 col-sm-4 col-md-3 mb-3 mb-md-0 pr-0'>
+                                                                    <img src="img/icon/bsc.svg"
+                                                                         style={{marginRight: '4px', marginTop: '3px'}}
                                                                          alt="wallet" />
-                                                                    <label htmlFor="deposit-amount" style={{margin: '0', top: '3px', position: 'relative'}}>
-                                                                        Please connect wallet to use this dApp
+                                                                    <label htmlFor="deposit-amount"
+                                                                           style={{margin: '0px', top: '4px', position: 'relative', color: 'white'}}>
+                                                                        BNB Chain
                                                                     </label>
                                                                 </div>
-                                                                <div className="col-4">
-                                                                    <button type="submit" onClick={this.showModal} className="btn  btn-block btn-primary l-outline-btn">
-                                                                        Connect Wallet
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        }
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className='col-lg-6 col-xs-12'>
-                                            <div className='row token-staking-form'>
-                                                <div className="col-12 padding-mobile">
-                                                    <div className="" style={{background: 'linear-gradient(257.76deg, #FFD962 6.29%, #F0BB1D 93.71%)',
-                                                        boxShadow: '0px 4px 24px rgba(0, 0, 0, 0.06)', borderRadius: '6px', paddingLeft: '5px', padding: '10px'}}>
-                                                        <div className="row">
-                                                            <div style={{marginTop: '0px', paddingLeft: ''}} className='col-3'>
-                                                                <img src="img/icon/bsc.svg"
-                                                                     style={{marginRight: '10px', marginTop: '5px'}}
-                                                                     alt="wallet" />
-                                                                <label htmlFor="deposit-amount"
-                                                                       style={{margin: '0px', top: '3px', position: 'relative', color: 'white'}}>
-                                                                    BNB Chain
-                                                                </label>
-                                                            </div>
-                                                            <div className="col-9">
-                                                                <div className='row' >
-                                                                    <div className='col-6' style={{margin : '0px', padding: '0px'}}>
-                                                                        <div className='test'>
-                                                                            <div className='tvl_test'>
-                                                                                TVL USD <span className='testNumber'>$ {tvl_usd} </span>
-                                                                            </div>
+                                                                <div className='col-8 col-sm-6 col-md-5 mb-3 mb-md-0 pr-2'>
+                                                                    <div className='test'>
+                                                                        <div className='tvl_test'>
+                                                                            TVL USD <span className='testNumber'>$ {tvl_usd} </span>
                                                                         </div>
                                                                     </div>
+                                                                </div>
 
-                                                                    <div className='col-5' style={{marginLeft : '10px', padding: '0px'}}>
-                                                                        <div className='test'>
-                                                                            <div className='tvl_test'>
-                                                                                APR <span className='testNumber'> <img src='img/icon/vector.svg' /> {apy}% </span>
-                                                                            </div>
+                                                                <div className='col-6 col-sm-4 col-md-4 mb-1 mb-md-0'>
+                                                                    <div className='test'>
+                                                                        <div className='tvl_test'>
+                                                                            APR <span className='testNumber'> <img src='img/icon/vector.svg' /> {apy}% </span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -774,269 +773,268 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div className='col-lg-6'>
-                                    <div className='row token-staking-form'>
-                                        <div className='col-12'>
-                                            <div className='l-box'>
-                                                {showDeposit == true ?
-                                                    <form onSubmit={e => e.preventDefault()}>
-                                                        <div className='form-group'>
+                                    <div className='col-lg-6'>
+                                        <div className='row token-staking-form'>
+                                            <div className='col-12'>
+                                                <div className='l-box'>
+                                                    {showDeposit == true ?
+                                                        <form onSubmit={e => e.preventDefault()}>
+                                                            <div className='form-group'>
+                                                                <div className='row'>
+                                                                    <label htmlFor='deposit-amount' className='col-md-8 d-block text-left'>DEPOSIT</label>
+                                                                    {/*<div className='col-4'>*/}
+                                                                    {/*    <a target='_blank' rel='noopener noreferrer' href={`https://app.uniswap.org/#/swap?inputCurrency=${liquidity}&outputCurrency=0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17`} >*/}
+                                                                    {/*        <button className='btn btn-sm btn-block btn-primary l-outline-btn' type='button'>*/}
+                                                                    {/*            GET DYP*/}
+                                                                    {/*        </button>*/}
+                                                                    {/*    </a>*/}
+                                                                    {/*</div>*/}
+                                                                </div>
+                                                                <div>
+                                                                    <p>Balance: {getFormattedNumber(this.state.selectedTokenBalance/10**this.state.selectedTokenDecimals, 6)} {this.state.selectedTokenSymbol}</p>
+                                                                    <select disabled={!is_connected} value={this.state.selectedBuybackToken} onChange={e => this.handleSelectedTokenChange(e.target.value)} className='form-control' className='form-control'>
+                                                                        {Object.keys(window.buyback_tokens).map((t) => <option key={t} value={t}> {window.buyback_tokens[t].symbol} </option>)}
+                                                                    </select>
+                                                                    <br />
+                                                                </div>
+                                                                <div className='input-group '>
+
+                                                                    <input disabled={!is_connected} value={Number(this.state.depositAmount) > 0 ? this.state.depositAmount  : this.state.depositAmount} onChange={e => this.setState({ depositAmount: e.target.value })} className='form-control left-radius' placeholder='0' type='text' />
+                                                                    <div className='input-group-append'>
+                                                                        <button disabled={!is_connected} className='btn  btn-primary right-radius btn-max l-light-btn' style={{ cursor: 'pointer' }} onClick={this.handleSetMaxDeposit}>
+                                                                            MAX
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <div className='row'>
-                                                                <label htmlFor='deposit-amount' className='col-md-8 d-block text-left'>DEPOSIT</label>
-                                                                {/*<div className='col-4'>*/}
-                                                                {/*    <a target='_blank' rel='noopener noreferrer' href={`https://app.uniswap.org/#/swap?inputCurrency=${liquidity}&outputCurrency=0x961c8c0b1aad0c0b10a51fef6a867e3091bcef17`} >*/}
-                                                                {/*        <button className='btn btn-sm btn-block btn-primary l-outline-btn' type='button'>*/}
-                                                                {/*            GET DYP*/}
-                                                                {/*        </button>*/}
-                                                                {/*    </a>*/}
+                                                                <div style={{ paddingRight: '0.3rem' }} className='col-6'>
+                                                                    <button disabled={!is_connected} onClick={this.handleApprove} className='btn  btn-block btn-primary ' type='button'>
+                                                                        APPROVE
+                                                                    </button>
+                                                                </div>
+                                                                <div style={{ paddingLeft: '0.3rem' }} className='col-6'>
+                                                                    <button disabled={!is_connected} onClick={this.handleStake} className='btn  btn-block btn-primary l-outline-btn' type='submit'>
+                                                                        DEPOSIT
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <p style={{ fontSize: '.8rem' }} className='mt-1 text-center mb-0 text-muted mt-3'>
+                                                                {/* Some info text here.<br /> */}
+                                                                Please approve before deposit. 0% fee for deposit.
+                                                            </p>
+
+                                                        </form>
+                                                        :
+                                                        <div className='row'>
+                                                            <div className='col-md-12 d-block text-muted small'
+                                                                 style={{fontSize: '15px'}}>
+                                                                <b>NOTE:</b>
+                                                            </div>
+                                                            <div className='col-md-12 d-block text-muted small' style={{fontSize: '15px'}}>
+                                                                Deposit not available because the contract expires faster than the pool lock time.
+                                                            </div>
+                                                            <div className='col-md-12 d-block mb-0 text-muted small'
+                                                                 style={{fontSize: '15px'}}>
+                                                                New contracts with improved strategies are coming soon, waiting for security audit results.
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div className='col-12'>
+                                                <div className='l-box'>
+                                                    <form onSubmit={this.handleWithdraw}>
+                                                        <div className='form-group'>
+                                                            <label htmlFor='deposit-amount' className='d-block text-left'>WITHDRAW</label>
+                                                            <div className='input-group '>
+                                                                <input value={`$${this.state.withdrawAmount}`} onChange={e => this.setState({ withdrawAmount:e.target.value })} className='form-control left-radius' placeholder='0' type='text' disabled />
+                                                                {/*<div className='input-group-append'>*/}
+                                                                {/*    <button className='btn  btn-primary right-radius btn-max l-light-btn' style={{ cursor: 'pointer' }} onClick={this.handleSetMaxWithdraw}>*/}
+                                                                {/*        MAX*/}
+                                                                {/*    </button>*/}
                                                                 {/*</div>*/}
                                                             </div>
-                                                            <div>
-                                                                <p>Balance: {getFormattedNumber(this.state.selectedTokenBalance/10**this.state.selectedTokenDecimals, 6)} {this.state.selectedTokenSymbol}</p>
-                                                                <select disabled={!is_connected} value={this.state.selectedBuybackToken} onChange={e => this.handleSelectedTokenChange(e.target.value)} className='form-control' className='form-control'>
-                                                                    {Object.keys(window.buyback_tokens).map((t) => <option key={t} value={t}> {window.buyback_tokens[t].symbol} </option>)}
-                                                                </select>
-                                                                <br />
-                                                            </div>
-                                                            <div className='input-group '>
-
-                                                                <input disabled={!is_connected} value={Number(this.state.depositAmount) > 0 ? this.state.depositAmount  : this.state.depositAmount} onChange={e => this.setState({ depositAmount: e.target.value })} className='form-control left-radius' placeholder='0' type='text' />
-                                                                <div className='input-group-append'>
-                                                                    <button disabled={!is_connected} className='btn  btn-primary right-radius btn-max l-light-btn' style={{ cursor: 'pointer' }} onClick={this.handleSetMaxDeposit}>
-                                                                        MAX
-                                                                    </button>
+                                                        </div>
+                                                        <button title={canWithdraw ? '' : `You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw || !is_connected } className='btn  btn-primary btn-block l-outline-btn' type='submit'>
+                                                            WITHDRAW
+                                                        </button>
+                                                        <p style={{fontSize: '.8rem'}}
+                                                           className='mt-1 text-center mb-0 text-muted mt-3'>
+                                                            To <strong>WITHDRAW</strong> you will be asked to sign <strong>2 transactions</strong>
+                                                        </p>
+                                                        <p style={{fontSize: '.8rem'}} className='mt-1 text-center text-muted mt-3'>0% fee for withdraw</p>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div className='col-12'>
+                                                <div className='l-box'>
+                                                    <form onSubmit={this.handleClaimDivs}>
+                                                        <div className='form-group'>
+                                                            <label htmlFor='deposit-amount' className='text-left d-block'>REWARDS</label>
+                                                            <div className='form-row'>
+                                                                {/* <div className='col-md-6'>
+                                                            <p className='form-control  text-right' style={{ border: 'none', marginBottom: 0, paddingLeft: 0, background: 'transparent', color: '#222' }}><span style={{ fontSize: '1.2rem', color: 'rgb(255, 0, 122)' }}>{pendingDivsEth}</span> <small className='text-bold'>WETH</small></p>
+                                                        </div> */}
+                                                                <div className='col-md-12'>
+                                                                    {/*<p className='form-control  text-right' style={{ border: 'none', marginBottom: 0, paddingLeft: 0, background: 'transparent', color: 'var(--text-color)' }}><span style={{ fontSize: '1.2rem', color: 'var(--text-color)' }}>{pendingDivs}</span> <small className='text-bold'>DYP</small></p>*/}
+                                                                    <input value={Number(pendingDivs) > 0 ? `${pendingDivs} DYP` : `${pendingDivs} DYP`} onChange={e => this.setState({pendingDivs: Number(e.target.value) > 0 ? e.target.value : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className='row'>
-                                                            <div style={{ paddingRight: '0.3rem' }} className='col-6'>
-                                                                <button disabled={!is_connected} onClick={this.handleApprove} className='btn  btn-block btn-primary ' type='button'>
-                                                                    APPROVE
-                                                                </button>
-                                                            </div>
-                                                            <div style={{ paddingLeft: '0.3rem' }} className='col-6'>
-                                                                <button disabled={!is_connected} onClick={this.handleStake} className='btn  btn-block btn-primary l-outline-btn' type='submit'>
-                                                                    DEPOSIT
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        <p style={{ fontSize: '.8rem' }} className='mt-1 text-center mb-0 text-muted mt-3'>
-                                                            {/* Some info text here.<br /> */}
-                                                            Please approve before deposit. 0% fee for deposit.
-                                                        </p>
-
-                                                    </form>
-                                                    :
-                                                    <div className='row'>
-                                                        <div className='col-md-12 d-block text-muted small'
-                                                             style={{fontSize: '15px'}}>
-                                                            <b>NOTE:</b>
-                                                        </div>
-                                                        <div className='col-md-12 d-block text-muted small' style={{fontSize: '15px'}}>
-                                                            Deposit not available because the contract expires faster than the pool lock time.
-                                                        </div>
-                                                        <div className='col-md-12 d-block mb-0 text-muted small'
-                                                             style={{fontSize: '15px'}}>
-                                                            New contracts with improved strategies are coming soon, waiting for security audit results.
-                                                        </div>
-                                                    </div>
-                                                }
-                                            </div>
-                                        </div>
-                                        <div className='col-12'>
-                                            <div className='l-box'>
-                                                <form onSubmit={this.handleWithdraw}>
-                                                    <div className='form-group'>
-                                                        <label htmlFor='deposit-amount' className='d-block text-left'>WITHDRAW</label>
-                                                        <div className='input-group '>
-                                                            <input value={`$${this.state.withdrawAmount}`} onChange={e => this.setState({ withdrawAmount:e.target.value })} className='form-control left-radius' placeholder='0' type='text' disabled />
-                                                            {/*<div className='input-group-append'>*/}
-                                                            {/*    <button className='btn  btn-primary right-radius btn-max l-light-btn' style={{ cursor: 'pointer' }} onClick={this.handleSetMaxWithdraw}>*/}
-                                                            {/*        MAX*/}
-                                                            {/*    </button>*/}
-                                                            {/*</div>*/}
-                                                        </div>
-                                                    </div>
-                                                    <button title={canWithdraw ? '' : `You recently staked, you can unstake ${cliffTimeInWords}`} disabled={!canWithdraw || !is_connected } className='btn  btn-primary btn-block l-outline-btn' type='submit'>
-                                                        WITHDRAW
-                                                    </button>
-                                                    <p style={{fontSize: '.8rem'}}
-                                                       className='mt-1 text-center mb-0 text-muted mt-3'>
-                                                        To <strong>WITHDRAW</strong> you will be asked to sign <strong>2 transactions</strong>
-                                                    </p>
-                                                    <p style={{fontSize: '.8rem'}} className='mt-1 text-center text-muted mt-3'>0% fee for withdraw</p>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div className='col-12'>
-                                            <div className='l-box'>
-                                                <form onSubmit={this.handleClaimDivs}>
-                                                    <div className='form-group'>
-                                                        <label htmlFor='deposit-amount' className='text-left d-block'>REWARDS</label>
                                                         <div className='form-row'>
-                                                            {/* <div className='col-md-6'>
-                                                        <p className='form-control  text-right' style={{ border: 'none', marginBottom: 0, paddingLeft: 0, background: 'transparent', color: '#222' }}><span style={{ fontSize: '1.2rem', color: 'rgb(255, 0, 122)' }}>{pendingDivsEth}</span> <small className='text-bold'>WETH</small></p>
-                                                    </div> */}
-                                                            <div className='col-md-12'>
-                                                                {/*<p className='form-control  text-right' style={{ border: 'none', marginBottom: 0, paddingLeft: 0, background: 'transparent', color: 'var(--text-color)' }}><span style={{ fontSize: '1.2rem', color: 'var(--text-color)' }}>{pendingDivs}</span> <small className='text-bold'>DYP</small></p>*/}
-                                                                <input value={Number(pendingDivs) > 0 ? `${pendingDivs} DYP` : `${pendingDivs} DYP`} onChange={e => this.setState({pendingDivs: Number(e.target.value) > 0 ? e.target.value : e.target.value})} className='form-control left-radius' placeholder='0' type='text' disabled />
+                                                            <div className='col-md-6 mb-2'>
+                                                                <button disabled={!is_connected} className='btn  btn-primary btn-block ' type='submit'>
+                                                                    CLAIM
+                                                                </button>
+                                                            </div>
+                                                            <div className='col-md-6 mb-2'>
+                                                                <button disabled={!is_connected} className='btn  btn-primary btn-block l-outline-btn' type='button' onClick={this.handleReinvest}>
+                                                                    REINVEST
+                                                                </button>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div className='form-row'>
-                                                        <div className='col-md-6 mb-2'>
-                                                            <button disabled={!is_connected} className='btn  btn-primary btn-block ' type='submit'>
-                                                                CLAIM
-                                                            </button>
-                                                        </div>
-                                                        <div className='col-md-6 mb-2'>
-                                                            <button disabled={!is_connected} className='btn  btn-primary btn-block l-outline-btn' type='button' onClick={this.handleReinvest}>
-                                                                REINVEST
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    <p style={{fontSize: '.8rem'}}
-                                                       className='mt-1 text-center mb-0 text-muted mt-3'>
-                                                        To <strong>CLAIM</strong> you will be asked to sign <strong>2 transactions</strong>
-                                                    </p>
-                                                </form>
+                                                        <p style={{fontSize: '.8rem'}}
+                                                           className='mt-1 text-center mb-0 text-muted mt-3'>
+                                                            To <strong>CLAIM</strong> you will be asked to sign <strong>2 transactions</strong>
+                                                        </p>
+                                                    </form>
+                                                </div>
                                             </div>
+                                            {/*<div className='col-12'>*/}
+                                            {/*    <div className='l-box'>*/}
+                                            {/*        <form onSubmit={(e) => e.preventDefault()}>*/}
+                                            {/*            <div className='form-group'>*/}
+                                            {/*                <label htmlFor='deposit-amount' className='d-block text-left'>RETURN CALCULATOR</label>*/}
+                                            {/*                <div className='row'>*/}
+                                            {/*                    <div className='col'>*/}
+                                            {/*                        <label style={{ fontSize: '1rem', fontWeight: 'normal' }}>DYP to Deposit</label>*/}
+                                            {/*                        <input className='form-control ' value={ this.state.approxDeposit} onChange={e => this.setState({ approxDeposit: e.target.value })} placeholder='0' type='text' />*/}
+                                            {/*                    </div>*/}
+                                            {/*                    <div className='col'>*/}
+                                            {/*                        <label style={{ fontSize: '1rem', fontWeight: 'normal' }}>Days</label>*/}
+                                            {/*                        <input className='form-control ' value={this.state.approxDays} onChange={e => this.setState({ approxDays: e.target.value })} type='text' />*/}
+                                            {/*                    </div>*/}
+                                            {/*                </div>*/}
+                                            {/*            </div>*/}
+                                            {/*            <p>*/}
+                                            {/*                Approx. {getFormattedNumber(this.getApproxReturn(), 6)} DYP*/}
+                                            {/*            </p>*/}
+                                            {/*            /!*<p style={{ fontSize: '.8rem' }} className='mt-1 text-center'>Approx. Value Not Considering Staking / Unstakig Fees.</p>*!/*/}
+                                            {/*        </form>*/}
+                                            {/*    </div>*/}
+                                            {/*</div>*/}
                                         </div>
-                                        {/*<div className='col-12'>*/}
-                                        {/*    <div className='l-box'>*/}
-                                        {/*        <form onSubmit={(e) => e.preventDefault()}>*/}
-                                        {/*            <div className='form-group'>*/}
-                                        {/*                <label htmlFor='deposit-amount' className='d-block text-left'>RETURN CALCULATOR</label>*/}
-                                        {/*                <div className='row'>*/}
-                                        {/*                    <div className='col'>*/}
-                                        {/*                        <label style={{ fontSize: '1rem', fontWeight: 'normal' }}>DYP to Deposit</label>*/}
-                                        {/*                        <input className='form-control ' value={ this.state.approxDeposit} onChange={e => this.setState({ approxDeposit: e.target.value })} placeholder='0' type='text' />*/}
-                                        {/*                    </div>*/}
-                                        {/*                    <div className='col'>*/}
-                                        {/*                        <label style={{ fontSize: '1rem', fontWeight: 'normal' }}>Days</label>*/}
-                                        {/*                        <input className='form-control ' value={this.state.approxDays} onChange={e => this.setState({ approxDays: e.target.value })} type='text' />*/}
-                                        {/*                    </div>*/}
-                                        {/*                </div>*/}
-                                        {/*            </div>*/}
-                                        {/*            <p>*/}
-                                        {/*                Approx. {getFormattedNumber(this.getApproxReturn(), 6)} DYP*/}
-                                        {/*            </p>*/}
-                                        {/*            /!*<p style={{ fontSize: '.8rem' }} className='mt-1 text-center'>Approx. Value Not Considering Staking / Unstakig Fees.</p>*!/*/}
-                                        {/*        </form>*/}
-                                        {/*    </div>*/}
-                                        {/*</div>*/}
                                     </div>
-                                </div>
-                                <div className='col-lg-6'>
-                                    <div className='l-box'>
-                                        <div className='table-responsive'>
-                                            <h3 style={{ fontSize: '1.1rem', fontWeight: '600', padding: '.3rem' }}>STATS</h3>
-                                            <table className='table-stats table table-sm table-borderless'>
-                                                <tbody>
-                                                {/*<tr>*/}
-                                                {/*    <th>My Address</th>*/}
-                                                {/*    <td className='text-right'>*/}
-                                                {/*        <Address style={{ fontFamily: 'monospace' }} a={coinbase} />*/}
-                                                {/*    </td>*/}
-                                                {/*</tr>*/}
-                                                {/*<tr>*/}
-                                                {/*    <th>Contract Address</th>*/}
-                                                {/*    <td className='text-right'>*/}
-                                                {/*        <Address style={{ fontFamily: 'monospace' }} a={staking._address} />*/}
-                                                {/*    </td>*/}
-                                                {/*</tr>*/}
-
-                                                <tr>
-                                                    <th>Contract Expiration</th>
-                                                    <td className="text-right"><strong>{expiration_time}</strong></td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th>My DYP Balance</th>
-                                                    <td className="text-right"><strong>{token_balance}</strong> <small>{token_symbol}</small></td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th>My Deposit Value</th>
-                                                    <td className="text-right"><strong>${depositedTokens}</strong> <small>USD</small></td>
-                                                </tr>
-                                                {/*<tr>*/}
-                                                {/*    <th>Total DYP Locked</th>*/}
-                                                {/*    <td className="text-right"><strong>{tvl}</strong> <small>{token_symbol}</small></td>*/}
-                                                {/*</tr>*/}
-
-                                                <tr>
-                                                    <th>Total Earned</th>
-                                                    <td className="text-right"><strong>${totalEarnedTokens}</strong> <small>USD</small></td>
-                                                </tr>
-
-                                                <tr>
-                                                    <th>TVL USD</th>
-                                                    <td className="text-right"><strong>${tvl_usd}</strong> <small>USD</small></td>
-                                                </tr>
-                                                {/* <tr>
-                                               <th>Total Stakers</th>
-                                               <td className="text-right"><strong>{total_stakers}</strong> <small></small></td>
-                                            </tr> */}
-                                                {/* <tr>
-                                        <th>Pending</th>
-                                        <td className="text-right"><strong>{pendingDivs}</strong> <small>DYP</small></td>
-                                    </tr> */}
-
-                                                {is_connected &&
+                                    <div className='col-lg-6'>
+                                        <div className='l-box'>
+                                            <div className='table-responsive'>
+                                                <h3 style={{ fontSize: '1.1rem', fontWeight: '600', padding: '.3rem' }}>STATS</h3>
+                                                <table className='table-stats table table-sm table-borderless'>
+                                                    <tbody>
+                                                    {/*<tr>*/}
+                                                    {/*    <th>My Address</th>*/}
+                                                    {/*    <td className='text-right'>*/}
+                                                    {/*        <Address style={{ fontFamily: 'monospace' }} a={coinbase} />*/}
+                                                    {/*    </td>*/}
+                                                    {/*</tr>*/}
+                                                    {/*<tr>*/}
+                                                    {/*    <th>Contract Address</th>*/}
+                                                    {/*    <td className='text-right'>*/}
+                                                    {/*        <Address style={{ fontFamily: 'monospace' }} a={staking._address} />*/}
+                                                    {/*    </td>*/}
+                                                    {/*</tr>*/}
 
                                                     <tr>
-                                                        <td style={{ fontSize: '1rem', paddingTop: '2rem' }} colSpan='2' className='text-center'>
-                                                            <a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/token/${reward_token._address}?a=${coinbase}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{ fontSize: '.8rem' }} className='fas fa-external-link-alt'></i>
-                                                        </td>
+                                                        <th>Contract Expiration</th>
+                                                        <td className="text-right"><strong>{expiration_time}</strong></td>
                                                     </tr>
-                                                }
 
-                                                {/* <tr>
-                                                <td style={{ fontSize: '1rem' }} colSpan='2' className='text-center'>
-                                                    <span className='lp-link'>
-                                                        <NavLink style={{fontSize: '1rem'}} to='/referral-stats'>View Referral Stats</NavLink>
-                                                    </span>
-                                                </td>
-                                            </tr> */}
-                                                {/* <tr>
-                                                <td colSpan='2'>
-                                                    <div><span style={{fontSize: '.8rem'}}>
+                                                    <tr>
+                                                        <th>My DYP Balance</th>
+                                                        <td className="text-right"><strong>{token_balance}</strong> <small>{token_symbol}</small></td>
+                                                    </tr>
 
-                                                        <span style={{ cursor: "pointer" }}>
-                                                            <Clipboard
-                                                                component="span"
-                                                                onSuccess={e => {
-                                                                    setTimeout(() => ReactTooltip.hide(), 2000);
-                                                                }} data-event="click" data-for={id} data-tip="Copied To Clipboard!" data-clipboard-text={this.getReferralLink()}>Referral Link:  &nbsp; <span
+                                                    <tr>
+                                                        <th>My Deposit Value</th>
+                                                        <td className="text-right"><strong>${depositedTokens}</strong> <small>USD</small></td>
+                                                    </tr>
+                                                    {/*<tr>*/}
+                                                    {/*    <th>Total DYP Locked</th>*/}
+                                                    {/*    <td className="text-right"><strong>{tvl}</strong> <small>{token_symbol}</small></td>*/}
+                                                    {/*</tr>*/}
 
-                                                                title="Copy link to clipboard"
-                                                                style={{
-                                                                    cursor: 'pointer'
-                                                                }} className="fas fa-paste"></span></Clipboard>
-                                                            <ReactTooltip id={id} effect="solid" />
-                                                        </span>
+                                                    <tr>
+                                                        <th>Total Earned</th>
+                                                        <td className="text-right"><strong>${totalEarnedTokens}</strong> <small>USD</small></td>
+                                                    </tr>
 
+                                                    <tr>
+                                                        <th>TVL USD</th>
+                                                        <td className="text-right"><strong>${tvl_usd}</strong> <small>USD</small></td>
+                                                    </tr>
+                                                    {/* <tr>
+                                                   <th>Total Stakers</th>
+                                                   <td className="text-right"><strong>{total_stakers}</strong> <small></small></td>
+                                                </tr> */}
+                                                    {/* <tr>
+                                            <th>Pending</th>
+                                            <td className="text-right"><strong>{pendingDivs}</strong> <small>DYP</small></td>
+                                        </tr> */}
 
-                                                        <br /><a className='text-muted small' href={this.getReferralLink()}> {this.getReferralLink()} </a></span></div>
-                                                </td>
-                                            </tr> */}
-                                                <tr>
+                                                    {is_connected &&
 
-                                                </tr>
-                                                {isOwner && <tr>
+                                                        <tr>
+                                                            <td style={{ fontSize: '1rem', paddingTop: '2rem' }} colSpan='2' className='text-center'>
+                                                                <a target='_blank' rel='noopener noreferrer' href={`${window.config.etherscan_baseURL}/token/${reward_token._address}?a=${coinbase}`}>View Transaction History on Bscscan</a> &nbsp; <i style={{ fontSize: '.8rem' }} className='fas fa-external-link-alt'></i>
+                                                            </td>
+                                                        </tr>
+                                                    }
+
+                                                    {/* <tr>
                                                     <td style={{ fontSize: '1rem' }} colSpan='2' className='text-center'>
-                                                        <a onClick={this.handleListDownload} target='_blank' rel='noopener noreferrer' href='#'><i style={{ fontSize: '.8rem' }} className='fas fa-download'></i> Download Stakers List </a>
+                                                        <span className='lp-link'>
+                                                            <NavLink style={{fontSize: '1rem'}} to='/referral-stats'>View Referral Stats</NavLink>
+                                                        </span>
                                                     </td>
-                                                </tr>}
-                                                </tbody>
-                                            </table>
+                                                </tr> */}
+                                                    {/* <tr>
+                                                    <td colSpan='2'>
+                                                        <div><span style={{fontSize: '.8rem'}}>
+
+                                                            <span style={{ cursor: "pointer" }}>
+                                                                <Clipboard
+                                                                    component="span"
+                                                                    onSuccess={e => {
+                                                                        setTimeout(() => ReactTooltip.hide(), 2000);
+                                                                    }} data-event="click" data-for={id} data-tip="Copied To Clipboard!" data-clipboard-text={this.getReferralLink()}>Referral Link:  &nbsp; <span
+
+                                                                    title="Copy link to clipboard"
+                                                                    style={{
+                                                                        cursor: 'pointer'
+                                                                    }} className="fas fa-paste"></span></Clipboard>
+                                                                <ReactTooltip id={id} effect="solid" />
+                                                            </span>
+
+
+                                                            <br /><a className='text-muted small' href={this.getReferralLink()}> {this.getReferralLink()} </a></span></div>
+                                                    </td>
+                                                </tr> */}
+                                                    <tr>
+
+                                                    </tr>
+                                                    {isOwner && <tr>
+                                                        <td style={{ fontSize: '1rem' }} colSpan='2' className='text-center'>
+                                                            <a onClick={this.handleListDownload} target='_blank' rel='noopener noreferrer' href='#'><i style={{ fontSize: '.8rem' }} className='fas fa-download'></i> Download Stakers List </a>
+                                                        </td>
+                                                    </tr>}
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
 
                             {/* <div className='mt-3 text-center'>
