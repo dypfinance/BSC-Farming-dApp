@@ -527,13 +527,13 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                             <div className="container">
                                 <Popup show={this.state.popup} handleClose={this.hidePopup} >
                                     <div className="earn-hero-content p4token-wrapper">
-                                        <p className='h3'><b>Earn more DYP</b></p>
+                                        <p className='h3'><b>DYP Staking</b></p>
                                         <p>Stake your DYP tokens and earn {this.state.apy2 == 0 ? (
                                             <Dots />
                                         ) : (
                                             getFormattedNumber(this.state.apy2,0)
                                         )
-                                        }% APR. No Impermanent Loss.</p>
+                                        }% APR with no Impermanent Loss.</p>
                                         <p>To start earning, all you need is to deposit DYP tokens into the Staking
                                             contract. You can choose from two different staking options, with
                                             rewards starting from {this.state.apy1 == 0 ? (
@@ -551,9 +551,8 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                                         <p>The staking pools have the REINVEST function integrated, meaning that
                                             you can automatically add your daily rewards to the staking pool.
                                             Moreover, the DYP Referral is available. If you refer DYP to your
-                                            friends, 5% of your friends’ rewards will automatically be sent to you
-                                            whenever your friends stake DYP. You do not need to stake, it will’ be
-                                            automatically sent to you, free of gas fee.</p>
+                                            friends, 5% of your friends’ rewards will automatically be sent to
+                                            you whenever they stake DYP.</p>
                                     </div>
 
                                 </Popup>
@@ -569,7 +568,7 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                                                         className='btn  btn-block btn-primary button' type='button'>
                                                     <img src="img/icon/bulb.svg" style={{float: 'left'}}
                                                          alt="wallet" />
-                                                    Farming info
+                                                    More info
                                                 </button>
                                             </div>
                                             <div style={{paddingLeft: '20px'}} className='col-6'>
