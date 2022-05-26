@@ -78,7 +78,7 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                 depositAmount: '',
                 withdrawAmount: '',
 
-                coinbase: '',
+                coinbase: '0x0000000000000000000000000000000000000111',
                 tvl: '',
                 referralFeeEarned: '',
                 stakingOwner: null,
@@ -164,8 +164,6 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
             window._refreshBalInterval = setInterval(this.refreshBalance, 3000)
 
             this.getPriceDYP()
-
-            this.getTotalTvl().then()
         }
 
         getTotalTvl = async () =>
@@ -306,8 +304,14 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
         }
 
         refreshBalance = async () => {
-            let coinbase = window.coinbase_address
-            this.setState({ coinbase })
+            let coinbase = this.state.coinbase
+
+            if (window.coinbase_address){
+                coinbase = window.coinbase_address
+                this.setState({ coinbase })
+            }
+
+            this.getTotalTvl()
 
             let lp_data = this.props.the_graph_result.token_data
             //console.log({lp_data})
@@ -556,7 +560,7 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                                 <Modal show={this.state.show} handleConnection={this.props.handleConnection} handleConnectionWalletConnect={this.props.handleConnectionWalletConnect} handleClose={this.hideModal} />
                                 <div className='row'>
                                     <div className='col-12' style={{marginBottom: '30px'}}>
-                                        <p style={{width: '100%', height: 'auto', fontFamily: 'Mulish', fontStyle: 'normal', fontWeight: '900', fontSize: '42px', lineHeight: '55px', color: '#FFFFFF', marginTop: '35px', maxHeight: '55px'}} >Staking pool</p>
+                                        <p style={{width: '100%', height: 'auto', fontFamily: 'Mulish', fontStyle: 'normal', fontWeight: '900', fontSize: '42px', lineHeight: '55px', color: '#FFFFFF', marginTop: '35px', maxHeight: '55px'}} >DYP Staking</p>
                                     </div>
                                     <div className='col-6' style={{marginBottom: '27px'}}>
                                         <div className='row'>

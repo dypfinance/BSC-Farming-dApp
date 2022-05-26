@@ -79,7 +79,7 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
                 depositAmount: '',
                 withdrawAmount: 0,
 
-                coinbase: '',
+                coinbase: '0x0000000000000000000000000000000000000111',
                 tvl: '',
                 stakingOwner: null,
                 approxDeposit: 100 ,
@@ -170,7 +170,6 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
 
         componentDidMount() {
             this.refreshBalance()
-            this.getTotalTvl().then()
             window._refreshBalInterval = setInterval(this.refreshBalance, 3000)
 
             this.getPriceDYP()
@@ -383,8 +382,14 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
         }
 
         refreshBalance = async () => {
-            let coinbase = window.coinbase_address
-            this.setState({ coinbase })
+            let coinbase = this.state.coinbase
+
+            if (window.coinbase_address){
+                coinbase = window.coinbase_address
+                this.setState({ coinbase })
+            }
+
+            this.getTotalTvl()
 
             let usd_per_dyps = this.props.the_graph_result.price_DYPS ? this.props.the_graph_result.price_DYPS : 1
 
@@ -653,7 +658,7 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
                                 <Modal show={this.state.show} handleConnection={this.props.handleConnection} handleConnectionWalletConnect={this.props.handleConnectionWalletConnect} handleClose={this.hideModal} />
                                 <div className='row'>
                                     <div className='col-12' style={{marginBottom: '30px'}}>
-                                        <p style={{width: '100%', height: 'auto', fontFamily: 'Mulish', fontStyle: 'normal', fontWeight: '900', fontSize: '42px', lineHeight: '55px', color: '#FFFFFF', marginTop: '35px', maxHeight: '55px'}} >DYP Buyback pool</p>
+                                        <p style={{width: '100%', height: 'auto', fontFamily: 'Mulish', fontStyle: 'normal', fontWeight: '900', fontSize: '42px', lineHeight: '55px', color: '#FFFFFF', marginTop: '35px', maxHeight: '55px'}} >DYP Buyback</p>
                                     </div>
                                     <div className='col-6' style={{marginBottom: '27px'}}>
                                         <div className='row'>
@@ -662,7 +667,7 @@ export default function initStaking({ staking, constant, apr, lock, expiration_t
                                                         className='btn  btn-block btn-primary button' type='button'>
                                                     <img src="img/icon/bulb.svg" style={{float: 'left'}}
                                                          alt="wallet" />
-                                                     Buyback Info
+                                                     More Info
                                                 </button>
                                             </div>
                                             <div style={{paddingLeft: '20px'}} className='col-6'>
