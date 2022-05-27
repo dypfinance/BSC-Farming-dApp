@@ -752,7 +752,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
             return (<div>
 
                     <div className='row'>
-                        <div className="col-12" style={{background: 'url(img/banner/bsc-farming.svg)', backgroundSize: 'cover', resize: 'both'}}>
+                        <div className="col-12 header-image-farming-new">
                             <div className="container">
                                 <Popup show={this.state.popup} handleClose={this.hidePopup} >
                                     <div className="earn-hero-content p4token-wrapper">
