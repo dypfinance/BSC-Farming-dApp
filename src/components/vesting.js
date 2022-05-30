@@ -476,7 +476,7 @@ export default function initVesting({ staking, buyers, apr, liquidity='ETH', loc
                                     <div className='row token-staking-form'>
                                         <div className='col-12'>
                                             <div className='l-box'>
-                                                {showDeposit == true ?
+                                                {showDeposit == false ?
                                                     <form onSubmit={e => e.preventDefault()}>
                                                         <div className='form-group'>
                                                             <div className='row'>
