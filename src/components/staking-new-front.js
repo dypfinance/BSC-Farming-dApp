@@ -6,6 +6,7 @@ import Modal from "./modal";
 import Popup from "./popup";
 import Tooltip from "@material-ui/core/Tooltip"
 import {Button} from "@material-ui/core";
+import {NavLink} from "react-router-dom";
 
 export default function initStakingNew({token, staking, constant, liquidity, lp_symbol, reward, lock, rebase_factor, expiration_time}) {
 
@@ -1217,7 +1218,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                 <div className='row' style={{marginLeft: '0px'}}>
                                                     <label className='col-md-8 d-block text-left' style={{fontSize: '1.1rem', fontWeight: '600', padding: '.3rem'}}>MY STATS</label>
                                                     <div className='col-4'>
-                                                        <a rel='noopener noreferrer' href={'/staking-stats'} >
+                                                        <NavLink rel='noopener noreferrer' to={'/staking-stats'} >
 
                                                             {is_connected &&
 
@@ -1226,7 +1227,7 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                                 </button>
                                                             }
 
-                                                        </a>
+                                                        </NavLink>
                                                     </div>
                                                 </div>
                                                 <table className='table-stats table table-sm table-borderless'>
