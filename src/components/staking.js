@@ -627,13 +627,13 @@ export default function initStaking({token, staking, liquidity, lp_symbol, rewar
                         <div className='table-responsive container'>
                             <div className='row' style={{marginLeft: '0px'}}>
                                 <label className='col-md-8 d-block text-left' style={{fontSize: '1.1rem', fontWeight: '600', padding: '.3rem'}}>MY STATS</label>
-                                <div className='col-4'>
-                                    <a rel='noopener noreferrer' href={'/staking-stats'} >
-                                        <button className='btn btn-sm btn-block btn-primary l-outline-btn' type='button'>
-                                            VIEW ALL
-                                        </button>
-                                    </a>
-                                </div>
+                                {/*<div className='col-4'>*/}
+                                {/*    <a rel='noopener noreferrer' href={'/staking-stats'} >*/}
+                                {/*        <button className='btn btn-sm btn-block btn-primary l-outline-btn' type='button'>*/}
+                                {/*            VIEW ALL*/}
+                                {/*        </button>*/}
+                                {/*    </a>*/}
+                                {/*</div>*/}
                             </div>
                             <table className='table-stats table table-sm table-borderless'>
                                 <tbody>
