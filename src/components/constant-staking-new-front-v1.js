@@ -434,7 +434,7 @@ export default function initStaking({ staking, apr, liquidity='ETH', lock, expir
                                         <p className='h3'><b>DYP Staking</b></p>
                                         <p>Stake your DYP tokens and earn 25% APR with no Impermanent Loss.</p>
                                         <p>To start earning, all you need is to deposit DYP tokens into the
-                                            Staking contract and earn BNB as rewards.</p>
+                                            Staking contract and earn DYP as rewards.</p>
                                         <p>The staking pools have the REINVEST function integrated, meaning
                                             that you can automatically add your daily rewards to the staking
                                             pool. Moreover, the DYP Referral is available. If you refer DYP
