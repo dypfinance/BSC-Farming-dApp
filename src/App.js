@@ -22,6 +22,8 @@ import initStakingNew_front from './components/staking-new-front'
 
 // import initConstantStakingiDYP from './components/constant-staking-idyp'
 
+import initConstantStakingDYP from './components/constant-staking-new-front-v1'
+
 import initConstantStakingiDYP from './components/constant-staking-idyp-new-front'
 
 import StakingList from './components/staking-list'
@@ -79,6 +81,9 @@ const ConstantStaking90 = initConstantStaking({ staking: window.constant_staking
 
 //Constant Staking NEW DYP -> DAI
 const ConstantStakingDai = initConstantStakingDai({ staking: window.constant_stakingdai, apr: 25, liquidity: bnb_address, expiration_time: '10 May 2023', other_info: true })
+
+//Constant Staking NEW DYP -> DYP
+const ConstantStakingDYP = initConstantStakingDYP({ staking: window.constant_staking_new10, apr: 30, liquidity: bnb_address, expiration_time: '14 July 2023', other_info: false })
 
 //Buyback New
 const BuybackStaking1 = initBuybackStakingNewFront({ staking: window.buyback_staking1_1, constant: window.constant_staking_new3, apr: 30, expiration_time: '17 November 2022' })
@@ -370,6 +375,8 @@ render() {
       {/*Constant Staking DYP -> DAI*/}
       <Route exact path='/constant-staking-3' render={props => <ConstantStakingDai is_wallet_connected={this.state.is_wallet_connected} handleConnection={this.handleConnection} handleConnectionWalletConnect={this.handleConnectionWalletConnect} the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
 
+      {/*Constant Staking DYP -> DYP 30%*/}
+      <Route exact path='/constant-staking-180' render={props => <ConstantStakingDYP is_wallet_connected={this.state.is_wallet_connected} handleConnection={this.handleConnection} handleConnectionWalletConnect={this.handleConnectionWalletConnect} the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
 
       {/*Buyback New*/}
       <Route exact path='/staking-buyback-1' render={props => <BuybackStaking1 is_wallet_connected={this.state.is_wallet_connected} handleConnection={this.handleConnection} handleConnectionWalletConnect={this.handleConnectionWalletConnect} the_graph_result={this.state.the_graph_result_BSC_V2} {...props} />} />
