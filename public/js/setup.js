@@ -273,7 +273,8 @@ window.config = {
 	reward_token_dai_address: '0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3',
 
 	//Constant Staking DYP -> DYP 30%
-	constant_stakingidyp_3_address: '0xef9e50A19358CCC8816d9BC2c2355aea596efd06'
+	constant_stakingidyp_3_address: '0xef9e50A19358CCC8816d9BC2c2355aea596efd06',
+	constant_stakingidyp_4_address: '0xfc4493e85fd5424456f22135db6864dd4e4ed662'
 }
 
 window.infuraWeb3 = new Web3(window.config.infura_endpoint)
@@ -4278,6 +4279,7 @@ window.constant_stakingdai = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGDAI")
 
 //Constant staking DYP -> DYP 30%
 window.constant_staking_new10 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGIDYP_3")
+window.constant_staking_new11 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGIDYP_4")
 
 /*buyback*/
 window.buyback_staking = new BUYBACK_STAKING('BUYBACK_STAKING')
