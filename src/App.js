@@ -76,29 +76,29 @@ const VestingAirdrop = initVesting({ staking: window.constant_staking_90, buyers
 const VestingStakingAirdrop = initVestingStaking({ staking: window.constant_staking_120, apr: 0, liquidity: eth_address, expiration_time: '23 November 2022' })
 
 //Constant Staking New
-const ConstantStaking30 = initConstantStaking({ staking: window.constant_staking_new1, apr: 25, liquidity: bnb_address, expiration_time: '17 November 2022' })
-const ConstantStaking90 = initConstantStaking({ staking: window.constant_staking_new2, apr: 50, liquidity: bnb_address, expiration_time: '17 November 2022' })
+const ConstantStaking30 = initConstantStaking({ staking: window.constant_staking_new1, apr: 25, liquidity: bnb_address, expiration_time: '17 November 2022', fee: 0.25 })
+const ConstantStaking90 = initConstantStaking({ staking: window.constant_staking_new2, apr: 50, liquidity: bnb_address, expiration_time: '17 November 2022', fee: 0.5 })
 
 //Constant Staking NEW DYP -> DAI
 const ConstantStakingDai = initConstantStakingDai({ staking: window.constant_stakingdai, apr: 25, liquidity: bnb_address, expiration_time: '10 May 2023', other_info: true })
 
 //Constant Staking NEW DYP -> DYP
-const ConstantStakingDYP = initConstantStakingDYP({ staking: window.constant_staking_new10, apr: 30, liquidity: bnb_address, expiration_time: '14 July 2023', other_info: false })
-const ConstantStakingDYP10APR = initConstantStakingDYP({ staking: window.constant_staking_new11, apr: 10, liquidity: bnb_address, expiration_time: '5 August 2023', other_info: false })
+const ConstantStakingDYP = initConstantStakingDYP({ staking: window.constant_staking_new10, apr: 30, liquidity: bnb_address, expiration_time: '14 July 2023', other_info: false, fee: 3.5 })
+const ConstantStakingDYP10APR = initConstantStakingDYP({ staking: window.constant_staking_new11, apr: 10, liquidity: bnb_address, expiration_time: '5 August 2023', other_info: false, fee: 1 })
 
 //Buyback New
-const BuybackStaking1 = initBuybackStakingNewFront({ staking: window.buyback_staking1_1, constant: window.constant_staking_new3, apr: 30, expiration_time: '17 November 2022' })
-const BuybackStaking2 = initBuybackStakingNewFront({ staking: window.buyback_staking1_2, constant: window.constant_staking_new4, apr: 100, expiration_time: '17 November 2022' })
+const BuybackStaking1 = initBuybackStakingNewFront({ staking: window.buyback_staking1_1, constant: window.constant_staking_new3, apr: 30, expiration_time: '17 November 2022', fee: 1 })
+const BuybackStaking2 = initBuybackStakingNewFront({ staking: window.buyback_staking1_2, constant: window.constant_staking_new4, apr: 100, expiration_time: '17 November 2022', fee: 3.5 })
 
 
 const BuybackStaking2_front = initBuybackStakingNewFront({ staking: window.buyback_staking1_2, constant: window.constant_staking_new4, apr: 100, expiration_time: '17 November 2022' })
 
 //Farming New
-const StakingNew1 = initStakingNew_front({token: window.token_new, staking: window.farming_new_1, constant: window.constant_staking_new5, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
-const StakingNew2 = initStakingNew_front({token: window.token_new, staking: window.farming_new_2, constant: window.constant_staking_new6, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
-const StakingNew3 = initStakingNew_front({token: window.token_new, staking: window.farming_new_3, constant: window.constant_staking_new7, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
-const StakingNew4 = initStakingNew_front({token: window.token_new, staking: window.farming_new_4, constant: window.constant_staking_new8, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
-const StakingNew5 = initStakingNew_front({token: window.token_new, staking: window.farming_new_5, constant: window.constant_staking_new9, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
+const StakingNew1 = initStakingNew_front({token: window.token_new, staking: window.farming_new_1, constant: window.constant_staking_new5, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022', fee: 0.3})
+const StakingNew2 = initStakingNew_front({token: window.token_new, staking: window.farming_new_2, constant: window.constant_staking_new6, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022', fee: 0.3})
+const StakingNew3 = initStakingNew_front({token: window.token_new, staking: window.farming_new_3, constant: window.constant_staking_new7, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022', fee: 0.4})
+const StakingNew4 = initStakingNew_front({token: window.token_new, staking: window.farming_new_4, constant: window.constant_staking_new8, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022', fee: 0.8})
+const StakingNew5 = initStakingNew_front({token: window.token_new, staking: window.farming_new_5, constant: window.constant_staking_new9, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022', fee: 1.2})
 
 const StakingNew5_front = initStakingNew_front({token: window.token_new, staking: window.farming_new_5, constant: window.constant_staking_new9, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
 

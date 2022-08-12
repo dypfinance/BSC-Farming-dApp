@@ -8,7 +8,7 @@ import Tooltip from "@material-ui/core/Tooltip"
 import {Button} from "@material-ui/core";
 import {NavLink} from "react-router-dom";
 
-export default function initStakingNew({token, staking, constant, liquidity, lp_symbol, reward, lock, rebase_factor, expiration_time}) {
+export default function initStakingNew({token, staking, constant, liquidity, lp_symbol, reward, lock, rebase_factor, expiration_time, fee}) {
 
     let {reward_token, BigNumber, alertify, reward_token_idyp, token_dyps} = window
 
@@ -1001,7 +1001,8 @@ export default function initStakingNew({token, staking, constant, liquidity, lp_
                                                             <p style={{fontSize: '.8rem'}}
                                                                className='mt-1 text-center mb-0 text-muted mt-3'>
                                                                 {/* Some info text here.<br /> */}
-                                                                Please approve before deposit.
+                                                                Please approve before deposit. PERFORMANCE FEE {fee}%<br/>
+                                                                Performance fees are already subtracted from the displayed APR.
                                                             </p>
 
                                                         </form>
