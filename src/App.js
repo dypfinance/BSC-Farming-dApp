@@ -111,8 +111,10 @@ const StakingNewError4 = initStakingNew({token: window.token_new, staking: windo
 const StakingNewError5 = initStakingNew({token: window.token_new, staking: window.farming_error_5, constant: window.constant_staking_new9, liquidity: wbnb_address, lp_symbol:'USD', reward: '30,000', lock: '3 Days', rebase_factor: rebase_factors[0], expiration_time: '19 November 2022'})
 
 //Constant Staking iDYP
-const ConstantStakingiDYP1 = initConstantStakingiDYP({ staking: window.constant_staking_idyp_1, apr: 20, liquidity: wbnb_address, expiration_time: '28 February 2023' })
-const ConstantStakingiDYP2 = initConstantStakingiDYP({ staking: window.constant_staking_idyp_2, apr: 45, liquidity: wbnb_address, expiration_time: '28 February 2023' })
+const ConstantStakingiDYP1 = initConstantStakingiDYP({ staking: window.constant_staking_idyp_1, apr: 20, liquidity: wbnb_address, expiration_time: '28 February 2023', other_info: true, fee_s: 0, fee_u: 0.25 })
+const ConstantStakingiDYP2 = initConstantStakingiDYP({ staking: window.constant_staking_idyp_2, apr: 45, liquidity: wbnb_address, expiration_time: '28 February 2023', other_info: true, fee_s: 0, fee_u: 0.25 })
+const ConstantStakingiDYP3 = initConstantStakingiDYP({ staking: window.constant_staking_idyp_3, apr: 15, liquidity: eth_address, expiration_time: '15 August 2023', other_info: false, fee_s: 1, fee_u: 0 })
+const ConstantStakingiDYP4 = initConstantStakingiDYP({ staking: window.constant_staking_idyp_4, apr: 30, liquidity: eth_address, expiration_time: '15 August 2023', other_info: false, fee_s: 3.5, fee_u: 0 })
 
 
 
@@ -404,6 +406,8 @@ render() {
 
       <Route exact path='/staking-idyp-1' render={props => <ConstantStakingiDYP1 is_wallet_connected={this.state.is_wallet_connected} handleConnection={this.handleConnection} handleConnectionWalletConnect={this.handleConnectionWalletConnect} the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
       <Route exact path='/staking-idyp-2' render={props => <ConstantStakingiDYP2 is_wallet_connected={this.state.is_wallet_connected} handleConnection={this.handleConnection} handleConnectionWalletConnect={this.handleConnectionWalletConnect} the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
+      <Route exact path='/staking-idyp-3' render={props => <ConstantStakingiDYP3 is_wallet_connected={this.state.is_wallet_connected} handleConnection={this.handleConnection} handleConnectionWalletConnect={this.handleConnectionWalletConnect} the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
+      <Route exact path='/staking-idyp-4' render={props => <ConstantStakingiDYP4 is_wallet_connected={this.state.is_wallet_connected} handleConnection={this.handleConnection} handleConnectionWalletConnect={this.handleConnectionWalletConnect} the_graph_result={this.state.the_graph_result_BSC_V2} referrer={this.state.referrer} {...props} />} />
 
       </div>
       <Footer />
