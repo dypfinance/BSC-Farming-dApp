@@ -217,8 +217,8 @@ window.config = {
 	//Constant Staking iDYP
 	constant_stakingidyp_1_address: '0x58366902082b90fca01be07d929478bd48acfb19',
 	constant_stakingidyp_2_address: '0x160ff3c4a6e9aa8e4271aa71226cc811bfef7ed9',
-	constant_stakingidyp_3_address: '0x7e766f7005c7a9e74123b156697b582eecb8d2d7',
-	constant_stakingidyp_4_address: '0x4c04e53f9aaa17fc2c914694b4aae57a9d1be445',
+	constant_stakingidyp_5_address: '0x7e766f7005c7a9e74123b156697b582eecb8d2d7',
+	constant_stakingidyp_6_address: '0x4c04e53f9aaa17fc2c914694b4aae57a9d1be445',
 
 	cg_ids: {
 		'main': 'binancecoin',
@@ -4314,8 +4314,8 @@ window.farming_error_5 = new STAKING("FARMING_NEW_10")
 /* Constant Staking iDYP */
 window.constant_staking_idyp_1 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGIDYP_1")
 window.constant_staking_idyp_2 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGIDYP_2")
-window.constant_staking_idyp_3 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGIDYP_3")
-window.constant_staking_idyp_4 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGIDYP_4")
+window.constant_staking_idyp_5 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGIDYP_5")
+window.constant_staking_idyp_6 = new CONSTANT_STAKING_NEW("CONSTANT_STAKINGIDYP_6")
 
 
 /**
